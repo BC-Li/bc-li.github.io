@@ -6,13 +6,17 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives: 2020/3 | Bocheng Li&#39;s Blog</title>
+  <title>git commands | Bocheng Li&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Bocheng Li&#39;s Blog">
-<meta property="og:url" content="http://yoursite.com/archives/2020/03/index.html">
+  <meta name="description" content="1.创建仓库及push操作创建操作在github desktop&#x2F;github网页上执行在本地上用git bash cd到指定的文件夹，git clone https:&#x2F;&#x2F;.... . ...git创建文件夹之后第一次提交需要进行的操作：    把自己要push的文件放进文件夹  依次执行命令git add .git commit -m &quot;first commit&quot;git pu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="git commands">
+<meta property="og:url" content="http://yoursite.com/2020/03/23/git-commands/index.html">
 <meta property="og:site_name" content="Bocheng Li&#39;s Blog">
+<meta property="og:description" content="1.创建仓库及push操作创建操作在github desktop&#x2F;github网页上执行在本地上用git bash cd到指定的文件夹，git clone https:&#x2F;&#x2F;.... . ...git创建文件夹之后第一次提交需要进行的操作：    把自己要push的文件放进文件夹  依次执行命令git add .git commit -m &quot;first commit&quot;git pu">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-03-23T07:24:02.000Z">
+<meta property="article:modified_time" content="2020-03-23T07:42:12.130Z">
 <meta property="article:author" content="菜兔">
 <meta name="twitter:card" content="summary">
   
@@ -164,114 +168,111 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
+            <article id="programming-git-commands" class="article article-type-programming " itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
   
+    <h1 class="article-title" itemprop="name">
+      git commands
+    </h1>
   
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2020" class="archive-year">2020</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-programming">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/03/23/git-commands/" class="archive-article-date">
+
+        
+        <a href="/2020/03/23/git-commands/" class="archive-article-date">
   	<time datetime="2020-03-23T07:24:02.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-23</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/03/23/git-commands/">git commands</a>
-    </h1>
-  
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.创建仓库及push操作<br>创建操作在github desktop/github网页上执行<br>在本地上用git bash cd到指定的文件夹，<br><code>git clone https://.... . ...git</code><br>创建文件夹之后第一次提交需要进行的操作：  </p>
+<ul>
+<li><p>把自己要push的文件放进文件夹</p>
+</li>
+<li><p>依次执行命令<br><code>git add .</code><br><code>git commit -m &quot;first commit&quot;</code><br><code>git push u origin master</code><br>会提示输入ssh密码/github用户名，密码，输入即可  </p>
+</li>
+</ul>
+<p>第二次及以后的操作只需修改本地仓库的文件之后<br><code>git push</code><br>即可。<br>2.其他的git命令：<br><code>git init                    #把当前目录变成git可以管理的仓库</code><br><code>git add readme.txt          #添加一个文件，也可以添加文件夹</code><br><code>git add -A                  #添加全部文件</code><br><code>git commit -m &quot;some commit&quot; #提交修改</code><br><code>git status                  #查看是否还有未提交</code><br><code>git log                     #查看最近日志</code><br><code>git reset --hard HEAD^      #版本回退一个版本</code><br><code>git reset --hard HEAD^^     #版本回退两个版本</code><br><code>git reset --hard HEAD~100   #版本回退多个版本</code><br><code>git remote add origin +地址 #远程仓库的提交（第一次链接）</code><br><code>git push -u origin master   #仓库关联``</code> git push                  #远程仓库的提交（第二次及之后）`<br>  来源：<a href="https://blog.csdn.net/Rong_Toa/article/details/80577410" target="_blank" rel="noopener">https://blog.csdn.net/Rong_Toa/article/details/80577410</a></p>
 
-        <div class="article-info info-on-right">
-          
-          
+      
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/03/20/post/" class="archive-article-date">
-  	<time datetime="2020-03-20T10:58:58.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-20</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2020/03/20/post/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">一点点小更新</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/03/20/post/">一点点小更新</a>
-    </h1>
+  
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Blog维护</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
+  
+    <!-- ������City�氲װ���� -->
+<div id="lv-container" data-id="city" data-uid="MTAyMC80OTIwNi8yNTcwMA==">
+	<script type="text/javascript">
+   (function(d, s) {
+       var j, e = d.getElementsByTagName(s)[0];
+
+       if (typeof LivereTower === 'function') { return; }
+
+       j = d.createElement(s);
+       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+       j.async = true;
+
+       e.parentNode.insertBefore(j, e);
+   })(document, 'script');
+	</script>
+<noscript> Ϊ����ʹ�����������۹����뼤��JavaScript</noscript>
+</div>
+<!-- City�氲װ��������� -->
     
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/03/20/%E4%BD%A0%E5%A5%BD%EF%BC%81/" class="archive-article-date">
-  	<time datetime="2020-03-20T05:40:04.606Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-20</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/03/20/%E4%BD%A0%E5%A5%BD%EF%BC%81/">你好！</a>
-    </h1>
+
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
-  
-    </div></section>
-  
-
-    
 
 
           </div>
@@ -300,8 +301,8 @@
 	var yiliaConfig = {
 		mathjax: true,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: true,

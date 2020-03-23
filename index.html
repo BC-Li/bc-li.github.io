@@ -166,6 +166,76 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="programming-git-commands" class="article article-type-programming  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/03/23/git-commands/">git commands</a>
+    </h1>
+  
+
+        
+        <a href="/2020/03/23/git-commands/" class="archive-article-date">
+  	<time datetime="2020-03-23T07:24:02.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-23</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.创建仓库及push操作<br>创建操作在github desktop/github网页上执行<br>在本地上用git bash cd到指定的文件夹，<br><code>git clone https://.... . ...git</code><br>创建文件夹之后第一次提交需要进行的操作：  </p>
+<ul>
+<li><p>把自己要push的文件放进文件夹</p>
+</li>
+<li><p>依次执行命令<br><code>git add .</code><br><code>git commit -m &quot;first commit&quot;</code><br><code>git push u origin master</code><br>会提示输入ssh密码/github用户名，密码，输入即可  </p>
+</li>
+</ul>
+<p>第二次及以后的操作只需修改本地仓库的文件之后<br><code>git push</code><br>即可。<br>2.其他的git命令：<br><code>git init                    #把当前目录变成git可以管理的仓库</code><br><code>git add readme.txt          #添加一个文件，也可以添加文件夹</code><br><code>git add -A                  #添加全部文件</code><br><code>git commit -m &quot;some commit&quot; #提交修改</code><br><code>git status                  #查看是否还有未提交</code><br><code>git log                     #查看最近日志</code><br><code>git reset --hard HEAD^      #版本回退一个版本</code><br><code>git reset --hard HEAD^^     #版本回退两个版本</code><br><code>git reset --hard HEAD~100   #版本回退多个版本</code><br><code>git remote add origin +地址 #远程仓库的提交（第一次链接）</code><br><code>git push -u origin master   #仓库关联``</code> git push                  #远程仓库的提交（第二次及之后）`<br>  来源：<a href="https://blog.csdn.net/Rong_Toa/article/details/80577410" target="_blank" rel="noopener">https://blog.csdn.net/Rong_Toa/article/details/80577410</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/03/23/git-commands/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-post" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
