@@ -168,6 +168,79 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-## Openpose配置小记" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/03/28/##%20Openpose%E9%85%8D%E7%BD%AE%E5%B0%8F%E8%AE%B0/">## Openpose配置小记</a>
+    </h1>
+  
+
+        
+        <a href="/2020/03/28/##%20Openpose%E9%85%8D%E7%BD%AE%E5%B0%8F%E8%AE%B0/" class="archive-article-date">
+  	<time datetime="2020-03-28T05:58:19.510Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-28</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="Openpose配置小记"><a href="#Openpose配置小记" class="headerlink" title="Openpose配置小记"></a>Openpose配置小记</h2><p>这些文字是我打的第二遍，因为上个文件因为脑袋太晕在重启的时候没保存。（sigh<br>这是我们在某课程中选择的课题。<br>大概这是我用时最长，产出最少的一个项目了，光是安装就一直忙到现在，API的调用遥遥无期。<br>其实之前有跑通过的，但是由于系统更新搞掉了驱动，所以一直没有再次运行成功。<br>Ubuntu对于NVIDIA显卡驱动的支持程度差得超乎我的想象，所以下次掉驱动我可能不会像现在这样挣扎了好几周才选择重装Ubuntu，而是直接插上我的启动盘（可以，不和他多BB—某主播）<br><a href="https://blog.csdn.net/qq_35468937/article/details/81514198#t27" target="_blank" rel="noopener">https://blog.csdn.net/qq_35468937/article/details/81514198#t27</a><br>这是具体的安装教程，照着走就可以，十分详细，不过里面的一些坑还是很闹心的。</p>
+<ul>
+<li>Cmake版本不要按这个来，否则NOTFOUNDCUDA_cublas_device_LIBRARY。<br>解决方案： <a href="https://blog.csdn.net/DumpDoctorWang/article/details/89644762" target="_blank" rel="noopener">https://blog.csdn.net/DumpDoctorWang/article/details/89644762</a><br>如果你安装了旧版的cmake，那就直接删掉旧的重装一下就可以了，软连接之后cmake-gui就能进入gui界面，不要在安装cmake-qt-gui，那个是旧版的。</li>
+<li>CUDA9 最多支持到Ubuntu 16，没有Ubuntu 1804的deb包/run file<br>解决方案：实测CUDA10也可以正常跑，不过，跑别的项目可能会崩，照我来讲，我可能会选择再次重装系统。  （我的配置是i7-9750H+GTX 1650)</li>
+<li>如果你选择了BUILD-PYTHON,不事先clone一个pybind肯定出错。因为git clone下来的仓库3rdparty文件夹是<strong>空的</strong>。</li>
+<li>不要用UBUNTU的自动更新</li>
+<li><em>别问我是怎么知道的。*</em></li>
+<li>更多的稀奇古怪的BUG，建议你学会看错误信息而不是复制粘贴一堆没用的log在百度上，能搜到才见鬼。</li>
+<li>复制粘贴类似环境变量EXPORT的时候，看准了里面要填写你自己的路径，复制别人的路径没用…</li>
+<li>USE Google instead of Baidu/CSDN<br>你懂的。<br>其实我是还能写更多的，但是现在太忙了，下周还会有代数结构的小测，需要复习。<br>这次用4.5H把整个过程又重走了一遍，比刚开始花10天只搞一个这种* * <em>的东西强多了。<br>可能带给我的唯一收获是少到可怜的Linux基本操作技巧和*</em>好脾气**。<br>哦，还有我打字的速度明显增快了（刚开始不知道shift+ctrl+c/v是linux下的复制粘贴，手打了不知道多少命令）。有时间考虑搞个机械键盘噼里啪啦一下///<br>头好晕啊，也许应该考虑睡一觉XD<br>这几天github.io受到了中间人攻击，也许你可以试试搭梯子上github，效果不错。</li>
+</ul>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/03/28/##%20Openpose%E9%85%8D%E7%BD%AE%E5%B0%8F%E8%AE%B0/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="programming-git-commands" class="article article-type-programming  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
