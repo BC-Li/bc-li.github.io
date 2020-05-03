@@ -20,15 +20,15 @@
     var CONFIG = {"hostname":"bc-li.github.io","root":"/","scheme":"Mist","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="这些文字已经是编辑的第二遍了，因为上个文件因为脑袋太晕在重启的时候没保存…Openpose 是我们在新生研讨课中选择的课题。大概这是我用时最长，产出最少的一个项目了，光是安装就一直忙到现在，API的调用遥遥无期。其实之前有跑通过的，但是由于系统更新搞掉了驱动，所以一直没有再次运行成功。Ubuntu对于NVIDIA显卡驱动的支持程度差得超乎我的想象，所以下次掉驱动我可能不会像现在这样挣扎了好几周">
+  <meta name="description" content="记录了一点 Openpose 的配置过程及踩过的坑">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Openpose 配置小记">
 <meta property="og:url" content="https://bc-li.github.io/2020/03/28/Openpose%E9%85%8D%E7%BD%AE%E5%B0%8F%E8%AE%B0-1/index.html">
 <meta property="og:site_name" content="Forest Zone">
-<meta property="og:description" content="这些文字已经是编辑的第二遍了，因为上个文件因为脑袋太晕在重启的时候没保存…Openpose 是我们在新生研讨课中选择的课题。大概这是我用时最长，产出最少的一个项目了，光是安装就一直忙到现在，API的调用遥遥无期。其实之前有跑通过的，但是由于系统更新搞掉了驱动，所以一直没有再次运行成功。Ubuntu对于NVIDIA显卡驱动的支持程度差得超乎我的想象，所以下次掉驱动我可能不会像现在这样挣扎了好几周">
+<meta property="og:description" content="记录了一点 Openpose 的配置过程及踩过的坑">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-03-28T08:42:08.000Z">
-<meta property="article:modified_time" content="2020-05-03T15:01:00.294Z">
+<meta property="article:modified_time" content="2020-05-03T15:04:54.545Z">
 <meta property="article:author" content="TurboRocket">
 <meta property="article:tag" content="programming">
 <meta name="twitter:card" content="summary">
@@ -204,7 +204,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-05-03 23:01:00" itemprop="dateModified" datetime="2020-05-03T23:01:00+08:00">2020-05-03</time>
+                <time title="修改时间：2020-05-03 23:04:54" itemprop="dateModified" datetime="2020-05-03T23:04:54+08:00">2020-05-03</time>
               </span>
 
           
@@ -225,8 +225,8 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <a id="more"></a>
-
+        <p>记录了一点 Openpose 的配置过程及踩过的坑</p>
+<a id="more"></a>
 <p>这些文字已经是编辑的第二遍了，因为上个文件因为脑袋太晕在重启的时候没保存…<br>Openpose 是我们在新生研讨课中选择的课题。<br>大概这是我用时最长，产出最少的一个项目了，光是安装就一直忙到现在，API的调用遥遥无期。<br>其实之前有跑通过的，但是由于系统更新搞掉了驱动，所以一直没有再次运行成功。<br>Ubuntu对于NVIDIA显卡驱动的支持程度差得超乎我的想象，所以下次掉驱动我可能不会像现在这样挣扎了好几周才选择重装Ubuntu，而是直接插上我的启动盘（可以，不和他多BB—某主播）</p>
 <p><a href="https://blog.csdn.net/qq_35468937/article/details/81514198#t27" target="_blank" rel="noopener">这是具体的安装教程</a>，照着走就可以，十分详细，不过里面的一些坑还是很闹心的。</p>
 <ul>
@@ -243,9 +243,9 @@
 <li><p>复制粘贴类似环境变量 EXPORT 的时候，看准了里面要填写你自己的路径，复制别人的路径没用…</p>
 </li>
 <li><p>USE Google instead of Baidu / CSDN<br>你懂的。</p>
-<p>其实我是还能写更多的，但是现在太忙了，下周还会有代数结构的小测，需要复习。<br>这次用 4.5 H 把整个过程又重走了一遍，比刚开始花 10 天只搞一个这种…的东西强多了。<br>可能带给我的唯一收获是少到可怜的 Linux 基本操作技巧和 <strong>好脾气</strong> 。<br>不过有了好脾气很多东西不就很好解决了嘛 2333<br>哦，还有我打字的速度明显增快了（刚开始都不知道 Shift + Ctrl + C / V 是 Linux 下的复制粘贴，手打了不知道多少命令）。有时间考虑搞个机械键盘（搞不好会被室友打哦…）</p>
 </li>
 </ul>
+<p>  其实我是还能写更多的，但是现在太忙了，下周还会有代数结构的小测，需要复习。<br>  这次用 4.5 H 把整个过程又重走了一遍，比刚开始花 10 天只搞一个这种…的东西强多了。<br>  可能带给我的唯一收获是少到可怜的 Linux 基本操作技巧和 <strong>好脾气</strong> 。<br>  不过有了好脾气很多东西不就很好解决了嘛 2333<br>  哦，还有我打字的速度明显增快了（刚开始都不知道 Shift + Ctrl + C / V 是 Linux 下的复制粘贴，手打了不知道多少命令）。有时间考虑搞个机械键盘（搞不好会被室友打哦…）</p>
 
     </div>
 
