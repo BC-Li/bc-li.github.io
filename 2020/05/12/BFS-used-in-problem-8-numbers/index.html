@@ -27,11 +27,11 @@
 <meta property="og:site_name" content="Forest Zone">
 <meta property="og:description" content="“8 numbers problem” in CPII 2020 Spring: solution and some related basic knowledge used in it.">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://bc-li.github.io/2020/05/12/BFS-used-in-problem-8-numbers/C:%5CUsers%5CAmethyst%5CHexo%5Csource_posts%5CBFS-used-in-problem-8-numbers%5Cv2-7d1e0548d25096f24b5ff23944f58d18_720w.png">
-<meta property="og:image" content="https://bc-li.github.io/2020/05/12/BFS-used-in-problem-8-numbers/C:%5CUsers%5CAmethyst%5CHexo%5Csource_posts%5CBFS-used-in-problem-8-numbers%5Cv2-63f88b398a7843506efd6f5249e60b94_720w.png">
-<meta property="og:image" content="https://bc-li.github.io/2020/05/12/BFS-used-in-problem-8-numbers/C:%5CUsers%5CAmethyst%5CHexo%5Csource_posts%5CBFS-used-in-problem-8-numbers%5Cv2-a4f12599e335d6ac6e72d685accad82e_720w.png">
-<meta property="og:image" content="https://bc-li.github.io/2020/05/12/BFS-used-in-problem-8-numbers/C:%5CUsers%5CAmethyst%5CHexo%5Csource_posts%5CBFS-used-in-problem-8-numbers%5Cv2-89b61c229f7a852888e4e29b2cafd7a1_720w.png">
-<meta property="og:image" content="https://bc-li.github.io/2020/05/12/BFS-used-in-problem-8-numbers/C:%5CUsers%5CAmethyst%5CHexo%5Csource_posts%5CBFS-used-in-problem-8-numbers%5Cv2-813b44a06012c6ae599a62aaa422c96b_720w.png">
+<meta property="og:image" content="https://bc-li.github.io/2020/05/12/BFS-used-in-problem-8-numbers/v2-7d1e0548d25096f24b5ff23944f58d18_720w.png">
+<meta property="og:image" content="https://bc-li.github.io/2020/05/12/BFS-used-in-problem-8-numbers/v2-63f88b398a7843506efd6f5249e60b94_720w.png">
+<meta property="og:image" content="https://bc-li.github.io/2020/05/12/BFS-used-in-problem-8-numbers/v2-a4f12599e335d6ac6e72d685accad82e_720w.png">
+<meta property="og:image" content="https://bc-li.github.io/2020/05/12/BFS-used-in-problem-8-numbers/v2-89b61c229f7a852888e4e29b2cafd7a1_720w.png">
+<meta property="og:image" content="https://bc-li.github.io/2020/05/12/BFS-used-in-problem-8-numbers/v2-813b44a06012c6ae599a62aaa422c96b_720w.png">
 <meta property="og:image" content="https://www.zhihu.com/equation?tex=+X%253Da_n(n-1)!%252Ba_%7Bn-1%7D(n-2)!%252B%C2%B7%C2%B7%C2%B7%252Ba_1%5Ctimes0!%252B1">
 <meta property="og:image" content="https://www.zhihu.com/equation?tex=a_i">
 <meta property="og:image" content="https://www.zhihu.com/equation?tex=a_1%253D2%E3%80%82">
@@ -50,11 +50,11 @@
 <meta property="og:image" content="https://www.zhihu.com/equation?tex=a_5">
 <meta property="og:image" content="https://www.zhihu.com/equation?tex=X%253D2%5Ctimes(5-1)!%252B2%5Ctimes(5-2)!%252B0%5Ctimes(5-3)!%252B1%5Ctimes(5-4)!%252B0%5Ctimes(5-5)!%252B1%253D62">
 <meta property="article:published_time" content="2020-05-12T03:23:17.000Z">
-<meta property="article:modified_time" content="2020-05-12T10:51:30.254Z">
+<meta property="article:modified_time" content="2020-05-12T10:54:59.160Z">
 <meta property="article:author" content="TurboRocket">
 <meta property="article:tag" content="programming">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://bc-li.github.io/2020/05/12/BFS-used-in-problem-8-numbers/C:%5CUsers%5CAmethyst%5CHexo%5Csource_posts%5CBFS-used-in-problem-8-numbers%5Cv2-7d1e0548d25096f24b5ff23944f58d18_720w.png">
+<meta name="twitter:image" content="https://bc-li.github.io/2020/05/12/BFS-used-in-problem-8-numbers/v2-7d1e0548d25096f24b5ff23944f58d18_720w.png">
 
 <link rel="canonical" href="https://bc-li.github.io/2020/05/12/BFS-used-in-problem-8-numbers/">
 
@@ -221,7 +221,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2020-05-12 11:23:17 / 修改时间：18:51:30" itemprop="dateCreated datePublished" datetime="2020-05-12T11:23:17+08:00">2020-05-12</time>
+              <time title="创建时间：2020-05-12 11:23:17 / 修改时间：18:54:59" itemprop="dateCreated datePublished" datetime="2020-05-12T11:23:17+08:00">2020-05-12</time>
             </span>
 
           
@@ -247,15 +247,15 @@
 
 <h2 id="Preknowledge"><a href="#Preknowledge" class="headerlink" title="Preknowledge"></a>Preknowledge</h2><h3 id="BFS（广度优先搜索）"><a href="#BFS（广度优先搜索）" class="headerlink" title="BFS（广度优先搜索）"></a><a href="https://zhuanlan.zhihu.com/p/24986203" target="_blank" rel="noopener">BFS（广度优先搜索）</a></h3><blockquote>
 <p>广度优先搜索较之深度优先搜索之不同在于，深度优先搜索旨在不管有多少条岔路，先一条路走到底，不成功就返回上一个路口然后就选择下一条岔路，而广度优先搜索旨在面临一个路口时，把所有的岔路口都记下来，然后选择其中一个进入，然后将它的分路情况记录下来，然后再返回来进入另外一个岔路，并重复这样的操作，用图形来表示则是这样的，例子:</p>
-<p><img src="/2020/05/12/BFS-used-in-problem-8-numbers/C:%5CUsers%5CAmethyst%5CHexo%5Csource_posts%5CBFS-used-in-problem-8-numbers%5Cv2-7d1e0548d25096f24b5ff23944f58d18_720w.png" alt="v2-7d1e0548d25096f24b5ff23944f58d18_720w"></p>
+<p><img src="/2020/05/12/BFS-used-in-problem-8-numbers/v2-7d1e0548d25096f24b5ff23944f58d18_720w.png" alt="v2-7d1e0548d25096f24b5ff23944f58d18_720w"></p>
 <p>从黑色起点出发，记录所有的岔路口，并标记为走一步可以到达的。然后选择其中一个方向走进去，我们走黑点方块上面的那个，然后将这个路口可走的方向记录下来并标记为2，意味走两步可以到达的地方。</p>
-<p><img src="/2020/05/12/BFS-used-in-problem-8-numbers/C:%5CUsers%5CAmethyst%5CHexo%5Csource_posts%5CBFS-used-in-problem-8-numbers%5Cv2-63f88b398a7843506efd6f5249e60b94_720w.png" alt="v2-63f88b398a7843506efd6f5249e60b94_720w"></p>
+<p><img src="/2020/05/12/BFS-used-in-problem-8-numbers/v2-63f88b398a7843506efd6f5249e60b94_720w.png" alt="v2-63f88b398a7843506efd6f5249e60b94_720w"></p>
 <p>接下来，我们回到黑色方块右手边的1方块上，并将它能走的方向也记录下来，同样标记为2，因为也是走两步便可到达的地方</p>
-<p><img src="/2020/05/12/BFS-used-in-problem-8-numbers/C:%5CUsers%5CAmethyst%5CHexo%5Csource_posts%5CBFS-used-in-problem-8-numbers%5Cv2-a4f12599e335d6ac6e72d685accad82e_720w.png" alt="v2-a4f12599e335d6ac6e72d685accad82e_720w"></p>
+<p><img src="/2020/05/12/BFS-used-in-problem-8-numbers/v2-a4f12599e335d6ac6e72d685accad82e_720w.png" alt="v2-a4f12599e335d6ac6e72d685accad82e_720w"></p>
 <p>这样走一步以及走两步可以到达的地方都搜索完毕了，下面同理，我们可以迅速把三步的格子给标记出来</p>
-<p><img src="/2020/05/12/BFS-used-in-problem-8-numbers/C:%5CUsers%5CAmethyst%5CHexo%5Csource_posts%5CBFS-used-in-problem-8-numbers%5Cv2-89b61c229f7a852888e4e29b2cafd7a1_720w.png" alt="v2-89b61c229f7a852888e4e29b2cafd7a1_720w"></p>
+<p><img src="/2020/05/12/BFS-used-in-problem-8-numbers/v2-89b61c229f7a852888e4e29b2cafd7a1_720w.png" alt="v2-89b61c229f7a852888e4e29b2cafd7a1_720w"></p>
 <p>再之后是四步，五步。</p>
-<p><img src="/2020/05/12/BFS-used-in-problem-8-numbers/C:%5CUsers%5CAmethyst%5CHexo%5Csource_posts%5CBFS-used-in-problem-8-numbers%5Cv2-813b44a06012c6ae599a62aaa422c96b_720w.png" alt="v2-813b44a06012c6ae599a62aaa422c96b_720w"></p>
+<p><img src="/2020/05/12/BFS-used-in-problem-8-numbers/v2-813b44a06012c6ae599a62aaa422c96b_720w.png" alt="v2-813b44a06012c6ae599a62aaa422c96b_720w"></p>
 <p>我们便成功寻找到了路径，并且把所有可行的路径都求出来了。在广度优先搜索中，可以看出是逐步求解的，反复的进入与退出，将当前的所有可行解都记录下来，然后逐个去查看。在DFS中我们说关键点是递归以及回溯，在BFS中，关键点则是状态的选取和标记。</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> n = <span class="number">10</span>, m = <span class="number">10</span>;                   <span class="comment">//地图宽高</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">BFS</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">queue</span> que;              <span class="comment">//用队列来保存路口</span></span><br><span class="line">    <span class="keyword">int</span> graph[n][m];          <span class="comment">//地图</span></span><br><span class="line">    <span class="keyword">int</span> px[] = &#123;<span class="number">-1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>&#125;;   <span class="comment">//移动方向的数组</span></span><br><span class="line">    <span class="keyword">int</span> py[] = &#123;<span class="number">0</span>, <span class="number">-1</span>, <span class="number">0</span>, <span class="number">1</span>&#125;;</span><br><span class="line">    que.push(起点入队);      <span class="comment">//将起点入队</span></span><br><span class="line">    <span class="keyword">while</span> (!que.empty()) &#123;    <span class="comment">//只要队列不为空</span></span><br><span class="line">        <span class="keyword">auto</span> temp = que.pop();          <span class="comment">//得到队列中的元素</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i != <span class="number">4</span>; ++i) &#123;</span><br><span class="line">            <span class="keyword">if</span>(<span class="comment">//可以走) &#123;</span></span><br><span class="line">                <span class="comment">//标记当前格子</span></span><br><span class="line">                <span class="comment">//将当前状态入队列，等待下次提取</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -275,9 +275,9 @@
 <p>其中X代表该排列的排名， <img src="https://www.zhihu.com/equation?tex=a_i" alt="[公式]"> 代表该排列中的第i位数字在第i位其后的数字中按升序排在第几个（以0为最小）。</p>
 <p><strong>举个例子：在1~5的排列中，求解34152的排名。</strong></p>
 <p>第1位数字是3，在34152中按升序排在第2个。（最小的是第0个）故 <img src="https://www.zhihu.com/equation?tex=a_1%3D2%E3%80%82" alt="[公式]"> </p>
-<p>第2位数字是4，在4152中按升序排在第2个。 <img src="https://www.zhihu.com/equation?tex=a_2%3D2" alt="[公式]"> 。</p>
-<p>第3位数字是1，在152中按升序排在第0个。 <img src="https://www.zhihu.com/equation?tex=a_3%3D0" alt="[公式]"> 。</p>
-<p>第4位数字是5，在52中按升序排在第1个。 <img src="https://www.zhihu.com/equation?tex=a_4%3D1" alt="[公式]"> 。</p>
+<p>第2位数字是4，在4152中按升序排在第2个。 <img src="https://www.zhihu.com/equation?tex=a_2%3D2" alt="[公式]"> </p>
+<p>第3位数字是1，在152中按升序排在第0个。 <img src="https://www.zhihu.com/equation?tex=a_3%3D0" alt="[公式]"> </p>
+<p>第4位数字是5，在52中按升序排在第1个。 <img src="https://www.zhihu.com/equation?tex=a_4%3D1" alt="[公式]"> </p>
 <p>最后一位 <img src="https://www.zhihu.com/equation?tex=a_5" alt="[公式]"> 固定为0。</p>
 <p>则 <img src="https://www.zhihu.com/equation?tex=X%3D2%5Ctimes%285-1%29%21%2B2%5Ctimes%285-2%29%21%2B0%5Ctimes%285-3%29%21%2B1%5Ctimes%285-4%29%21%2B0%5Ctimes%285-5%29%21%2B1%3D62" alt="[公式]"></p>
 <h3 id="字典序"><a href="#字典序" class="headerlink" title="字典序"></a>字典序</h3><p><img src="/2020/05/12/BFS-used-in-problem-8-numbers/811207-20160316224604443-404581276.png" alt="811207-20160316224604443-404581276"></p>
