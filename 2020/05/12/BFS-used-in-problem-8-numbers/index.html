@@ -20,20 +20,41 @@
     var CONFIG = {"hostname":"bc-li.github.io","root":"/","scheme":"Mist","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="“8 numbers problem” in CPII 2020 and some related basic knowledge used in it.">
+  <meta name="description" content="“8 numbers problem” in CPII 2020 Spring: solution and some related basic knowledge used in it.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="BFS used in problem 8 numbers">
 <meta property="og:url" content="https://bc-li.github.io/2020/05/12/BFS-used-in-problem-8-numbers/index.html">
 <meta property="og:site_name" content="Forest Zone">
-<meta property="og:description" content="“8 numbers problem” in CPII 2020 and some related basic knowledge used in it.">
+<meta property="og:description" content="“8 numbers problem” in CPII 2020 Spring: solution and some related basic knowledge used in it.">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://bc-li.github.io/2020/05/12/BFS-used-in-problem-8-numbers/C:%5CUsers%5CAmethyst%5CHexo%5Csource_posts%5CBFS-used-in-problem-8-numbers%5Cv2-7d1e0548d25096f24b5ff23944f58d18_720w.png">
+<meta property="og:image" content="https://bc-li.github.io/2020/05/12/BFS-used-in-problem-8-numbers/C:%5CUsers%5CAmethyst%5CHexo%5Csource_posts%5CBFS-used-in-problem-8-numbers%5Cv2-63f88b398a7843506efd6f5249e60b94_720w.png">
+<meta property="og:image" content="https://bc-li.github.io/2020/05/12/BFS-used-in-problem-8-numbers/C:%5CUsers%5CAmethyst%5CHexo%5Csource_posts%5CBFS-used-in-problem-8-numbers%5Cv2-a4f12599e335d6ac6e72d685accad82e_720w.png">
+<meta property="og:image" content="https://bc-li.github.io/2020/05/12/BFS-used-in-problem-8-numbers/C:%5CUsers%5CAmethyst%5CHexo%5Csource_posts%5CBFS-used-in-problem-8-numbers%5Cv2-89b61c229f7a852888e4e29b2cafd7a1_720w.png">
+<meta property="og:image" content="https://bc-li.github.io/2020/05/12/BFS-used-in-problem-8-numbers/C:%5CUsers%5CAmethyst%5CHexo%5Csource_posts%5CBFS-used-in-problem-8-numbers%5Cv2-813b44a06012c6ae599a62aaa422c96b_720w.png">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=+X%253Da_n(n-1)!%252Ba_%7Bn-1%7D(n-2)!%252B%C2%B7%C2%B7%C2%B7%252Ba_1%5Ctimes0!%252B1">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=a_i">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=a_1%253D2%E3%80%82">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=a_2%253D2">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=a_3%253D0">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=a_4%253D1">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=a_5">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=X%253D2%5Ctimes(5-1)!%252B2%5Ctimes(5-2)!%252B0%5Ctimes(5-3)!%252B1%5Ctimes(5-4)!%252B0%5Ctimes(5-5)!%252B1%253D62">
 <meta property="og:image" content="https://bc-li.github.io/2020/05/12/BFS-used-in-problem-8-numbers/811207-20160316224604443-404581276.png">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=+X%253Da_n(n-1)!%252Ba_%7Bn-1%7D(n-2)!%252B%C2%B7%C2%B7%C2%B7%252Ba_1%5Ctimes0!%252B1">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=a_i">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=a_1%253D2%E3%80%82">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=a_2%253D2">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=a_3%253D0">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=a_4%253D1">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=a_5">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=X%253D2%5Ctimes(5-1)!%252B2%5Ctimes(5-2)!%252B0%5Ctimes(5-3)!%252B1%5Ctimes(5-4)!%252B0%5Ctimes(5-5)!%252B1%253D62">
 <meta property="article:published_time" content="2020-05-12T03:23:17.000Z">
-<meta property="article:modified_time" content="2020-05-12T06:35:24.126Z">
+<meta property="article:modified_time" content="2020-05-12T10:51:30.254Z">
 <meta property="article:author" content="TurboRocket">
 <meta property="article:tag" content="programming">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://bc-li.github.io/2020/05/12/BFS-used-in-problem-8-numbers/811207-20160316224604443-404581276.png">
+<meta name="twitter:image" content="https://bc-li.github.io/2020/05/12/BFS-used-in-problem-8-numbers/C:%5CUsers%5CAmethyst%5CHexo%5Csource_posts%5CBFS-used-in-problem-8-numbers%5Cv2-7d1e0548d25096f24b5ff23944f58d18_720w.png">
 
 <link rel="canonical" href="https://bc-li.github.io/2020/05/12/BFS-used-in-problem-8-numbers/">
 
@@ -200,7 +221,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2020-05-12 11:23:17 / 修改时间：14:35:24" itemprop="dateCreated datePublished" datetime="2020-05-12T11:23:17+08:00">2020-05-12</time>
+              <time title="创建时间：2020-05-12 11:23:17 / 修改时间：18:51:30" itemprop="dateCreated datePublished" datetime="2020-05-12T11:23:17+08:00">2020-05-12</time>
             </span>
 
           
@@ -221,16 +242,73 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>“8 numbers problem” in CPII 2020 and some related basic knowledge used in it.</p>
+        <p>“8 numbers problem” in CPII 2020 Spring: solution and some related basic knowledge used in it.</p>
 <a id="more"></a>
 
-<h3 id="Content"><a href="#Content" class="headerlink" title="Content"></a>Content</h3><p>3×3九宫棋盘，放置数码为1-8的8个棋牌，剩下一个空格，只能通过棋牌向空格的移动来改变棋盘的布局。要求：根据给定初始布局，问：至少移动几次才能从初始布局到达目标布局。</p>
-<p>目标布局如下图：<br>8 7 6<br>5 4 3<br>2 1</p>
+<h2 id="Preknowledge"><a href="#Preknowledge" class="headerlink" title="Preknowledge"></a>Preknowledge</h2><h3 id="BFS（广度优先搜索）"><a href="#BFS（广度优先搜索）" class="headerlink" title="BFS（广度优先搜索）"></a><a href="https://zhuanlan.zhihu.com/p/24986203" target="_blank" rel="noopener">BFS（广度优先搜索）</a></h3><blockquote>
+<p>广度优先搜索较之深度优先搜索之不同在于，深度优先搜索旨在不管有多少条岔路，先一条路走到底，不成功就返回上一个路口然后就选择下一条岔路，而广度优先搜索旨在面临一个路口时，把所有的岔路口都记下来，然后选择其中一个进入，然后将它的分路情况记录下来，然后再返回来进入另外一个岔路，并重复这样的操作，用图形来表示则是这样的，例子:</p>
+<p><img src="/2020/05/12/BFS-used-in-problem-8-numbers/C:%5CUsers%5CAmethyst%5CHexo%5Csource_posts%5CBFS-used-in-problem-8-numbers%5Cv2-7d1e0548d25096f24b5ff23944f58d18_720w.png" alt="v2-7d1e0548d25096f24b5ff23944f58d18_720w"></p>
+<p>从黑色起点出发，记录所有的岔路口，并标记为走一步可以到达的。然后选择其中一个方向走进去，我们走黑点方块上面的那个，然后将这个路口可走的方向记录下来并标记为2，意味走两步可以到达的地方。</p>
+<p><img src="/2020/05/12/BFS-used-in-problem-8-numbers/C:%5CUsers%5CAmethyst%5CHexo%5Csource_posts%5CBFS-used-in-problem-8-numbers%5Cv2-63f88b398a7843506efd6f5249e60b94_720w.png" alt="v2-63f88b398a7843506efd6f5249e60b94_720w"></p>
+<p>接下来，我们回到黑色方块右手边的1方块上，并将它能走的方向也记录下来，同样标记为2，因为也是走两步便可到达的地方</p>
+<p><img src="/2020/05/12/BFS-used-in-problem-8-numbers/C:%5CUsers%5CAmethyst%5CHexo%5Csource_posts%5CBFS-used-in-problem-8-numbers%5Cv2-a4f12599e335d6ac6e72d685accad82e_720w.png" alt="v2-a4f12599e335d6ac6e72d685accad82e_720w"></p>
+<p>这样走一步以及走两步可以到达的地方都搜索完毕了，下面同理，我们可以迅速把三步的格子给标记出来</p>
+<p><img src="/2020/05/12/BFS-used-in-problem-8-numbers/C:%5CUsers%5CAmethyst%5CHexo%5Csource_posts%5CBFS-used-in-problem-8-numbers%5Cv2-89b61c229f7a852888e4e29b2cafd7a1_720w.png" alt="v2-89b61c229f7a852888e4e29b2cafd7a1_720w"></p>
+<p>再之后是四步，五步。</p>
+<p><img src="/2020/05/12/BFS-used-in-problem-8-numbers/C:%5CUsers%5CAmethyst%5CHexo%5Csource_posts%5CBFS-used-in-problem-8-numbers%5Cv2-813b44a06012c6ae599a62aaa422c96b_720w.png" alt="v2-813b44a06012c6ae599a62aaa422c96b_720w"></p>
+<p>我们便成功寻找到了路径，并且把所有可行的路径都求出来了。在广度优先搜索中，可以看出是逐步求解的，反复的进入与退出，将当前的所有可行解都记录下来，然后逐个去查看。在DFS中我们说关键点是递归以及回溯，在BFS中，关键点则是状态的选取和标记。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> n = <span class="number">10</span>, m = <span class="number">10</span>;                   <span class="comment">//地图宽高</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">BFS</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">queue</span> que;              <span class="comment">//用队列来保存路口</span></span><br><span class="line">    <span class="keyword">int</span> graph[n][m];          <span class="comment">//地图</span></span><br><span class="line">    <span class="keyword">int</span> px[] = &#123;<span class="number">-1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>&#125;;   <span class="comment">//移动方向的数组</span></span><br><span class="line">    <span class="keyword">int</span> py[] = &#123;<span class="number">0</span>, <span class="number">-1</span>, <span class="number">0</span>, <span class="number">1</span>&#125;;</span><br><span class="line">    que.push(起点入队);      <span class="comment">//将起点入队</span></span><br><span class="line">    <span class="keyword">while</span> (!que.empty()) &#123;    <span class="comment">//只要队列不为空</span></span><br><span class="line">        <span class="keyword">auto</span> temp = que.pop();          <span class="comment">//得到队列中的元素</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i != <span class="number">4</span>; ++i) &#123;</span><br><span class="line">            <span class="keyword">if</span>(<span class="comment">//可以走) &#123;</span></span><br><span class="line">                <span class="comment">//标记当前格子</span></span><br><span class="line">                <span class="comment">//将当前状态入队列，等待下次提取</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>注：以上两个代码只是提供思路，并非是语法正确的可运行代码。</strong></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a><strong>总结</strong></h2><p>对于这两个搜索方法，其实我们是可以轻松的看出来，他们有许多差异与许多相同点的。</p>
+<p><strong>1.数据结构上的运用</strong></p>
+<p>DFS用递归的形式，用到了栈结构，先进后出。</p>
+<p>BFS选取状态用队列的形式，先进先出。</p>
+<p><strong>2.复杂度</strong></p>
+<p>DFS的复杂度与BFS的复杂度大体一致，不同之处在于遍历的方式与对于问题的解决出发点不同，DFS适合目标明确，而BFS适合大范围的寻找。</p>
+<p><strong>3.思想</strong></p>
+<p>思想上来说这两种方法都是穷竭列举所有的情况。</p>
+<p>From: Zhihu: <a href="https://www.zhihu.com/people/cheng-jie-shi-36" target="_blank" rel="noopener">Linkcheng</a></p>
+</blockquote>
+<h3 id="Cantor-展开"><a href="#Cantor-展开" class="headerlink" title="Cantor 展开"></a><a href="https://blog.csdn.net/ltrbless/article/details/87696372" target="_blank" rel="noopener">Cantor 展开</a></h3><h4 id="Target-usage"><a href="#Target-usage" class="headerlink" title="Target usage"></a>Target usage</h4><p>Cantor 展开用于求解一个全排列的序号。例如：12345 序号为 1 ，12354 序号为 2，按字典序增加序号递增。<br>Cantor 逆展开用于求解序号对应的排列。</p>
+<h4 id="Explanation"><a href="#Explanation" class="headerlink" title="Explanation"></a>Explanation</h4><p> <strong>康托展开的基本公式如下：</strong> <img src="https://www.zhihu.com/equation?tex=+X%3Da_n%28n-1%29%21%2Ba_%7Bn-1%7D%28n-2%29%21%2B%C2%B7%C2%B7%C2%B7%2Ba_1%5Ctimes0%21%2B1" alt="[公式]"></p>
+<p>其中X代表该排列的排名， <img src="https://www.zhihu.com/equation?tex=a_i" alt="[公式]"> 代表该排列中的第i位数字在第i位其后的数字中按升序排在第几个（以0为最小）。</p>
+<p><strong>举个例子：在1~5的排列中，求解34152的排名。</strong></p>
+<p>第1位数字是3，在34152中按升序排在第2个。（最小的是第0个）故 <img src="https://www.zhihu.com/equation?tex=a_1%3D2%E3%80%82" alt="[公式]"> </p>
+<p>第2位数字是4，在4152中按升序排在第2个。 <img src="https://www.zhihu.com/equation?tex=a_2%3D2" alt="[公式]"> 。</p>
+<p>第3位数字是1，在152中按升序排在第0个。 <img src="https://www.zhihu.com/equation?tex=a_3%3D0" alt="[公式]"> 。</p>
+<p>第4位数字是5，在52中按升序排在第1个。 <img src="https://www.zhihu.com/equation?tex=a_4%3D1" alt="[公式]"> 。</p>
+<p>最后一位 <img src="https://www.zhihu.com/equation?tex=a_5" alt="[公式]"> 固定为0。</p>
+<p>则 <img src="https://www.zhihu.com/equation?tex=X%3D2%5Ctimes%285-1%29%21%2B2%5Ctimes%285-2%29%21%2B0%5Ctimes%285-3%29%21%2B1%5Ctimes%285-4%29%21%2B0%5Ctimes%285-5%29%21%2B1%3D62" alt="[公式]"></p>
+<h3 id="字典序"><a href="#字典序" class="headerlink" title="字典序"></a>字典序</h3><p><img src="/2020/05/12/BFS-used-in-problem-8-numbers/811207-20160316224604443-404581276.png" alt="811207-20160316224604443-404581276"></p>
+<h2 id="8-numbers-problem"><a href="#8-numbers-problem" class="headerlink" title="8 numbers problem"></a>8 numbers problem</h2><h3 id="Content"><a href="#Content" class="headerlink" title="Content"></a>Content</h3><p>3×3九宫棋盘，放置数码为1-8的8个棋牌，剩下一个空格，只能通过棋牌向空格的移动来改变棋盘的布局。要求：根据给定初始布局，问：至少移动几次才能从初始布局到达目标布局。</p>
+<p>目标布局如下图：</p>
+<p>8 7 6<br>5 4 3<br>2 1</p>
 <h3 id="Input-Description"><a href="#Input-Description" class="headerlink" title="Input Description"></a>Input Description</h3><p>3行，每行3个0-8的不重复整数，其中0表示空格所在的位置，数字间用空格隔开，表示初始布局，数据保证该初始布局一定能移到目标布局。</p>
 <h3 id="Output-Description"><a href="#Output-Description" class="headerlink" title="Output Description"></a>Output Description</h3><p>一个整数，表示最少移动到目标布局的次数。</p>
 <h3 id="Sample"><a href="#Sample" class="headerlink" title="Sample"></a>Sample</h3><h4 id="INPUT"><a href="#INPUT" class="headerlink" title="INPUT"></a>INPUT</h4><p>0 7 6<br>8 4 3<br>5 2 1</p>
 <h4 id="OUTPUT"><a href="#OUTPUT" class="headerlink" title="OUTPUT"></a>OUTPUT</h4><p>4</p>
-<h4 id="BFS"><a href="#BFS" class="headerlink" title="BFS"></a>BFS</h4><h4 id="Cantor展开"><a href="#Cantor展开" class="headerlink" title="Cantor展开"></a>Cantor展开</h4><h4 id="字典序"><a href="#字典序" class="headerlink" title="字典序"></a>字典序</h4><p><img src="/2020/05/12/BFS-used-in-problem-8-numbers/811207-20160316224604443-404581276.png" alt="811207-20160316224604443-404581276"></p>
+<h3 id="Main-method"><a href="#Main-method" class="headerlink" title="Main method"></a>Main method</h3><p>对于每种情况，可以看作 9 个数字的不同排列，也就是说会有 9！=362880 种情况，而每种情况用一个字符串进行记录，也方便调用字符串函数减少工作量。为了避免搜索重复情况，将建立一个 HASH 表。每种排列的 Cantor 展开是唯一的，故可以此作为对应关系。</p>
+<h4 id="每种状态的记录以及挪动元素的实现"><a href="#每种状态的记录以及挪动元素的实现" class="headerlink" title="每种状态的记录以及挪动元素的实现"></a>每种状态的记录以及挪动元素的实现</h4><h5 id="记录"><a href="#记录" class="headerlink" title="记录"></a>记录</h5><p>例如：将 INPUT 情况记作序列</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> arr[<span class="number">9</span>] = &#123;<span class="number">0</span>,<span class="number">7</span>,<span class="number">6</span>,<span class="number">8</span>,<span class="number">4</span>,<span class="number">3</span>,<span class="number">5</span>,<span class="number">2</span>,<span class="number">1</span>&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="挪动元素"><a href="#挪动元素" class="headerlink" title="挪动元素"></a>挪动元素</h5><p>那么对于其中某一个元素（如 <strong>8</strong> ）向上一格，只需令 8 与它之前的第三个元素进行交换，同时需要满足：</p>
+<ul>
+<li>之前的第三个元素是 0；<br>只需<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">arr[where_8_is_located - <span class="number">3</span>] = <span class="number">0</span></span><br></pre></td></tr></table></figure></li>
+<li>不在边缘。<br>可以用标记该位置是否可以向左移动实现。<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> mobility[<span class="number">9</span>][<span class="number">4</span>]=&#123;&#123;<span class="number">0</span>,<span class="number">1</span>,<span class="number">0</span>,<span class="number">1</span>&#125;,&#123;<span class="number">0</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>&#125;,&#123;<span class="number">0</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">0</span>&#125;,&#123;<span class="number">1</span>,<span class="number">1</span>,<span class="number">0</span>,<span class="number">1</span>&#125;,&#123;<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>&#125;,&#123;<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">0</span>&#125;,&#123;<span class="number">1</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">1</span>&#125;,&#123;<span class="number">1</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">1</span>&#125;,&#123;<span class="number">1</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">0</span>&#125;&#125;  <span class="comment">//order in up, down, left and right, 0 means unable;</span></span><br></pre></td></tr></table></figure>
+同理，向左一格是与该元素之前的一个元素进行交换…<h5 id="避免重复搜索"><a href="#避免重复搜索" class="headerlink" title="避免重复搜索"></a>避免重复搜索</h5>原 Blog 中利用 Hash 表 + Cantor 展开.<br>复习一下上面的公式和算法：（似乎是我自己记不住… ）<br><img src="https://www.zhihu.com/equation?tex=+X%3Da_n%28n-1%29%21%2Ba_%7Bn-1%7D%28n-2%29%21%2B%C2%B7%C2%B7%C2%B7%2Ba_1%5Ctimes0%21%2B1" alt="[公式]"></li>
+</ul>
+<p>其中X代表该排列的排名， <img src="https://www.zhihu.com/equation?tex=a_i" alt="[公式]"> 代表该排列中的第i位数字在第i位其后的数字中按升序排在第几个（以0为最小）。</p>
+<p><strong>例子：在1~5的排列中，求解34152的排名。</strong></p>
+<p>第1位数字是3，在34152中按升序排在第2个。（最小的是第0个）故 <img src="https://www.zhihu.com/equation?tex=a_1%3D2%E3%80%82" alt="[公式]"> </p>
+<p>第2位数字是4，在4152中按升序排在第2个。 <img src="https://www.zhihu.com/equation?tex=a_2%3D2" alt="[公式]"> 。</p>
+<p>第3位数字是1，在152中按升序排在第0个。 <img src="https://www.zhihu.com/equation?tex=a_3%3D0" alt="[公式]"> 。</p>
+<p>第4位数字是5，在52中按升序排在第1个。 <img src="https://www.zhihu.com/equation?tex=a_4%3D1" alt="[公式]"> 。</p>
+<p>最后一位 <img src="https://www.zhihu.com/equation?tex=a_5" alt="[公式]"> 固定为0。</p>
+<p>则 <img src="https://www.zhihu.com/equation?tex=X%3D2%5Ctimes%285-1%29%21%2B2%5Ctimes%285-2%29%21%2B0%5Ctimes%285-3%29%21%2B1%5Ctimes%285-4%29%21%2B0%5Ctimes%285-5%29%21%2B1%3D62" alt="[公式]"></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">cantor</span><span class="params">(<span class="keyword">char</span> x[],<span class="keyword">int</span> n)</span>  <span class="comment">// calculate the cantor function </span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> fac[]=&#123;<span class="number">1</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">6</span>,<span class="number">24</span>,<span class="number">120</span>,<span class="number">720</span>,<span class="number">5040</span>,<span class="number">40320</span>&#125;;  <span class="comment">// values of factorial, from 0 to 8 (there is 9 numbers used in total) </span></span><br><span class="line">	<span class="keyword">int</span> i,j,num=<span class="number">0</span>,count; <span class="comment">//num means X.</span></span><br><span class="line">	<span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;n;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		count=<span class="number">0</span>;</span><br><span class="line">		<span class="keyword">for</span>(j=i+<span class="number">1</span>;j&lt;n;j++)</span><br><span class="line">			<span class="keyword">if</span>(x[j]&lt;x[i]) count++;</span><br><span class="line">		</span><br><span class="line">		num+=count*fac[n<span class="number">-1</span>-i];</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> num + <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id><a href="#" class="headerlink" title></a></h4><h3 id="Write-up"><a href="#Write-up" class="headerlink" title="Write-up"></a>Write-up</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;math.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 
     </div>
 
@@ -312,7 +390,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Content"><span class="nav-number">1.</span> <span class="nav-text">Content</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Input-Description"><span class="nav-number">2.</span> <span class="nav-text">Input Description</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Output-Description"><span class="nav-number">3.</span> <span class="nav-text">Output Description</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Sample"><span class="nav-number">4.</span> <span class="nav-text">Sample</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#INPUT"><span class="nav-number">4.1.</span> <span class="nav-text">INPUT</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#OUTPUT"><span class="nav-number">4.2.</span> <span class="nav-text">OUTPUT</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#BFS"><span class="nav-number">4.3.</span> <span class="nav-text">BFS</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Cantor展开"><span class="nav-number">4.4.</span> <span class="nav-text">Cantor展开</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#字典序"><span class="nav-number">4.5.</span> <span class="nav-text">字典序</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Preknowledge"><span class="nav-number">1.</span> <span class="nav-text">Preknowledge</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#BFS（广度优先搜索）"><span class="nav-number">1.1.</span> <span class="nav-text">BFS（广度优先搜索）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">2.</span> <span class="nav-text">总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Cantor-展开"><span class="nav-number">2.1.</span> <span class="nav-text">Cantor 展开</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Target-usage"><span class="nav-number">2.1.1.</span> <span class="nav-text">Target usage</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Explanation"><span class="nav-number">2.1.2.</span> <span class="nav-text">Explanation</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#字典序"><span class="nav-number">2.2.</span> <span class="nav-text">字典序</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-numbers-problem"><span class="nav-number">3.</span> <span class="nav-text">8 numbers problem</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Content"><span class="nav-number">3.1.</span> <span class="nav-text">Content</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Input-Description"><span class="nav-number">3.2.</span> <span class="nav-text">Input Description</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Output-Description"><span class="nav-number">3.3.</span> <span class="nav-text">Output Description</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Sample"><span class="nav-number">3.4.</span> <span class="nav-text">Sample</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#INPUT"><span class="nav-number">3.4.1.</span> <span class="nav-text">INPUT</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#OUTPUT"><span class="nav-number">3.4.2.</span> <span class="nav-text">OUTPUT</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Main-method"><span class="nav-number">3.5.</span> <span class="nav-text">Main method</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#每种状态的记录以及挪动元素的实现"><span class="nav-number">3.5.1.</span> <span class="nav-text">每种状态的记录以及挪动元素的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#记录"><span class="nav-number">3.5.1.1.</span> <span class="nav-text">记录</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#挪动元素"><span class="nav-number">3.5.1.2.</span> <span class="nav-text">挪动元素</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#避免重复搜索"><span class="nav-number">3.5.1.3.</span> <span class="nav-text">避免重复搜索</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#"><span class="nav-number">3.5.2.</span> <span class="nav-text"></span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Write-up"><span class="nav-number">3.6.</span> <span class="nav-text">Write-up</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
