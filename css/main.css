@@ -1172,7 +1172,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #ffaabf;
+  background: #ff59ff;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
@@ -1508,6 +1508,13 @@ pre .javascript .function {
     left: 20px;
     opacity: 0.8;
   }
+}
+body {
+  background-image: url("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589364821148&di=da0fab1a6b50bf2b7f16f0d5f972f6a3&imgtype=0&src=http%3A%2F%2Fpic1.win4000.com%2Fwallpaper%2F6%2F59b8a18461ecb.jpg");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: 50% 50%;
+  background-size: 100% 100%;
 }
 .post-body {
   font-family: 'Lato', "PingFang SC", "Microsoft YaHei", sans-serif;
