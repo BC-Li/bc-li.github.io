@@ -1172,7 +1172,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #6ff;
+  background: #ff17b5;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
@@ -1510,7 +1510,7 @@ pre .javascript .function {
   }
 }
 body {
-  background-image: url("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589907230027&di=446b1991416d02aa32e59f978a68d090&imgtype=0&src=http%3A%2F%2Fpic1.win4000.com%2Fwallpaper%2F4%2F57d7abca481a6.jpg");
+  background-image: url("/images/backGround.png");
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-position: 50% 50%;
