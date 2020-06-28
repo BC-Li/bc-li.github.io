@@ -1,0 +1,18 @@
+# main links
+main:
+  - title: "About"
+    url: /about/
+  - title: "Reviews"
+    url: /categories/reviews/
+  - title: "Coding"
+    url: /categories/coding/
+  - title : "中文内容"
+    url: /categories/cn/
+  # - title: "About"
+  #   url: https://mmistakes.github.io/minimal-mistakes/about/
+  # - title: "Sample Posts"
+  #   url: /year-archive/
+  # - title: "Sample Collections"
+  #   url: /collection-archive/
+  # - title: "Sitemap"
+  #   url: /sitemap/
