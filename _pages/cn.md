@@ -8,6 +8,6 @@ header:
 excerpt: "中文写的博客在这里！"
 author_profile: true
 toc: true
-taxonomy: Music
+taxonomy: cn
 author_profile: true
 ---
