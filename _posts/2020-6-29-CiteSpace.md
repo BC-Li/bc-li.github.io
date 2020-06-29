@@ -1,5 +1,5 @@
 ---
-title: Citespace使用教程
+title: Citespace 使用教程
 layout: single
 category: cn
 header:
