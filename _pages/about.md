@@ -7,33 +7,34 @@ header:
 author_profile: true
 toc: true
 ---
-## Who am I?
-  I am an undergraduate student, major in Computer Science in University of Science and Technology of China (USTC) .
-  I spend my childhood and my youth in Siping ,one of the cities in Jilin Pro., China. My dreams and all of my precious memories starts there. I cherish them always.
-### Education
-  
-  2007-2013 Siping No.2 Experimental Primary School, Siping,Jilin 
-  
-  2013-2016 Siping No.17 Middle School, Siping, Jilin
-  
-  2016-2019 Siping No.1 Senior High School, Siping, Jilin
-  
-  2019- now University of Science and Technology of China, Hefei, Anhui
+  I am an undergraduate student, major in [Computer Science](https://cs.ustc.edu.cn/) in [University of Science and Technology of China](https://www.ustc.edu.cn/) (USTC) . 
+## Contact Me
+  Feel free to send me an [E-mail](mailto:lazuliterabbit@mail.ustc.edu.cn). You can ask me anything if you want. I'll check them asap.
+  For personal contact you can add my QQ account [here](https://qm.qq.com/cgi-bin/qm/qr?k=u9Rt6hv6Mu2JoRsaF8rzzuCuDCW9-I_8). I'm always willing to make new friends.
 
-## What do I like?
-  I love music and I also play some video games. By the way, I played saxophone for a while but maybe I have already forgotten ... That's a shame for me LOL
-  
-  But whatever, Most of the spare time I listen to music. 
-  
-  My favorite songs are mostly western music. Among them, Pop, EDM or anything that can bring people positive energy are my favorites.
+`Note: The QQ address only works when you are using your mobile phone.` 
 
-## Want to get in touch?
-  Feel free to send me an email via the address shown on the homepage. You can ask me anything if you want. I'll check them asap.
-  
-  (Other accounts, such as my Twitter are also shown on the page, however I do not use them very often) 
-  
-  Note: If you are watching this on your mobile phone you may not be able to see these buttons. You can find it using your PC.
-    
+## Personal Preferences and Skills Regarding to technique
+* Programming Languages: C, Python
+* Version Control: Git
+* IDE: PyCharm, Visual Studio 2017
+* Editor: Visual Studio Code
+* System Administration: Linux ( Ubuntu 18.04 )
+* Others (may not be related to CS ): CiteSpace, Origin, Wolfram Mathmatica ( still new to it )
+
+## Education
+
+I spend my childhood and my youth in [Siping](https://baike.baidu.com/item/%E5%9B%9B%E5%B9%B3/475628?fr=aladdin), one of the cities in Jilin Pro., China. My dreams and all of my precious memories starts there. I cherish them always.
+
+| **2007-2013** |  **Siping No.2 Experimental Primary School, Siping,Jilin**   |
+| :-----------: | :----------------------------------------------------------: |
+| **2013-2016** |        **Siping No.17 Middle School, Siping, Jilin**         |
+| **2016-2019** | **[Siping No.1 Senior High School](https://sp1z.30edu.com.cn/), Siping, Jilin** |
+| **2019- now** | **[University of Science and Technology of China](https://www.ustc.edu.cn/), Hefei, Anhui** |
+
+
+
+
 ## Why "Forest Zone"?
   The name *Forest Zone* is originated from a location in an RPG game named *NieR:Automata* , one of my favorite games this year.
 
