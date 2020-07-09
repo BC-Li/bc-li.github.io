@@ -9,8 +9,21 @@ toc: true
 ---
   I am an undergraduate student, major in [Computer Science](https://cs.ustc.edu.cn/) in [University of Science and Technology of China](https://www.ustc.edu.cn/) (USTC) . 
 ## Contact Me
-* Email: `base64 -d <<< "bGF6dWxpdGVyYWJiaXRAbWFpbC51c3RjLmVkdS5jbg=="`
-* QQ (For personal contact only): `base64 -d <<<"aHR0cHM6Ly9xbS5xcS5jb20vY2dpLWJpbi9xbS9xcj9rPXU5UnQ2aHY2TXUySm9Sc2FGOHJ6enVDdURDVzktSV84ICAgSSYjMzk7bSBhbHdheXMgd2lsbGluZyB0byBtYWtlIG5ldyBmcmllbmRzLiBOb3RlOiBUaGUgUVEgYWRkcmVzcyBvbmx5IHdvcmtzIHdoZW4geW91IGFyZSB1c2luZyB5b3VyIG1vYmlsZSBwaG9uZS4="`
+* Email: 
+
+  ```
+  base64 -d <<< "bGF6dWxpdGVyYWJiaXRAbWFpbC51c3RjLmVkdS5jbg=="
+  ```
+
+  
+
+* QQ (For personal contact only): 
+
+  ```
+  base64 -d <<<"aHR0cHM6Ly9xbS5xcS5jb20vY2dpLWJpbi9xbS9xcj9rPXU5UnQ2aHY2TXUySm9Sc2FGOHJ6enVDdURDVzktSV84ICAgSSYjMzk7bSBhbHdheXMgd2lsbGluZyB0byBtYWtlIG5ldyBmcmllbmRzLiBOb3RlOiBUaGUgUVEgYWRkcmVzcyBvbmx5IHdvcmtzIHdoZW4geW91IGFyZSB1c2luZyB5b3VyIG1vYmlsZSBwaG9uZS4="
+  ```
+
+  
 
 ## Personal Preferences and Skills Regarding to technique
 * Programming Languages: C, Python
