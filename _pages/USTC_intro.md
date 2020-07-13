@@ -1,15 +1,15 @@
 ---
-title: 欢迎报考中国科学技术大学！
+title: 欢迎学弟学妹报考中国科学技术大学！
 layout: single
 permalink: /intro/
 category: cn
 header:
-  image: /assets/images/USTC.jpg
+  overlay_image: /assets/images/USTC.jpg
 author_profile: true
 toc: true
 ---
 
-# 欢迎学弟学妹报考中国科学技术大学！
+
 
 这个页面计划是在 2020 级高考报名结束之后就撤掉 2333 更多信息参见以下内容：
 
