@@ -31,7 +31,7 @@ toc: true
 * IDE: PyCharm, Visual Studio 2017
 * Editor: Visual Studio Code
 * System Administration: Linux ( Ubuntu 18.04 ), Windows 10 with WSL2
-* Others (may not be related to CS ): CiteSpace, Origin, Wolfram Mathmatica ( still new to it )
+* Others (may not be related to CS ): CiteSpace, Origin, Wolfram Mathmatica ( still new to it ), Antconc
 
 
 
