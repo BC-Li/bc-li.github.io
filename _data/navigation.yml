@@ -2,12 +2,15 @@
 main:
   - title: "About"
     url: /about/
+  - title: "Friends"
+    url: /friends/
   - title: "Reviews"
     url: /categories/reviews/
   - title: "Coding"
     url: /categories/coding/
-  - title : "中文内容"
+  - title: "中文内容"
     url: /categories/cn/
+
   # - title: "About"
   #   url: https://mmistakes.github.io/minimal-mistakes/about/
   # - title: "Sample Posts"

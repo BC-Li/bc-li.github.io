@@ -34,4 +34,5 @@ classes: wide
 {% include feature_row %}
 
 ## Related Links
-[TurboRocket's Blog](https://bc-li.github.io)
+
+* [TurboRocket's Friends](https://bc-li.github.io/friends/)
