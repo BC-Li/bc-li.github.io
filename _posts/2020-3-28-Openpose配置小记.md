@@ -3,7 +3,7 @@ title: Openpose 配置小记
 layout: single
 category: cn
 header:
-  image: /assets/images/openpose.jpg
+  overlay_image: /assets/images/openpose.jpg
 author_profile: true
 toc: true
 ---

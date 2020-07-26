@@ -3,7 +3,7 @@ title: Git Commands
 layout: single
 category: cn
 header:
-  image: /assets/images/git.jpg
+  overlay_image: /assets/images/git.jpg
 author_profile: true
 toc: true
 ---

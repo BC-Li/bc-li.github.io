@@ -3,7 +3,7 @@ title: Citespace 使用教程
 layout: single
 category: cn
 header:
-  image: /assets/images/citespace.jpg
+  overlay_image: /assets/images/citespace.jpg
 author_profile: true
 toc: true
 ---

@@ -3,7 +3,7 @@ title: Matplotlib 3D Toolkit Note
 layout: single
 category: coding
 header:
-  image: /assets/images/mat.jpg
+  overlay_image: /assets/images/mat.jpg
 author_profile: true
 toc: true
 ---
