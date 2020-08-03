@@ -7,7 +7,7 @@ header:
 author_profile: true
 toc: true
 ---
-TurboRocket is an undergraduate student, major in [Computer Science](https://cs.ustc.edu.cn/) in [University of Science and Technology of China](https://www.ustc.edu.cn/) (USTC) . 
+I‘m an undergraduate student, major in [Computer Science](https://cs.ustc.edu.cn/) in [University of Science and Technology of China](https://www.ustc.edu.cn/) (USTC) . 
 ## Contact Info
 * Email: 
 
@@ -36,6 +36,14 @@ TurboRocket is an undergraduate student, major in [Computer Science](https://cs.
   * Origin Pro
   * Wolfram Mathmatica ( still new to it )
   * Antconc
+
+## Relaxations
+
+In my spare time I spent sometime on music, books, movies and games.
+
+They somehow have become my remedies in my tough times. And I also have a chance to think about something I may never have a chance to through them.
+
+For more information about my favorites, you can check them [here](https://bc-li.github.io/relaxations).
 
 
 
