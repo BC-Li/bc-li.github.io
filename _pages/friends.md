@@ -25,9 +25,11 @@ gallery:
 
 {% include gallery %}
 
-I'd be glad to exchange friendly links here XD
+
 
 ##  Friendly Links
 
 * Raptazure: [https://raptazure.github.io](https://raptazure.github.io)
 * TurboRocket: [https://bc-li.github.io](https://bc-li.github.io)
+
+`If you want to exchange your link here you can E-Mail me or send me a QQ message. Find my contact info in Page "about".`

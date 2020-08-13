@@ -8,7 +8,10 @@ author_profile: true
 toc: true
 ---
 
+Citespace: 一款文献可视化分析软件
+
 ## CiteSpace的安装
+
 ### 需要准备
 * JDK(Java Development Kit)
 #### JDK 的下载，安装与配置
