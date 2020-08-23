@@ -7,7 +7,9 @@ header:
 author_profile: true
 toc: true
 ---
-This note is for the mini project named "n-body simulation" in Computer Programming II in 2020 Spring.
+Matplotlib 3D Toolkit Note
+
+Note for Matplotlib 3D Toolkit. 
 
 ## Getting Started
 

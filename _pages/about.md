@@ -31,7 +31,7 @@ I‘m an undergraduate student, major in [Computer Science](https://cs.ustc.edu.
 * IDE: PyCharm, Visual Studio 2017, CLion
 * Editor: Visual Studio Code
 * System Administration: Linux ( Ubuntu 18.04 ), Windows 10 with WSL2
-* Others (may not be related to CS ): 
+* Others (May not be related to CS ): 
   * CiteSpace
   * Origin Pro
   * Wolfram Mathmatica ( still new to it )
@@ -41,7 +41,7 @@ I‘m an undergraduate student, major in [Computer Science](https://cs.ustc.edu.
 
 In my spare time I spent sometime on music, books, movies and games.
 
-They somehow have become my remedies in my tough times. And I also have a chance to think about something I may never have a chance to through them.
+They somehow have become my remedies in my tough times. And I also have an opportunity to think about something I may never have a chance to.
 
 For more information about my favorites, you can check them [here](https://bc-li.github.io/relaxations).
 
