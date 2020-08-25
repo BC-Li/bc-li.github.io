@@ -18,7 +18,7 @@ minimal_mistakes_skin    : "default" # "air", "aqua", "contrast", "dark", "dirt"
 locale                   : "en-US"
 title                    : "Forest Zone"
 title_separator          : "-"
-subtitle                 : #"A place where I take notes of fantastic things in life." # site tagline that appears below site title in masthead
+subtitle                 : "I feel happiness in every tiny things." # site tagline that appears below site title in masthead
 name                     : "TurboRocket"
 description              : #"Place where I take notes of beautiful things in life"
 url                      : "https://bc-li.github.io" # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
