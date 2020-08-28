@@ -4,10 +4,8 @@ main:
     url: /about/
   - title: "Friends"
     url: /friends/
-  - title: "Reviews"
-    url: /categories/reviews/
-  - title: "Coding"
-    url: /categories/coding/
+  - title: "Blog"
+    url: /categories/Blog/
   - title: "中文内容"
     url: /categories/cn/
 
