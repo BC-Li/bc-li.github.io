@@ -13,19 +13,19 @@ feature_row:
     url: "/categories/reviews/"
     btn_label: "Find More"
     btn_class: "btn--primary"
-  - image_path: /assets/images/coding.jpg
-    alt: "code"
-    title: "Coding"
-    excerpt: "My experience on coding."
-    url: "/categories/coding/"
-    btn_label: "Take a look"
-    btn_class: "btn--primary"
   - image_path: /assets/images/cn.jpg
     alt: "Chinese contents"
     title: "中文内容"
     excerpt: "迁移的中文博文以及一些其他的东西"
     url: "/categories/cn/"
     btn_label: "See More"
+    btn_class: "btn--primary"
+  - image_path: /assets/images/github.png
+    alt: "code"
+    title: "GitHub"
+    excerpt: "Find TurboRocket on GitHub"
+    url: "https://github.com/bc-li"
+    btn_label: "Take a look"
     btn_class: "btn--primary"
 author_profile: true
 classes: wide
