@@ -5,7 +5,7 @@ main:
   - title: "Friends"
     url: /friends/
   - title: "Blog"
-    url: /categories/Blog/
+    url: /categories/blog/
   - title: "中文内容"
     url: /categories/cn/
 
