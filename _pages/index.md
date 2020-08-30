@@ -36,4 +36,4 @@ feature_row:
 ## Related Links
 
 * [TurboRocket's Friends](https://bc-li.github.io/friends/)
-<script>document.getElementById('page-title').insertAdjacentHTML('beforebegin', '<img src="https://www.baidu.com/link?url=Ug8_Jz7w3AB95tfvxnGlkvz-cE9nR7UipiqYaVumQgeia5FUTWNMbvMKA8wgzkrvh84SvtYWC6HNMtjOeAaymIQtKNSfmE4ERHAIklBeBSvFehb4Dfda_7g5XiXbnNn9G69B9lSluARO7viEhdHEGbimDC12UICrkzxYsgvJ5_jJfzAxonC4O7cWranirwTUq02P2HNUu7bXQHCkJwq4kcxGXYNnocIRKhFcWFa21Vxwsa0zKPn4bHcmvmqzxyBA071aXdnEnhvBBnc06ay6swaWzFTkIOWlJnGx9OwbMbSSTOBmZhcqqqLBH-jBYWpBy0DPWV3hNURqLmfMZF-u8YcTc2lhiuVN7t0b1vgwPccwKDtH411AbWG-esMWUqaE0cBkjcxuw9nXC-cf6go0VNn_TxOjryNZD8TPwQcFkbIS_rrIbXTQIXdxbneUkjXiX7xbVEsO-W9djs7sSLqLbdCDTdynSHJC12esYSJdMC4eeICdntY7EQHzbjffYo2-5aHz-6ae301d1SrKQWuEPZB50FZO5U5g_kp4-AwzPVgIBv4ojrHvI_MdrRbi0vitrILG2mKchOeUCaJOZ76BlLmVNThpLIiOXxfS0R5HKAa&wd=&eqid=b245bd1400298083000000035f4b99dd" alt="iBug" class="avatar" itemprop="image" />');</script>
+<script>document.getElementById('page-title').insertAdjacentHTML('beforebegin', '<img src="/assets/images/avatar.jpg" alt="TurboRocket" class="avatar" itemprop="image" />');</script>
