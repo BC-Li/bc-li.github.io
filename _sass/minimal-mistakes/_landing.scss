@@ -2,7 +2,7 @@ body.landing {
 	//background-color: #EEE;
 	//background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url('/image/mm/splash.jpg');
 	div.masthead {
-		background-image: url('/image/mm/splash.jpg');
+		background-image: url('/assets/images/2.jpg');
 		background-attachment: fixed;
 		background-size: cover;
 		background-position: center;
@@ -19,13 +19,13 @@ body.landing {
 		.greedy-nav {
 			.navicon {
 				&:before {
-					background-color: red;
+					background-color: white;
 				}
 				& {
-					background-color: yellow;
+					background-color: white;
 				}
 				&:after {
-					background-color: #0F0;
+					background-color: white;
 				}
 			}
 
@@ -36,7 +36,7 @@ body.landing {
 	}
 
 	div.page__hero--overlay {
-		background-image: url('/image/mm/splash.jpg');
+		background-image: url('/assets/images/2.jpg');
 		text-align: center;
 		height: calc(100vh - 4em);
 		background-attachment: fixed;
@@ -56,7 +56,7 @@ body.landing {
 				// Workaround for backdrop-filter: https://stackoverflow.com/a/38543010/5958455
 				&::before {
 					content: '';
-					background: linear-gradient(hsla(0, 0%, 100%, 0.1), hsla(0, 0%, 100%, 0.1)), url('/image/mm/splash.jpg') center / cover no-repeat fixed;
+					background: linear-gradient(hsla(0, 0%, 100%, 0.1), hsla(0, 0%, 100%, 0.1)), url('/assets/images/2.jpg') center / cover no-repeat fixed;
 					filter: blur(1.5px);
 					position: absolute;
 					z-index: -1;

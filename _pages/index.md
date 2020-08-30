@@ -1,12 +1,11 @@
 ---
+excerpt: "Developer, system administrator, geek"
 layout: splash
-classes: 
+classes:
  - landing
 permalink: /
 header:
-  image: /assets/images/2.jpg
-  show_overlay_excerpt: false
-excerpt: "Developer, system administrator, geek"
+  overlay_image: /assets/images/2.jpg
 feature_row:
   - image_path: assets/images/weather.jpg
     alt: "Weathering With You"
@@ -30,8 +29,6 @@ feature_row:
     url: "https://github.com/bc-li"
     btn_label: "Take a look"
     btn_class: "btn--info"
-author_profile: true
-classes: wide
 ---
 
 {% include feature_row %}
@@ -39,3 +36,4 @@ classes: wide
 ## Related Links
 
 * [TurboRocket's Friends](https://bc-li.github.io/friends/)
+<script>document.getElementById('page-title').insertAdjacentHTML('beforebegin', '<img src="https://www.bb.ustc.edu.cn/bbcswebdav/pid-28816-dt-content-rid-177392_1/courses/001519.15.2020SP/homework1%281%29.png" alt="iBug" class="avatar" itemprop="image" />');</script>
