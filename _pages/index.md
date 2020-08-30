@@ -1,11 +1,16 @@
 ---
-excerpt: "Developer, system administrator, geek"
+title: "TurboRocket"
+excerpt: "An undergraduate in USTC"
 layout: splash
+permalink: /
 classes:
  - landing
-permalink: /
 header:
   overlay_image: /assets/images/2.jpg
+  actions:
+    - label: "More Info"
+      url: "https://unsplash.com"
+  show_overlay_excerpt: true
 feature_row:
   - image_path: assets/images/weather.jpg
     alt: "Weathering With You"
