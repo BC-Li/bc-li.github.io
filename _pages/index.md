@@ -8,8 +8,12 @@ classes:
 header:
   overlay_image: /assets/images/2.jpg
   actions:
-    - label: "More Info"
-      url: "https://unsplash.com"
+    - label: "<i class='fas fa-user-circle'></i> About"
+      url: "/about/"
+    - label: "<i class='fas fa-book'></i> Blog"
+      url: "/categories/blog/"
+    - label: "<i class='fas fa-book-open'></i> Notion"
+      url: "https://www.notion.so/bochengli/e67d50d074754a28b3cc905f0d078338?v=96949b3285c241479be8ac666f1dcf59"
   show_overlay_excerpt: true
 feature_row:
   - image_path: assets/images/weather.jpg
