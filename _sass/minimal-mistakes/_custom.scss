@@ -1,0 +1,138 @@
+@import "1mixins";
+
+@import "landing"; // Special layout for landing page
+@import "home";
+@import "page-content";
+@import "archive";
+@import "toc";
+
+blockquote {
+	font-style: normal;
+	font-family: $serif;
+}
+
+.card {
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	margin: 0.2rem 0.2rem 0.4rem;
+}
+
+html {
+	box-sizing: border-box;
+	font-size: 14px;
+	@include breakpoint($medium) { font-size: 16px; }
+	@include breakpoint($large) { font-size: 18px; }
+	@include breakpoint($x-large) { font-size: 20px; }
+}
+
+#site-nav {
+	a.site-logo, a.site-title {
+		@include noselect;
+	}
+}
+
+#main {
+	@include breakpoint($x-large) { max-width: 1440px; }
+}
+
+.greedy-nav {
+	background: initial;
+}
+
+div.page__hero--overlay {
+	text-align: center;
+	margin-bottom: 1em;
+
+	h1.page__title {
+		// @include noselect;
+	}
+
+	a.btn {
+		backdrop-filter: blur(1.5px);
+	}
+
+	p.page__lead {
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+  .page__meta {
+    .post__meta-sep, .post__meta-read-time {
+      display: none;
+    }
+  }
+}
+
+.post__meta-sep {
+  &::before {
+    content: "\2022";
+    margin: 0 0.5em;
+  }
+}
+
+.nav__items li {
+  ul li, ol li {
+    line-height: 1.6;
+  }
+}
+
+/*
+div.feature__item {
+	.archive__item {
+		.archive__item-title, .archive__item-excerpt {
+			text-align: center;
+		}
+
+		.archive__item-excerpt + p {
+			text-align: center;
+		}
+	}
+}
+*/
+
+.pagination {
+  text-align: center;
+
+  ul {
+    display: inline-block;
+
+    li a {
+      transition: background-color 0.3s ease-in-out, color 0.1s ease-in-out;
+
+      &:not(disabled):hover {
+        color: white;
+        background-color: $primary-color;
+      }
+    }
+  }
+}
+
+.page__footer footer {
+	text-align: center;
+
+	.page__footer-follow .social-icons {
+		.fa, .fas, .far, .fab {
+			color: white;
+		}
+	}
+}
+
+/********** Misc **********/
+
+.sidebar .social-icons, .sidebar .nav__list {
+  .fas, .far, .fab, .fal {
+    color: inherit;
+  }
+}
+
+a.site-logo > img, div.author__avatar:hover > img {
+	animation: spin-periodically 5000ms infinite ease-in-out;
+}
+
+/********** Animations **********/
+
+@import "loading-animation";
+
+@keyframes spin-periodically {
+    80% { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}

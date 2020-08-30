@@ -1,9 +1,12 @@
 ---
 layout: splash
+classes: 
+ - landing
 permalink: /
 header:
-  image: /assets/images/unsplash-image-1.jpg
+  image: /assets/images/2.jpg
   show_overlay_excerpt: false
+excerpt: "Developer, system administrator, geek"
 feature_row:
   - image_path: assets/images/weather.jpg
     alt: "Weathering With You"
