@@ -37,4 +37,4 @@ script: bundle exec jekyll build
 
 The .tarvis.yml is like something you need the remote Ubuntu server to do. Write your commands which you basically wrote in Bash or Terminal or something else in **script** above, and the server will automatically run your commands.
 
-`inspired by an iBug's post.Thanks! (though he may not know me 233) ` 
+`inspired by an iBug's post.Thanks! ` 
