@@ -4,7 +4,6 @@ layout: single
 category: coding
 header:
   image: /assets/images/thoughts.jpg
-  teaser: /assets/images/thoughts.jpg
 author_profile: true
 toc: true
 ---
