@@ -1,6 +1,6 @@
 ---
 title: "TurboRocket"
-excerpt: "An undergraduate in USTC"
+excerpt: "Speak silently, chasing elegance"
 layout: splash
 permalink: /
 classes:
