@@ -35,6 +35,7 @@ toc: true
 即可。
 
 3.2.其他的git命令：
+
 ` git init                    #把当前目录变成git可以管理的仓库`
 
 ` git add readme.txt          #添加一个文件，也可以添加文件夹`
