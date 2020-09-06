@@ -13,7 +13,7 @@ header:
     - label: "<i class='fas fa-book'></i> Blog"
       url: "/categories/blog/"
     - label: "<i class='fas fa-book-open'></i> Notion"
-      url: "https://www.notion.so/bochengli/e67d50d074754a28b3cc905f0d078338?v=96949b3285c241479be8ac666f1dcf59"
+      url: "https://www.notion.so/bochengli/TurboRocket-s-Personal-Notion-Space-cee2c62aff584b298ae7088706c3d28e"
   show_overlay_excerpt: true
 feature_row:
   - image_path: assets/images/weather.jpg
@@ -45,4 +45,5 @@ feature_row:
 ## Related Links
 
 * [TurboRocket's Friends](https://bc-li.github.io/friends/)
+* [My Notion Space](https://www.notion.so/bochengli/TurboRocket-s-Personal-Notion-Space-cee2c62aff584b298ae7088706c3d28e) containing some movies, games, books etc.
 <script>document.getElementById('page-title').insertAdjacentHTML('beforebegin', '<img src="/assets/images/avatar.jpg" alt="TurboRocket" class="avatar" itemprop="image" />');</script>
