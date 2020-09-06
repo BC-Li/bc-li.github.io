@@ -3,7 +3,7 @@
 
 This is my personal page using Jekyll theme "minimal mistakes" 
 
-Check here: [bc-li.github.io](bc-li.github.io) (ﾉﾟ▽ﾟ)ﾉ
+Check here: [bc-li.github.io](https://bc-li.github.io) (ﾉﾟ▽ﾟ)ﾉ
 
 ## Special thanks
-Thanks @Colanora and @iBug for the help!
+Thanks [@Colanora](https://github.com/Colanora), [@iBug](https://github.com/iBug) and [@raptazure](https://github.com/raptazure) for the help!
