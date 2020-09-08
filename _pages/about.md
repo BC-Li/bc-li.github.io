@@ -43,7 +43,7 @@ In my spare time I spent sometime on music, books, movies and games.
 
 They somehow have become my remedies in my tough times. And I also have an opportunity to think about something I may never have a chance to.
 
-For more information about my favorites, you can check them [here](https://bc-li.github.io/relaxations).
+For more information about my favorites, you can check them at [TurboRocket's Personal Notion Space](https://www.notion.so/bochengli/TurboRocket-s-Personal-Notion-Space-cee2c62aff584b298ae7088706c3d28e).
 
 
 

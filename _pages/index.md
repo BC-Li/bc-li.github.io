@@ -44,6 +44,6 @@ feature_row:
 
 ## Related Links
 
-* [TurboRocket's Friends](https://bc-li.github.io/friends/)
-* [My Notion Space](https://www.notion.so/bochengli/TurboRocket-s-Personal-Notion-Space-cee2c62aff584b298ae7088706c3d28e) containing some movies, games, books etc.
+* See TurboRocket's friends [here](https://bc-li.github.io/friends/).
+* [My Notion space](https://www.notion.so/bochengli/TurboRocket-s-Personal-Notion-Space-cee2c62aff584b298ae7088706c3d28e), which shows some movies, music and books, etc. that I admire and love.
 <script>document.getElementById('page-title').insertAdjacentHTML('beforebegin', '<img src="/assets/images/avatar.jpg" alt="TurboRocket" class="avatar" itemprop="image" />');</script>
