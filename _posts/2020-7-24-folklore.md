@@ -1,7 +1,7 @@
 ---
 title: Folklore review
 layout: single
-category: coding
+category: blog
 header:
   overlay_image: /assets/images/folklore.jpg
 author_profile: true

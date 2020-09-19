@@ -1,7 +1,7 @@
 ---
 title: Matplotlib 3D Toolkit Note
 layout: single
-category: coding
+category: blog
 header:
   overlay_image: /assets/images/mat.jpg
 author_profile: true

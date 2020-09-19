@@ -1,7 +1,7 @@
 ---
 title: Customize your site built on jekyll theme "Minimal Mistakes" 
 layout: single
-category: coding
+category: blog
 header:
   overlay_image: /assets/images/2.jpg
 author_profile: true

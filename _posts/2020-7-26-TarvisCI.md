@@ -1,7 +1,7 @@
 ---
 title: Build your repo with Tarvis CI. 
 layout: single
-category: coding
+category: blog
 header:
   overlay_image: /assets/images/coding.jpg
 author_profile: true

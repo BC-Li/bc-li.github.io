@@ -1,11 +1,10 @@
 ---
 title: Meaning in life
 layout: single
-category: coding
+category: blog
 header:
   image: /assets/images/thoughts.jpg
 author_profile: true
-toc: true
 ---
 
 From Prof. Xiang Luo

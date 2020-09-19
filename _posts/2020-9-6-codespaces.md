@@ -1,7 +1,7 @@
 ---
 title: I start to use Codespaces. It's fantastic~
 layout: single
-category: coding
+category: blog
 header:
   overlay_image: /assets/images/github.png
 author_profile: true
