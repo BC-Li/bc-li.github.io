@@ -55,11 +55,11 @@ Windows 平台使用点击 StartCiteSpace_Windows.bat 。
 
 ### 数据收集
 目前我操作过的平台有： WOS、知网。
-#### 知网平台：
+#### 知网平台
 进入知网搜索所需的关键词：![image-20200620221648158](/assets/images/citespace/image-20200620221648158.png)![image-20200620221825110](/assets/images/citespace/image-20200620221825110.png)
 下载好以 TXT 格式结尾的文件将其放进上面4个文件夹中的“input”文件夹。并将文件更名为“download_**n**.txt”格式。其中**n**=1,2,3....
 
-### WOS 平台
+#### WOS 平台
 
 ![image-20200620222636511](/assets/images/citespace/image-20200620222636511.png)
 在精炼检索结果之后进行导出。
