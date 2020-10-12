@@ -6,7 +6,7 @@ header:
   overlay_image: /assets/images/2.jpg
 author_profile: true
 ---
-This is the proof by[ **Namita Tiwari**](https://namitatiwari.org/author/scholornamita/). Thanks!!!
+This is the proof by [**Namita Tiwari**](https://namitatiwari.org/author/scholornamita/). Thanks!!!
 
 **Theorem: Prove that every tree T has either one or two centers.**
 
