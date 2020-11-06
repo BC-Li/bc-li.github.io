@@ -33,7 +33,8 @@ Ubuntu 对于 NVIDIA 显卡驱动的支持程度差得超乎我的想象，所�
 
 * 多 **Google** ，百度 / CSDN 能用，但挺差劲的。
 
- ## 关于 Python API 的调用
+
+## 关于 Python API 的调用
 * Python 3 instead of Python 2
 
 * error: no module named openpose: if there're 2 versions of python installed in your computer, keep in mind that openpose selects the latest version of them, normally python 3. So all the dependencies should be installed via **pip3**.
