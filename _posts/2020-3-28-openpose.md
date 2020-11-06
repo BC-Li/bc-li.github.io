@@ -15,8 +15,10 @@ Ubuntu 对于 NVIDIA 显卡驱动的支持程度差得超乎我的想象，所�
 
 * CMake 版本不要按这个来，否则会出现报错：NOTFOUNDCUDA_cublas_device_LIBRARY。
    [解决方案]( https://blog.csdn.net/DumpDoctorWang/article/details/89644762)
-  如果你安装了旧版的 CMake，那就直接删掉旧的重装一下就可以了，软连接之后 CMake - gui就能进入 gui 界面，不要安装 CMake-QT-gui ，那个是旧版的。
+  如果你安装了旧版的 CMake，那就直接删掉旧的重装一下就可以了，软连接之后 CMake - gui 就能进入 gui 界面，不要安装 CMake-QT-gui ，那个是旧版的。
 
+   > 软连接 CMake :https://m.linuxidc.com/Linux/2018-09/154165.htm
+  
 * CUDA9 最多支持到 Ubuntu 16 ，没有 Ubuntu 1804 的 deb 包 / Run File
  解决方案：实测 CUDA 10 也可以正常跑，不过，跑别的项目可能会崩，照我来讲，我可能会选择再次重装系统。  （我的配置是 i7 - 9750H + GTX 1650 )
 
@@ -30,3 +32,14 @@ Ubuntu 对于 NVIDIA 显卡驱动的支持程度差得超乎我的想象，所�
 * 复制粘贴类似环境变量 EXPORT 的时候，看准了里面要填写你自己的路径，复制别人的路径没用...
 
 * 多 **Google** ，百度 / CSDN 能用，但挺差劲的。
+
+ ## 关于 Python API 的调用
+* Python 3 instead of Python 2
+
+* error: no module named openpose: if there're 2 versions of python installed in your computer, keep in mind that openpose selects the latest version of them, normally python 3. So all the dependencies should be installed via **pip3**.
+
+* after successfully installed all the dependencies maybe you should follow [this](https://github.com/CMU-Perceptual-Computing-Lab/openpose/issues/1027#issuecomment-455127043) to run your python demo. I cloned and built the latest version of openpose and after following that instruction it worked well.
+
+  > Don't forget to run command `sudo make install` in  folder `/build/python/`.
+ 
+
