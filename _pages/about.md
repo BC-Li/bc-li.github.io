@@ -52,3 +52,6 @@ For more information about my favorites, you can check them at [TurboRocket's Pe
 
 > *NieR: Automata* is a 2017 action role-playing video game developed by Platinum Games and published by Square Enix. It is a sequel to the 2010 video game *NieR*, itself a spin-off and sequel of the *Drakengard* series.
 
+## At the end of the page...
+
+> I have no time to hate, to confuse, to be in rage, to frustrate or something else because there's so many wonderful views, so many beautiful souls for me to explore, to encounter and to love. 
