@@ -54,4 +54,5 @@ For more information about my favorites, you can check them at [TurboRocket's Pe
 
 ## At the end of the page...
 
-> I have no time to hate, to confuse, to be in rage, to frustrate or something else because there's so many wonderful views, so many beautiful souls for me to explore, to encounter and to love. 
+> I have no time to hate, to confuse, to be in rage, to frustrate or something else...  
+> because there's so many wonderful views, so many beautiful souls for me to explore, to encounter and to love. 
