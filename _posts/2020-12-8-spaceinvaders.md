@@ -11,7 +11,7 @@ Space Invaders on FPGA is a project migrated from this [repo](https://github.com
 
 # Modules
 
-Main design is shown in annotations.
+Main design is shown in annotations ^ ^
 
 ## spaceship
 
