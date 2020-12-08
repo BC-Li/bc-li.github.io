@@ -1,5 +1,5 @@
 ---
-title: "Space Invaders" on FPGA: How it's built and how it functions
+title: "Space Invaders" on FPGA
 layout: single
 category: blog
 header:
