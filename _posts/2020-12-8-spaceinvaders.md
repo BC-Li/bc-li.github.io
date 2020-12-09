@@ -1,5 +1,5 @@
 ---
-title: "Space Invaders" on FPGA
+title: Space Invaders on FPGA
 layout: single
 category: blog
 header:
@@ -7,7 +7,7 @@ header:
 author_profile: true
 toc: true
 ---
-Space Invaders on FPGA is a project migrated from this [repo](https://github.com/nikkatsa7/SpaceInvadersFpgaGame). This article aims at explaining how the project is built and some logic behind it.
+This article aims at explaining how the project is built and some logic behind it.
 
 # Modules
 
