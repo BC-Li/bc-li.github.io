@@ -26,12 +26,15 @@ I‘m an undergraduate student, major in [Computer Science](https://cs.ustc.edu.
   
 
 ## Personal Preferences and Skills Regarding to Technique
-* Programming Languages: C, Python
+* Programming Languages: C, Python, Veri~~bug~~log
 * Version Control: Git
 * IDE: PyCharm, Visual Studio 2017, CLion
-* Editor: Visual Studio Code
-* System Administration: Linux ( Ubuntu 18.04 ), Windows 10 with WSL2
-* Others (May not be related to CS ): 
+* Editor: Visual Studio Code ( mainly )
+* System Administration: 
+  * Linux ( Ubuntu 18.04 ) 
+  * Windows 10 with WSL2
+* Others:
+  * LaTeX 
   * CiteSpace
   * Origin Pro
   * Wolfram Mathmatica ( still new to it )
