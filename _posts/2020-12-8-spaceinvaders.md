@@ -7,6 +7,9 @@ header:
 author_profile: true
 toc: true
 ---
+
+填坑填坑！
+
 ## Alien.v 外星人游戏逻辑
 
 ```verilog
@@ -118,7 +121,7 @@ endmodule
 
 ## Debounce_t.v 信号去毛刺
 
-```Verilog
+```verilog
 module debounce(input reset, clock, noisy, output reg clean); 
 
    reg [19:0] count;
@@ -162,7 +165,7 @@ endmodule
 
 ##  VGA.v 输出H-SYNC,V-SYNC以及用于Block Memory的内存地址
 
-```Verilog
+```verilog
 module VGA(
     input clk;
     input rst;
@@ -356,7 +359,7 @@ endmodule
 
 ## 子弹逻辑
 
-```Verilog
+```verilog
 module bullet(clk,rst,startX,startY,
         bulletX,bulletY,
         bulletX1,bulletY1,  
