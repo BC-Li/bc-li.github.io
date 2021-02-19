@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html><head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Verilog 笔记 - Forest Zone</title><meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<meta property="og:image" content=""/>
+	<meta property="og:title" content="Verilog 笔记" />
+<meta property="og:description" content="​	这学期开了模电，所以要用到 Veribug 语言啦。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://bc-li.github.io/posts/2020-10-20-verilog/" />
+<meta property="article:published_time" content="2020-10-20T00:00:00+00:00" />
+<meta property="article:modified_time" content="2020-10-20T00:00:00+00:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Verilog 笔记"/>
+<meta name="twitter:description" content="​	这学期开了模电，所以要用到 Veribug 语言啦。"/>
+<script src="https://bc-li.github.io/js/feather.min.js"></script>
+	
+	<link href="https://bc-li.github.io/css/fonts.css" rel="stylesheet">
+	
+	<link rel="stylesheet" type="text/css" media="screen" href="https://bc-li.github.io/css/main.css" />
+	
+</head>
+<body>
+        <div class="content"><header>
+	<div class="main">
+		<a href="https://bc-li.github.io/">Forest Zone</a>
+	</div>
+	<nav>
+		
+		<a href="/">Home</a>
+		
+		<a href="/posts">All posts</a>
+		
+		<a href="/about">About</a>
+		
+		<a href="/tags">Tags</a>
+		
+	</nav>
+</header>
+
+<main>
+	<article>
+		<div class="title">
+			<h1 class="title">Verilog 笔记</h1>
+			<div class="meta">Posted on Oct 20, 2020</div>
+		</div>
+		
+
+		<section class="body">
+			<h2 id="上手一个比较舒服的编辑器">上手一个比较舒服的编辑器</h2>
+<p>作为一个用惯了 VS Code 的童鞋来说，Vivado 自带的编辑器实在是太丑了！于是打算换到熟悉一点的环境。看了一下hin简单，稍稍配置一下就可以啦。
+上手之后主要是</p>
+<ul>
+<li>更换 Vivado 的默认编辑器</li>
+<li>给 VS Code 用上 Vivado 的代码补全</li>
+</ul>
+<p>具体过程省略100字 2333</p>
+<p>实际重要的是编程，不是嘛。</p>
+<h2 id="veribuglog-基本语法">Veri<del>bug</del>log 基本语法</h2>
+<h3 id="一个模块长啥样呢">一个模块长啥样呢</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#66d9ef">module</span> test(	<span style="color:#75715e">//	put your module name here
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">input</span> in,	<span style="color:#75715e">//	claim input signal
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">output</span> out 	<span style="color:#75715e">//	claim output signal
+</span><span style="color:#75715e"></span> 	<span style="color:#66d9ef">output</span> out_n   
+);
+    <span style="color:#75715e">//	if needed you can claim your internal variables here
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">/******	below are the logic descriptions *****/</span>
+    <span style="color:#66d9ef">assign</span> out <span style="color:#f92672">=</span> in;
+    <span style="color:#66d9ef">assign</span> out_n <span style="color:#f92672">=</span> <span style="color:#f92672">~</span>in;
+    <span style="color:#75715e">/****************** end **********************/</span>
+<span style="color:#66d9ef">endmodule</span>
+</code></pre></div><p>这个电路长介个样子：</p>
+<p>​																	图.jpg</p>
+<p>好吧我承认我太懒了ww</p>
+<h3 id="半加器的-verilog-代码">半加器的 Verilog 代码</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#66d9ef">module</span> add(
+	<span style="color:#66d9ef">input</span> a,b,
+    <span style="color:#66d9ef">output</span> sum,cout
+);
+    <span style="color:#66d9ef">assign</span> {cout,sum} <span style="color:#f92672">=</span> a<span style="color:#f92672">+</span>b;	
+<span style="color:#66d9ef">endmodule</span>
+</code></pre></div><p>这里的 { } 是位拼接符号。将两个单 bit 符号拼接成了一个 2bit 符号，用于接收相加的结果。</p>
+<p>下面这段代码与上面的代码等价。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#66d9ef">module</span> add(
+	<span style="color:#66d9ef">input</span> a,b,
+	<span style="color:#66d9ef">output</span> sum,cout
+);
+	<span style="color:#66d9ef">assign</span> cout <span style="color:#f92672">=</span> a <span style="color:#f92672">&amp;</span> b;
+	<span style="color:#66d9ef">assign</span> sum <span style="color:#f92672">=</span> a <span style="color:#f92672">^</span> b;
+<span style="color:#66d9ef">endmodule</span>
+</code></pre></div><p>需要注意的是， Verilog 作为一个<strong>硬件描述</strong>语言，上面代码块中的 cout 和 sum 两条语句顺序交换并不会对电路本身产生任何影响。他们是位置无关的。</p>
+<h3 id="全加器的-verilog-代码">全加器的 Verilog 代码</h3>
+<p>这个要上图了qwq</p>
+<p><img src="/assets/images/fulladder.png" alt="fulladder"></p>
+<p>用上面做好的半加器来做一个全加器吧。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#66d9ef">module</span> full_add(
+	<span style="color:#66d9ef">input</span> a,b,cin,
+    <span style="color:#66d9ef">output</span> sum,cout
+);
+    <span style="color:#66d9ef">wire</span> s,carry1,carry2;
+    add add_inst1(
+        .a(a ),
+        .b(b ),
+        .sum(s ),
+        .cout(carry1)
+    );
+    add add_inst2(	<span style="color:#75715e">//	claimed an half adder here. add_inst2 is customed name of the adder, you can name it anything.
+</span><span style="color:#75715e"></span>        .a(s ),
+        .b(cin ),
+        .sum(sum ),
+        .cout(carry2)
+    );
+    <span style="color:#66d9ef">assign</span> cout <span style="color:#f92672">=</span> carry1<span style="color:#f92672">|</span>carry2;
+<span style="color:#66d9ef">endmodule</span>
+</code></pre></div><h3 id="二选一选择器的-verilog-代码">二选一选择器的 Verilog 代码</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#66d9ef">module</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>mux(
+    <span style="color:#66d9ef">input</span> a_1,a_2,s,
+    <span style="color:#66d9ef">output</span> aout
+);
+    <span style="color:#66d9ef">assign</span> aout <span style="color:#f92672">=</span> (<span style="color:#f92672">~</span>s <span style="color:#f92672">&amp;</span> a_1)<span style="color:#f92672">|</span>(s <span style="color:#f92672">&amp;</span> a_2);
+<span style="color:#66d9ef">endmodule</span>
+</code></pre></div><h3 id="四选一选择器的-verilog-代码">四选一选择器的 Verilog 代码</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#66d9ef">module</span> <span style="color:#ae81ff">4</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>mux(
+	<span style="color:#66d9ef">input</span> a_1,a_2,a_3,a_4,s_1,s_2,
+    <span style="color:#66d9ef">output</span> aout
+);
+    <span style="color:#66d9ef">wire</span> carry_1,carry_2;
+    <span style="color:#ae81ff">2</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>mux selector_inst1(
+        .a_1(carry_1 ),
+        .a_2(carry_2 ),
+        .s(s_1 ),
+        .aout(aout )
+    );
+    <span style="color:#ae81ff">2</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>mux selector_inst2(
+        .a_1(a_1 ),
+        .a_2(a_2 ),
+        .s(s_2 ),
+        .aout(carry_1 )
+    );
+    <span style="color:#ae81ff">2</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>mux selector_inst3(
+        .a_1(a_3 ),
+        .a_2(a_4 ),
+        .s(s_2 ),
+        .aout(carry_2 )
+    );
+<span style="color:#66d9ef">endmodule</span>
+</code></pre></div><h2 id="时序电路的-verilog-描述">时序电路的 Verilog 描述</h2>
+<p>时序电路是比较复杂的一种电路。在这里我们将仍然利用示例程序来辅助理解 Verilog 语言。</p>
+<h3 id="d-触发器的-verilog-代码">D 触发器的 Verilog 代码</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#66d9ef">module</span> d_ff(
+	<span style="color:#66d9ef">input</span> clk,d,
+    <span style="color:#66d9ef">output</span> <span style="color:#66d9ef">reg</span> q
+);
+    <span style="color:#66d9ef">always</span>@(<span style="color:#66d9ef">posedge</span> clk)
+        q<span style="color:#f92672">&lt;=</span>d;
+<span style="color:#66d9ef">endmodule</span>
+</code></pre></div><blockquote>
+<p>reg、always 和 posedge 是 Verilog 中的关键字，其中 <strong>always 表示其后是个过程语句块</strong>。reg 与前面学习到的 wire 关键字类似，是一种数据类型，称为寄存器类型。对于初学者，可以简单的理解为凡是在 always 语句块内被赋值 的信号，都应定义为 reg 类型。</p>
+<p>posedge 为事件控制关键字，例如代码中的 “posedge clk”表示“clk 信号的上升沿”这一事件。另外，在时序逻辑电路中，信号赋值采用“&lt;=”（非阻塞赋值）,而不是“=”（阻塞赋值），这两种赋值方式的区别暂不介绍，读者只需记住一个原则：组合逻辑采用阻塞赋值“=”， 时序逻辑采用非阻塞赋值“&lt;=”。</p>
+</blockquote>
+<blockquote>
+<p>Tip: There&rsquo;s a tutorial on &ldquo;nonblocking assignment&rdquo; and &ldquo;blocking assignment&rdquo;. Check it <a href="https://blog.csdn.net/weixin_42369496/article/details/92643285">here</a>.</p>
+</blockquote>
+<h3 id="增加-复位信号-的d触发器">增加 <strong>复位信号</strong> 的D触发器</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#66d9ef">module</span> d_ff_r(
+	<span style="color:#66d9ef">input</span> clk,rst_n,d,
+    <span style="color:#66d9ef">output</span> <span style="color:#66d9ef">reg</span> q
+);
+    <span style="color:#66d9ef">always</span>@(<span style="color:#66d9ef">posedge</span> clk)
+        <span style="color:#66d9ef">begin</span>
+            <span style="color:#66d9ef">if</span>(rst_n<span style="color:#f92672">==</span><span style="color:#ae81ff">0</span>)
+                q<span style="color:#f92672">&lt;=</span><span style="color:#ae81ff">1</span><span style="color:#ae81ff">&#39;b0</span>;
+            <span style="color:#66d9ef">else</span>
+                q<span style="color:#f92672">&lt;=</span>d;
+        <span style="color:#66d9ef">end</span>
+<span style="color:#66d9ef">endmodule</span>
+</code></pre></div><blockquote>
+<p>这段代码中又新出现了 begin、end、if、else 四个关键字，其中 begin/end 必须成对出现，用于表征语句块的作用区间，如上述例子中，begin/end 之间的 代码都属于同一 always 块。if、else 用于条件判断，在很多其它语言中都有出现，其含义也都一样，此处不再赘述。</p>
+<p>“1’b0”是一种数据表示方式，一般格式为“数据位宽’进制数值”，本例中表示这是一个 1bit 的数据，用二进制表示， 其值为 0。</p>
+</blockquote>
+<p>上述是同步复位信号。相对应的，我们还有一种<strong>异步复位方式</strong>。即不论时钟和D信号是什么，一旦复位信号有效，输出端Q立刻变为确定的复位值（一般是低电平）。</p>
+<h3 id="异步复位的-d-触发器">异步复位的 D 触发器</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#66d9ef">module</span> d_ff_r(
+	<span style="color:#66d9ef">input</span> clk,rst_n,d,
+	<span style="color:#66d9ef">output</span> <span style="color:#66d9ef">reg</span> q
+);
+	<span style="color:#66d9ef">always</span>@(<span style="color:#66d9ef">posedge</span> clk <span style="color:#66d9ef">or</span> <span style="color:#66d9ef">negedge</span> rst_n)
+		<span style="color:#66d9ef">begin</span>
+			<span style="color:#66d9ef">if</span>(rst_n<span style="color:#f92672">==</span><span style="color:#ae81ff">0</span>)
+				q <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">1</span><span style="color:#960050;background-color:#1e0010">’</span>b0;
+			<span style="color:#66d9ef">else</span>
+				q <span style="color:#f92672">&lt;=</span> d;
+		<span style="color:#66d9ef">end</span>
+<span style="color:#66d9ef">endmodule</span>
+</code></pre></div><blockquote>
+<p>negedge 是与 posedge 同类型的一个关键字，只不过它表示信号的下降沿事件。关键字“or”表示“或”操作。</p>
+</blockquote>
+<p>可以看出，异步复位与同步复位最大的区别在于，复位信号与时钟信号同时出现在了 always 语句的敏感变量列表中，在没有时钟上升沿的情况下，复位信号也能够起作用。因为复位操作不再完全与时钟信号的上升沿同步，因此称为异步复位。</p>
+<h3 id="寄存器">寄存器</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#66d9ef">module</span> REG4( <span style="color:#75715e">// a register that can store 4-bit data
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">input</span> CLK,RST_N,
+	<span style="color:#66d9ef">input</span> [<span style="color:#ae81ff">3</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] D_IN,
+	<span style="color:#66d9ef">output</span> <span style="color:#66d9ef">reg</span> [<span style="color:#ae81ff">3</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] q
+);
+	<span style="color:#66d9ef">always</span>@(<span style="color:#66d9ef">posedge</span> CLK)
+	<span style="color:#66d9ef">begin</span>
+		<span style="color:#66d9ef">if</span>(RST_N<span style="color:#f92672">==</span><span style="color:#ae81ff">0</span>)
+			D_OUT <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">4</span><span style="color:#960050;background-color:#1e0010">’</span>b0;
+		<span style="color:#66d9ef">else</span>
+			D_OUT <span style="color:#f92672">&lt;=</span> D_IN;
+	<span style="color:#66d9ef">end</span>
+<span style="color:#66d9ef">endmodule</span>
+</code></pre></div><blockquote>
+<p>对于多 bit 位宽的信号，在 Verilog 中使用“[x:y]”这种方式声明，例如上述代码中，D_OUT 就是一个 4bit 的信号，它包含了 D_OUT[0]、D_OUT[1]、 D_OUT[2]、D_OUT[3]四个单 bit 信号。</p>
+</blockquote>
+<h3 id="整个计数器">整个计数器！</h3>
+<p>利用 4bit 寄存器，我们可以搭建一个 4bit 的计数器。该计数器在 0~15 之间循环计数，复位时输出值为 0。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#66d9ef">module</span> REG4(
+	<span style="color:#66d9ef">input</span> CLK,RST_N,
+	<span style="color:#66d9ef">output</span> <span style="color:#66d9ef">reg</span> [<span style="color:#ae81ff">3</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] CNT
+);
+	<span style="color:#66d9ef">always</span>@(<span style="color:#66d9ef">posedge</span> CLK)
+		<span style="color:#66d9ef">begin</span>
+			<span style="color:#66d9ef">if</span>(RST_N<span style="color:#f92672">==</span><span style="color:#ae81ff">0</span>)
+				CNT <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">4</span><span style="color:#960050;background-color:#1e0010">’</span>b0;
+			<span style="color:#66d9ef">else</span>
+				CNT <span style="color:#f92672">&lt;=</span> CNT <span style="color:#f92672">+</span> <span style="color:#ae81ff">4</span><span style="color:#960050;background-color:#1e0010">’</span>b1;
+		<span style="color:#66d9ef">end</span>
+<span style="color:#66d9ef">endmodule</span>
+</code></pre></div><h3 id="附录">附录</h3>
+<h4 id="常数表示">常数表示</h4>
+<p>从 CSDN 搬过来一个！</p>
+<blockquote>
+<p>请参考 verilog 数据常量
+数字表达式：&lt;位宽&gt;&lt;进制&gt;&lt;数字&gt;
+’b:二进制    //eg.4&rsquo;b1110  表示4位二进制数1110
+‘h:十六进制 //eg  8&rsquo;hef、4’ha等
+&rsquo;d:十进制    //eg   2&rsquo;d3、4‘d15(不能写16，4位宽最大15)等</p>
+<p>所以10’d0表示10位宽的数值0，0000000000
+加入10‘d15,则表示十进制15,    0000001111</p>
+</blockquote>
+<h4 id="有符号数和无符号数的区别">有符号数和无符号数的区别</h4>
+<p>Originated from <a href="https://blog.csdn.net/u014485485/article/details/79962316">here</a>.</p>
+<h5 id="无符号数用补码存储">无符号数：用补码存储</h5>
+<blockquote>
+<ol>
+<li>高位溢出赋给一个位宽不够的数：高位截断，保留低位</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#66d9ef">wire</span> [<span style="color:#ae81ff">3</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] a <span style="color:#f92672">=</span> <span style="color:#ae81ff">4</span><span style="color:#ae81ff">&#39;b1111</span>; <span style="color:#75715e">// a = 15
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">wire</span> [<span style="color:#ae81ff">3</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] b <span style="color:#f92672">=</span> <span style="color:#ae81ff">4</span><span style="color:#ae81ff">&#39;b0010</span>; <span style="color:#75715e">// b = 2
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">wire</span> [<span style="color:#ae81ff">3</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] c;
+
+<span style="color:#66d9ef">assign</span> c <span style="color:#f92672">=</span> a <span style="color:#f92672">+</span> b;		<span style="color:#75715e">//c = 17 = 10001, while c is a 4-bit wire variable, so 10001 will be stored as &#34;0001&#34;.
+</span></code></pre></div><ol start="2">
+<li>高位溢出赋给一个位宽足够的数：留下符号位，多位补0</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#66d9ef">wire</span> [<span style="color:#ae81ff">3</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] a <span style="color:#f92672">=</span> <span style="color:#ae81ff">4</span><span style="color:#ae81ff">&#39;b1111</span>; <span style="color:#75715e">// a = 15
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">wire</span> [<span style="color:#ae81ff">3</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] b <span style="color:#f92672">=</span> <span style="color:#ae81ff">4</span><span style="color:#ae81ff">&#39;b0010</span>; <span style="color:#75715e">// b = 2
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">wire</span> [<span style="color:#ae81ff">4</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] c;
+
+<span style="color:#66d9ef">assign</span> c <span style="color:#f92672">=</span> a <span style="color:#f92672">+</span> b;		<span style="color:#75715e">//c = 17 = 10001, while c is a 5-bit wire variable, so 10001 will be stored as &#34;10001&#34;.
+</span></code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#66d9ef">wire</span> [<span style="color:#ae81ff">3</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] a <span style="color:#f92672">=</span> <span style="color:#ae81ff">4</span><span style="color:#ae81ff">&#39;b1111</span>; <span style="color:#75715e">// a = 15
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">wire</span> [<span style="color:#ae81ff">3</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] b <span style="color:#f92672">=</span> <span style="color:#ae81ff">4</span><span style="color:#ae81ff">&#39;b0010</span>; <span style="color:#75715e">// b = 2
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">wire</span> [<span style="color:#ae81ff">5</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] c;
+
+<span style="color:#66d9ef">assign</span> c <span style="color:#f92672">=</span> a <span style="color:#f92672">+</span> b;		<span style="color:#75715e">//c = 17 = 10001, while c is a 6-bit wire variable, so 10001 will be stored as &#34;010001&#34;.
+</span></code></pre></div><ol start="3">
+<li>对中间结果移位：先赋值再移位</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#66d9ef">wire</span> [<span style="color:#ae81ff">3</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] a <span style="color:#f92672">=</span> <span style="color:#ae81ff">4</span><span style="color:#ae81ff">&#39;b1111</span>; <span style="color:#75715e">// a = 15
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">wire</span> [<span style="color:#ae81ff">3</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] b <span style="color:#f92672">=</span> <span style="color:#ae81ff">4</span><span style="color:#ae81ff">&#39;b0010</span>; <span style="color:#75715e">// b = 2
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">wire</span> [<span style="color:#ae81ff">3</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] c;
+
+<span style="color:#66d9ef">assign</span> c <span style="color:#f92672">=</span>(( a <span style="color:#f92672">+</span> b) <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">1</span>);	<span style="color:#75715e">//c = 17 = 10001, while c is a 3-bit wire variable, so 10001 will be stored as &#34;0001&#34;. After moving digits the final result will be &#34;0000&#34;.
+</span></code></pre></div><ul>
+<li>算数右移和逻辑右移待补充&hellip;  (refer to <a href="https://blog.csdn.net/qq_41634276/article/details/80414488">this post</a>?</li>
+</ul>
+</blockquote>
+<h5 id="有符号数">有符号数</h5>
+<blockquote>
+<ol>
+<li>正常运算</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#66d9ef">wire</span> <span style="color:#66d9ef">signed</span> [<span style="color:#ae81ff">3</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] a <span style="color:#f92672">=</span> <span style="color:#ae81ff">4</span><span style="color:#ae81ff">&#39;b1111</span>; <span style="color:#75715e">// a = -1
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">wire</span> <span style="color:#66d9ef">signed</span> [<span style="color:#ae81ff">3</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] b <span style="color:#f92672">=</span> <span style="color:#ae81ff">4</span><span style="color:#ae81ff">&#39;b0010</span>; <span style="color:#75715e">// b = 2
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">wire</span> <span style="color:#66d9ef">signed</span> [<span style="color:#ae81ff">3</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] c;
+
+<span style="color:#66d9ef">assign</span> c <span style="color:#f92672">=</span> a <span style="color:#f92672">+</span> b;			   <span style="color:#75715e">// c = 0001
+</span></code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#66d9ef">wire</span> <span style="color:#66d9ef">signed</span> [<span style="color:#ae81ff">3</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] a <span style="color:#f92672">=</span> <span style="color:#ae81ff">4</span><span style="color:#ae81ff">&#39;b1110</span>; <span style="color:#75715e">// a = -2
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">wire</span> <span style="color:#66d9ef">signed</span> [<span style="color:#ae81ff">3</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] b <span style="color:#f92672">=</span> <span style="color:#ae81ff">4</span><span style="color:#ae81ff">&#39;b0001</span>; <span style="color:#75715e">// b = 1
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">wire</span> <span style="color:#66d9ef">signed</span> [<span style="color:#ae81ff">3</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] c;
+
+<span style="color:#66d9ef">assign</span> c <span style="color:#f92672">=</span> a <span style="color:#f92672">+</span> b;			   <span style="color:#75715e">// c = 1111
+</span></code></pre></div><ol start="2">
+<li>赋值给位宽不够的数: 舍弃高位</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#66d9ef">wire</span> <span style="color:#66d9ef">signed</span> [<span style="color:#ae81ff">3</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] a<span style="color:#f92672">=</span><span style="color:#ae81ff">4</span><span style="color:#ae81ff">&#39;b0111</span>;<span style="color:#75715e">//7
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">wire</span> <span style="color:#66d9ef">signed</span> [<span style="color:#ae81ff">3</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] b<span style="color:#f92672">=</span><span style="color:#ae81ff">4</span><span style="color:#ae81ff">&#39;b0010</span>;<span style="color:#75715e">//2
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">wire</span> <span style="color:#66d9ef">signed</span> [<span style="color:#ae81ff">3</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] c;
+
+<span style="color:#66d9ef">assign</span> c <span style="color:#f92672">=</span>a <span style="color:#f92672">+</span> b; <span style="color:#75715e">//9=1001,displayed fine
+</span></code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#66d9ef">wire</span> <span style="color:#66d9ef">signed</span> [<span style="color:#ae81ff">3</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] a<span style="color:#f92672">=</span><span style="color:#ae81ff">4</span><span style="color:#ae81ff">&#39;b1001</span>;<span style="color:#75715e">//-7
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">wire</span> <span style="color:#66d9ef">signed</span> [<span style="color:#ae81ff">3</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] b<span style="color:#f92672">=</span><span style="color:#ae81ff">4</span><span style="color:#ae81ff">&#39;b1110</span>;<span style="color:#75715e">//-2
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">wire</span> <span style="color:#66d9ef">signed</span> [<span style="color:#ae81ff">3</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] c;
+
+<span style="color:#66d9ef">assign</span> c <span style="color:#f92672">=</span>a <span style="color:#f92672">+</span> b;<span style="color:#75715e">//-9=10111,displayed &#34;0111&#34;
+</span></code></pre></div><ol start="3">
+<li>位宽足够：补0</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#66d9ef">wire</span> <span style="color:#66d9ef">signed</span> [<span style="color:#ae81ff">3</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] a<span style="color:#f92672">=</span><span style="color:#ae81ff">4</span><span style="color:#ae81ff">&#39;b0111</span>;
+<span style="color:#66d9ef">wire</span> <span style="color:#66d9ef">signed</span> [<span style="color:#ae81ff">3</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] b<span style="color:#f92672">=</span><span style="color:#ae81ff">4</span><span style="color:#ae81ff">&#39;b0010</span>;
+<span style="color:#66d9ef">wire</span> <span style="color:#66d9ef">signed</span> [<span style="color:#ae81ff">4</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] c;
+
+<span style="color:#66d9ef">assign</span> c <span style="color:#f92672">=</span>a <span style="color:#f92672">+</span> b;<span style="color:#75715e">//9=1001.displayed &#34;01001&#34;
+</span></code></pre></div><ol start="4">
+<li>给中间结果移位</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#66d9ef">wire</span> <span style="color:#66d9ef">signed</span> [<span style="color:#ae81ff">3</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] a<span style="color:#f92672">=</span><span style="color:#ae81ff">4</span><span style="color:#ae81ff">&#39;b1001</span>;<span style="color:#75715e">//-7
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">wire</span> <span style="color:#66d9ef">signed</span> [<span style="color:#ae81ff">3</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] b<span style="color:#f92672">=</span><span style="color:#ae81ff">4</span><span style="color:#ae81ff">&#39;b1110</span>;<span style="color:#75715e">//-2
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">wire</span> <span style="color:#66d9ef">signed</span> [<span style="color:#ae81ff">3</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] c;
+
+<span style="color:#66d9ef">assign</span> c <span style="color:#f92672">=</span>(( a <span style="color:#f92672">+</span> b ) <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">1</span>); <span style="color:#75715e">//-9=10111,displayed 0011
+</span></code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#66d9ef">wire</span> <span style="color:#66d9ef">signed</span> [<span style="color:#ae81ff">3</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] a<span style="color:#f92672">=</span><span style="color:#ae81ff">4</span><span style="color:#ae81ff">&#39;b1001</span>;
+<span style="color:#66d9ef">wire</span> <span style="color:#66d9ef">signed</span> [<span style="color:#ae81ff">3</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] b<span style="color:#f92672">=</span><span style="color:#ae81ff">4</span><span style="color:#ae81ff">&#39;b1110</span>;
+<span style="color:#66d9ef">wire</span> <span style="color:#66d9ef">signed</span> [<span style="color:#ae81ff">5</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] c;
+
+<span style="color:#66d9ef">assign</span> c <span style="color:#f92672">=</span> ((a <span style="color:#f92672">+</span> b)<span style="color:#f92672">&gt;&gt;</span><span style="color:#ae81ff">1</span>) ; <span style="color:#75715e">//-9 = 10111. &gt;&gt;1 : 01011 displayed 
+</span></code></pre></div><p><code>I'm a little bit confused about this.</code>Please refer to <a href="https://en.wikipedia.org/wiki/Sign_extension">sign extension</a> to know more~</p>
+</blockquote>
+
+		</section>
+
+		<div class="post-tags">
+			
+			
+			<nav class="nav tags">
+				<ul class="tags">
+					
+					<li><a href="/tags/coding">coding</a></li>
+					
+				</ul>
+			</nav>
+			
+			
+		</div>
+	</article>
+</main>
+<footer>
+<hr><a class="soc" href="https://github.com/BC-Li" title="GitHub"><i data-feather="github"></i></a>|<a class="soc" href="https://twitter.com/turborocket123/" title="Twitter"><i data-feather="twitter"></i></a>|⚡️
+	2021  TurboRocket |  <a href="https://github.com/athul/archie">Archie Theme</a> | Built with <a href="https://gohugo.io">Hugo</a>
+</footer>
+
+
+<script>
+      feather.replace()
+</script></div>
+    </body>
+</html>

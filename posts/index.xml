@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on Forest Zone</title>
+    <link>https://bc-li.github.io/posts/</link>
+    <description>Recent content in Posts on Forest Zone</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>TurboRocket</copyright>
+    <lastBuildDate>Fri, 19 Feb 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://bc-li.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Again from Jekyll to Hugo</title>
+      <link>https://bc-li.github.io/posts/jekylltohugo/</link>
+      <pubDate>Fri, 19 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://bc-li.github.io/posts/jekylltohugo/</guid>
+      <description>又双叒换了生成器，从 Hexo -&amp;gt; Jekyll -&amp;gt; Hugo
+最大的动力还是感觉这个主题比较简单好看，之前的稍微有点臃肿了，而且图片也放了比较多，头图在没CDN加速的时候太慢了加载简直灾难（也没上 CloudFlare
+之前的一些博文由于图片还没迁移过来，估计一段时间没法加载，还要再等一段
+还有的废话博文打算撤掉啦
+所以将来一段时间应该就是这样了，换来换去迁移博文的时间成本也蛮高的
+说实话半小时也不想浪费在“挑衣服”上面&amp;hellip;
+另外，等俺有钱了一定买个域名再来折腾orz</description>
+    </item>
+    
+    <item>
+      <title>Space Invaders on FPGA</title>
+      <link>https://bc-li.github.io/posts/2020-12-8-spaceinvaders/</link>
+      <pubDate>Tue, 08 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://bc-li.github.io/posts/2020-12-8-spaceinvaders/</guid>
+      <description>Alien.v 外星人游戏逻辑 module alien( input [23:0]aliennumber; // 外星人的数目  input clk,rst; // 时钟和复位信号 input bulletflying,startscreen,gameover,frontalive; // 依次为 子弹是否正在飞行，是否在开始界面，是否已经gg，前面两个外星人是不是还活着（第一排和第二排用，防止前面有外星人时就开火） input [9:0] startX; // 子弹开始时的横坐标  input [8:0] startY; // 子弹开始时的纵坐标  input [9:0] bulletX; // 子弹现在的横坐标  input [8:0] bulletY; // 子弹现在的纵坐标  input [9:0] width; // 外星人的图片宽度（用于伤害判定）  input [27:0] firefreq; // 开火频率  output reg [9:0]alienX; // 输出外星人的横纵坐标  output reg [8:0]alienY; output reg alienalive,hit,alienfire; // 输出外星人的生命状态，是否被击中，以及外星人开火信号 ); reg [23:0] counter; // 分频时钟  reg [27:0] firecounter; // 开火分频时钟  reg speed,direction; // speed 是移动的速度， direction 是控制左右  wire [10:0]aliencounter; // 外星人分频时钟  always@(posedge clk or posedge rst) // 时序逻辑  begin if(rst) // 复位状态均置零  begin firecounter &amp;lt;= 0; alienfire &amp;lt;= 0; end else begin if(alienalive &amp;amp;&amp;amp; ~frontalive &amp;amp;&amp;amp; ~startscreen &amp;amp;&amp;amp; ~gameover) begin // 如果活着，前方没有活外星人而且没在开始/结束页面的时候就定时开火  if(firecounter == firefreq) begin // 每隔一段时间开火  firecounter &amp;lt;= 0; alienfire &amp;lt;= 1; end else begin firecounter &amp;lt;= firecounter + 1&amp;#39;b1; alienfire &amp;lt;= 0; end end else begin // 其余时间不开火  firecounter &amp;lt;= 0; alienfire &amp;lt;= 0; end end end always@(posedge clk or posedge rst) // 伤害判定  begin if(rst) begin // 复位时复活外星人  alienalive &amp;lt;= 1&amp;#39;b1; hit &amp;lt;= 0; end else begin // 没复位的时候开始伤害判定  if(bulletflying &amp;amp;&amp;amp; alienalive &amp;amp;&amp;amp;(((bulletX &amp;gt;= alienX -2)&amp;amp;&amp;amp;(bulletX &amp;lt;= alienX + width + 2))&amp;amp;&amp;amp;(bulletY == alienY))) begin // 当子弹到alien图片的这个区域的时候启动伤害判定  alienalive &amp;lt;= 0; hit &amp;lt;= 1&amp;#39;b1; // alien 被打了  end else begin hit &amp;lt;= 0; // 其余时间没被打  end end end assign aliencounter = aliennumber; // 存储外星人数目  always@(posedge clk or posedge rst) begin if(rst) // 复位时重置外星人位置  begin alienX &amp;lt;= startX; end else if(counter &amp;gt;= (24&amp;#39;d1000_000)) // 用一个counter降频  begin speed &amp;lt;= 1&amp;#39;b1; counter &amp;lt;= 0; end else begin if(direction) // 向左还是向右看direction的值  begin counter &amp;lt;= counter + 6 - aliennumber ; // 外星人的移动速度随着场上alien数减少而增加  alienX &amp;lt;= startscreen?</description>
+    </item>
+    
+    <item>
+      <title>Verilog 笔记</title>
+      <link>https://bc-li.github.io/posts/2020-10-20-verilog/</link>
+      <pubDate>Tue, 20 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://bc-li.github.io/posts/2020-10-20-verilog/</guid>
+      <description>上手一个比较舒服的编辑器 作为一个用惯了 VS Code 的童鞋来说，Vivado 自带的编辑器实在是太丑了！于是打算换到熟悉一点的环境。看了一下hin简单，稍稍配置一下就可以啦。 上手之后主要是
+ 更换 Vivado 的默认编辑器 给 VS Code 用上 Vivado 的代码补全  具体过程省略100字 2333
+实际重要的是编程，不是嘛。
+Veribuglog 基本语法 一个模块长啥样呢 module test(	//	put your module name here  input in,	//	claim input signal  output out //	claim output signal  output out_n ); //	if needed you can claim your internal variables here  /******	below are the logic descriptions *****/ assign out = in; assign out_n = ~in; /****************** end **********************/ endmodule 这个电路长介个样子：</description>
+    </item>
+    
+    <item>
+      <title>CMakeList Usage and some must-handle Syntax</title>
+      <link>https://bc-li.github.io/posts/2020-10-15-cmakelist/</link>
+      <pubDate>Thu, 15 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://bc-li.github.io/posts/2020-10-15-cmakelist/</guid>
+      <description>One good tutorial about CMake is here. You can also take the official document as a reference.
+What is CMake?  CMake is a meta build system that uses scripts called CMakeLists to generate build files for a specific environment (for example, makefiles on Unix machines). When you create a new CMake project in CLion, a CMakeLists.txt file is automatically generated under the project root.
+ So when you want to get CMake running you are required to handle some basic CMakeList syntax, which I&amp;rsquo;ll show below.</description>
+    </item>
+    
+    <item>
+      <title>Centre of trees</title>
+      <link>https://bc-li.github.io/posts/2020-10-11-centers_of_tree-copy/</link>
+      <pubDate>Sun, 11 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://bc-li.github.io/posts/2020-10-11-centers_of_tree-copy/</guid>
+      <description>This is the proof by Namita Tiwari. Thanks!!!
+Theorem: Prove that every tree T has either one or two centers.
+Proof: We will use one observation that the maximum distance max d(v,w) from a given vertex v to any other vertex w occurs only when w is pendant vertex.
+Now, let T is a tree with n vertices (n&amp;gt;=2)
+⇒T must have atleast two pendant vertices.
+delete all pendant vertices from T, then resulting graph T’ is still a tree.</description>
+    </item>
+    
+    <item>
+      <title>Learn to use Docker</title>
+      <link>https://bc-li.github.io/posts/2020-9-28-docker/</link>
+      <pubDate>Mon, 28 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://bc-li.github.io/posts/2020-9-28-docker/</guid>
+      <description>What is Docker? Before we go into the world of Docker, we should know the concept of &amp;ldquo;container&amp;rdquo; first.
+Container  A container is a standard unit of software that packages up code and all its dependencies so the application runs quickly and reliably from one computing environment to another. A Docker container image is a lightweight, standalone, executable package of software that includes everything needed to run an application: code, runtime, system tools, system libraries and settings.</description>
+    </item>
+    
+    <item>
+      <title>Record coding time with WakaTime and display with Wakabox &amp; GitHub Gist</title>
+      <link>https://bc-li.github.io/posts/2020-9-10-waka_box/</link>
+      <pubDate>Thu, 10 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://bc-li.github.io/posts/2020-9-10-waka_box/</guid>
+      <description>Wakatime is something you can use to record your coding (touching fish) time.
+What is WakaTime?  WakaTime is committed to making time tracking fully automatic for every programmer. By creating open source plugins for IDEs and text editors, we give powerful insights about how you code, and let you get back to what matters most: creating amazing software.
+ What will happen if I use it? You can see your coding time at the bottom of your IDE.</description>
+    </item>
+    
+    <item>
+      <title>I start to use Codespaces. It&#39;s fantastic~</title>
+      <link>https://bc-li.github.io/posts/2020-9-6-codespaces/</link>
+      <pubDate>Sun, 06 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://bc-li.github.io/posts/2020-9-6-codespaces/</guid>
+      <description>Codespaces: An cloud IDE made by GitHub &amp;amp; Microsoft, previously named &amp;ldquo;Visual Studio Online&amp;rdquo;.
+I almost forgot when I received an E-mail from GitHub, saying that I&amp;rsquo;m off the waiting list and I&amp;rsquo;m able to use one of the beta features called &amp;ldquo;Codespaces&amp;rdquo; released on May by GitHub Satellite.
+I&amp;rsquo;m more than delighted to get that, for it&amp;rsquo;s a feature that I&amp;rsquo;ve been longing for. So I excitedly clicked it immediately, and it run as imagined.</description>
+    </item>
+    
+    <item>
+      <title>Customize your site built on jekyll theme &#34;Minimal Mistakes&#34;</title>
+      <link>https://bc-li.github.io/posts/2020-8-30-customize_your_site/</link>
+      <pubDate>Sun, 30 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://bc-li.github.io/posts/2020-8-30-customize_your_site/</guid>
+      <description>Importing the CSS files Read the documents and you&amp;rsquo;ll find it&amp;rsquo;s rather easy to use your own CSS. Go straight to /assets/css/main.scss . You can import them here.
+For instance:
+--- # Only the main Sass file needs front matter (the dashes are enough) --- @charset &amp;#34;utf-8&amp;#34;; @import &amp;#34;minimal-mistakes/skins/{{ site.minimal_mistakes_skin | default: &amp;#39;default&amp;#39; }}&amp;#34;; // skin @import &amp;#34;minimal-mistakes&amp;#34;; // main partials  @import &amp;#34;minimal-mistakes/_custom&amp;#34;; // Your personal config on your site goes here and below @import &amp;#34;minimal-mistakes/_landing&amp;#34;; And that&amp;rsquo;s it.</description>
+    </item>
+    
+    <item>
+      <title>Build your repo with Tarvis CI.</title>
+      <link>https://bc-li.github.io/posts/2020-7-26-tarvisci/</link>
+      <pubDate>Sun, 26 Jul 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://bc-li.github.io/posts/2020-7-26-tarvisci/</guid>
+      <description>Build your repo automatically with Tarvis CI.
+What is Tarvis CI?  Travis CI is a hosted[2] continuous integration service used to build and test software projects hosted at GitHub[3] and Bitbucket.[4]
+Travis CI provides various paid plan for private projects, and a free plan for open source. TravisPro provides custom deployments of a proprietary version on the customer&amp;rsquo;s own hardware.
+The source is technically free software and available piecemeal on GitHub under permissive licenses.</description>
+    </item>
+    
+    <item>
+      <title>Folklore review</title>
+      <link>https://bc-li.github.io/posts/2020-7-24-folklore/</link>
+      <pubDate>Fri, 24 Jul 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://bc-li.github.io/posts/2020-7-24-folklore/</guid>
+      <description>Music is shown below in the Bilibili. {% include video id=&amp;ldquo;BV1Ba4y1a7XR&amp;rdquo; provider=&amp;ldquo;bilibili&amp;rdquo; %}
+2019 vs 2020, sad about it (joking)  2019 : Lover *2: one is for me, the other given as a nice gift.   2020 : folklore*1: for myself, no one to give as a gift yet &amp;amp; may be unwilling to take an album as a present again. Such a failure (  </description>
+    </item>
+    
+    <item>
+      <title>Matplotlib 3D Toolkit Note</title>
+      <link>https://bc-li.github.io/posts/2020-7-13-matplotlib3dnote/</link>
+      <pubDate>Mon, 13 Jul 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://bc-li.github.io/posts/2020-7-13-matplotlib3dnote/</guid>
+      <description>Matplotlib 3D Toolkit Note
+Getting Started We need 2 apis for the project:
+ matplotlib.animation matplotlib.mplot3d  Matplotlib.animation tutorial We may need matplotlib.animation.FuncAnimation to start.
+*class* matplotlib.animation.FuncAnimation (*fig*, *func*, *frames=None*, *init_func=None*, *fargs=None*, *save_count=None*, ***, *cache_frame_data=True*, ***kwargs*) This function mainly makes an animation by repeatedly calling a function func.
+For the parameters I decide to just use the official document here.
+  fig: Figure
+this &amp;ldquo;figure object&amp;rdquo; should be the one that we need to use.</description>
+    </item>
+    
+    <item>
+      <title>Meaning in life</title>
+      <link>https://bc-li.github.io/posts/2020-7-1-meaning/</link>
+      <pubDate>Mon, 29 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://bc-li.github.io/posts/2020-7-1-meaning/</guid>
+      <description>Living in the post-modern days, many people get a sense of nothingness.
+They regard their lives as &amp;ldquo;meaningless&amp;rdquo;. However, there must be something to chase, because when you think your life &amp;ldquo;meaningless&amp;rdquo;, there must be a contradictory concept named &amp;ldquo;meaningful&amp;rdquo;. Thorough scepticism is totally wrong in logic for &amp;ldquo;is suspecting itself worth suspecting?&amp;rdquo; At least you can feel your breath now, and you may die if you jump from the high building.</description>
+    </item>
+    
+    <item>
+      <title>BFS used in problem 8 numbers</title>
+      <link>https://bc-li.github.io/posts/2020-5-12-bfs/</link>
+      <pubDate>Tue, 12 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://bc-li.github.io/posts/2020-5-12-bfs/</guid>
+      <description>Preknowledge BFS（广度优先搜索）  广度优先搜索较之深度优先搜索之不同在于，深度优先搜索旨在不管有多少条岔路，先一条路走到底，不成功就返回上一个路口然后就选择下一条岔路，而广度优先搜索旨在面临一个路口时，把所有的岔路口都记下来，然后选择其中一个进入，然后将它的分路情况记录下来，然后再返回来进入另外一个岔路，并重复这样的操作，用图形来表示则是这样的，例子:
+从黑色起点出发，记录所有的岔路口，并标记为走一步可以到达的。然后选择其中一个方向走进去，我们走黑点方块上面的那个，然后将这个路口可走的方向记录下来并标记为2，意味走两步可以到达的地方。
+接下来，我们回到黑色方块右手边的1方块上，并将它能走的方向也记录下来，同样标记为2，因为也是走两步便可到达的地方
+这样走一步以及走两步可以到达的地方都搜索完毕了，下面同理，我们可以迅速把三步的格子给标记出来
+再之后是四步，五步。
+我们便成功寻找到了路径，并且把所有可行的路径都求出来了。在广度优先搜索中，可以看出是逐步求解的，反复的进入与退出，将当前的所有可行解都记录下来，然后逐个去查看。在DFS中我们说关键点是递归以及回溯，在BFS中，关键点则是状态的选取和标记。
+int n = 10, m = 10; //地图宽高 void BFS() { queue que; //用队列来保存路口  int graph[n][m]; //地图  int px[] = {-1, 0, 1, 0}; //移动方向的数组  int py[] = {0, -1, 0, 1}; que.push(起点入队); //将起点入队  while (!que.empty()) { //只要队列不为空  auto temp = que.pop(); //得到队列中的元素  for (int i = 0; i != 4; ++i) { if(//可以走) {  //标记当前格子  //将当前状态入队列，等待下次提取  } } } } 注：以上两个代码只是提供思路，并非是语法正确的可运行代码。</description>
+    </item>
+    
+    <item>
+      <title>喜欢的游戏要出新作了，好开心 ^_^</title>
+      <link>https://bc-li.github.io/posts/2020-3-30-%E5%96%9C%E6%AC%A2%E7%9A%84%E6%B8%B8%E6%88%8F%E8%A6%81%E5%87%BA%E6%96%B0%E4%BD%9C%E5%95%A6%E5%A5%BD%E5%BC%80%E5%BF%83-%E5%89%AF%E6%9C%AC-%E5%89%AF%E6%9C%AC/</link>
+      <pubDate>Mon, 30 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://bc-li.github.io/posts/2020-3-30-%E5%96%9C%E6%AC%A2%E7%9A%84%E6%B8%B8%E6%88%8F%E8%A6%81%E5%87%BA%E6%96%B0%E4%BD%9C%E5%95%A6%E5%A5%BD%E5%BC%80%E5%BF%83-%E5%89%AF%E6%9C%AC-%E5%89%AF%E6%9C%AC/</guid>
+      <description>2B小姐姐 惊艳到 之后很快，
+NieR Replicant ver.1.22474487139&amp;hellip; （对，这就是官方原名 ）
+作为尼尔十周年的新作就要开始制（hua）作（bing）了，听说并不是重制版，而是加了内容的“增强版”
+总之期待++ 最后， $$ \sqrt1.5=1.22474487139&amp;hellip; $$ （这个居然是版本号的来源&amp;hellip;</description>
+    </item>
+    
+    <item>
+      <title>Openpose 配置小记</title>
+      <link>https://bc-li.github.io/posts/2020-3-28-openpose/</link>
+      <pubDate>Sat, 28 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://bc-li.github.io/posts/2020-3-28-openpose/</guid>
+      <description>记录了一点 Openpose 的配置过程及踩过的坑
+Ubuntu 对于 NVIDIA 显卡驱动的支持程度差得超乎我的想象，所以下次掉驱动我可能不会像现在这样挣扎了好几周才选择重装 Ubuntu，而是直接插上我的启动盘（可以，不和他多 BB &amp;mdash;某主播）
+这是具体的安装教程，照着走就可以，十分详细，不过里面的一些坑还是很闹心的。
+  CMake 版本不要按这个来，否则会出现报错：NOTFOUNDCUDA_cublas_device_LIBRARY。 解决方案 如果你安装了旧版的 CMake，那就直接删掉旧的重装一下就可以了，软连接之后 CMake - gui 就能进入 gui 界面，不要安装 CMake-QT-gui ，那个是旧版的。
+ 软连接 CMake :https://m.linuxidc.com/Linux/2018-09/154165.htm
+   CUDA9 最多支持到 Ubuntu 16 ，没有 Ubuntu 1804 的 deb 包 / Run File 解决方案：实测 CUDA 10 也可以正常跑，不过，跑别的项目可能会崩，照我来讲，我可能会选择再次重装系统。 （我的配置是 i7 - 9750H + GTX 1650 )
+  如果你选择了 BUILD-PYTHON, 不事先 clone 一个 Pybind 肯定出错。因为 git clone 下来的仓库： 3rdparty 文件夹是空的。（我怎么知道为什么</description>
+    </item>
+    
+    <item>
+      <title>Git Commands</title>
+      <link>https://bc-li.github.io/posts/2020-3-23-git_commands/</link>
+      <pubDate>Mon, 23 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://bc-li.github.io/posts/2020-3-23-git_commands/</guid>
+      <description>1.创建仓库及push操作
+创建操作在github desktop/github网页上执行
+在本地上用git bash cd到指定的文件夹，
+git clone https://.... . ...git
+创建文件夹之后第一次提交需要进行的操作：
+  把自己要push的文件放进文件夹
+  依次执行命令 git add . git commit -m &amp;quot;first commit&amp;quot; git push u origin master 会提示输入ssh密码/github用户名，密码，输入即可
+  第二次及以后的操作只需修改本地仓库的文件之后
+git push
+即可。
+3.2.其他的git命令：
+ git init #把当前目录变成git可以管理的仓库
+ git add readme.txt #添加一个文件，也可以添加文件夹
+ git add -A #添加全部文件
+ git commit -m &amp;quot;some commit&amp;quot; #提交修改
+ git status #查看是否还有未提交
+ git log #查看最近日志
+ git reset --hard HEAD^ #版本回退一个版本</description>
+    </item>
+    
+  </channel>
+</rss>

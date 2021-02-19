@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html><head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Learn to use Docker - Forest Zone</title><meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<meta property="og:image" content=""/>
+	<meta property="og:title" content="Learn to use Docker" />
+<meta property="og:description" content="Use docker as your virtual environment for your project testing." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://bc-li.github.io/posts/2020-9-28-docker/" />
+<meta property="article:published_time" content="2020-09-28T00:00:00+00:00" />
+<meta property="article:modified_time" content="2020-09-28T00:00:00+00:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Learn to use Docker"/>
+<meta name="twitter:description" content="Use docker as your virtual environment for your project testing."/>
+<script src="https://bc-li.github.io/js/feather.min.js"></script>
+	
+	<link href="https://bc-li.github.io/css/fonts.css" rel="stylesheet">
+	
+	<link rel="stylesheet" type="text/css" media="screen" href="https://bc-li.github.io/css/main.css" />
+	
+</head>
+<body>
+        <div class="content"><header>
+	<div class="main">
+		<a href="https://bc-li.github.io/">Forest Zone</a>
+	</div>
+	<nav>
+		
+		<a href="/">Home</a>
+		
+		<a href="/posts">All posts</a>
+		
+		<a href="/about">About</a>
+		
+		<a href="/tags">Tags</a>
+		
+	</nav>
+</header>
+
+<main>
+	<article>
+		<div class="title">
+			<h1 class="title">Learn to use Docker</h1>
+			<div class="meta">Posted on Sep 28, 2020</div>
+		</div>
+		
+
+		<section class="body">
+			<h2 id="what-is-docker">What is Docker?</h2>
+<p>Before we go into the world of Docker, we should know the concept of &ldquo;container&rdquo; first.</p>
+<h3 id="containerhttpswwwdockercomresourceswhat-container"><a href="https://www.docker.com/resources/what-container">Container</a></h3>
+<blockquote>
+<p>A container is a standard unit of software that packages up code and all its dependencies so the application runs quickly and reliably from one computing environment to another. A Docker container image is a lightweight, standalone, executable package of software that includes everything needed to run an application: code, runtime, system tools, system libraries and settings.</p>
+</blockquote>
+<p>You can find more in the website shown above in title <strong>Container</strong>.</p>
+<h2 id="what-can-docker-do">What can Docker do?</h2>
+<blockquote>
+<p><strong>Docker</strong> is a tool designed to make it easier to create, deploy, and run applications by using containers. Containers allow a developer to package up an application with all of the parts it needs, such as libraries and other dependencies, and deploy it as one package.</p>
+</blockquote>
+<h2 id="install-docker">Install Docker</h2>
+<p>This can be easily installed following the instructions given by <a href="https://www.docker.com/">docker website</a>.</p>
+<h2 id="docker-usage">Docker usage</h2>
+<h3 id="your-first-hello-world-through-docker">Your first &lsquo;Hello world&rsquo; through Docker</h3>
+<ul>
+<li>
+<p>Run docker.</p>
+</li>
+<li>
+<p>Run command <code>docker run ubuntu:18.04 /bin/echo &quot;Hello world&quot;</code> in terminal. If there&rsquo;s no image in your computer, docker will download one in Docker Hub.</p>
+</li>
+</ul>
+<h3 id="communicate-with-docker-through-command-line">Communicate with Docker through command line</h3>
+<ul>
+<li>Run command <code>docker run -i -t ubuntu:18.04 /bin/bash</code></li>
+<li>Enjoy, and you can run <code>exit</code> or <code>CTRL+D</code> to exit your container.</li>
+</ul>
+<h3 id="run-docker-on-background">Run docker on background</h3>
+<ul>
+<li>
+<p><code>docker run -d ubuntu:18.04 yourcommand</code></p>
+</li>
+<li>
+<p>Stop: <code>docker stop</code></p>
+</li>
+<li>
+<p>Use <code>docker ps</code> to check your container status.</p>
+</li>
+</ul>
+
+		</section>
+
+		<div class="post-tags">
+			
+			
+			<nav class="nav tags">
+				<ul class="tags">
+					
+					<li><a href="/tags/coding">coding</a></li>
+					
+				</ul>
+			</nav>
+			
+			
+		</div>
+	</article>
+</main>
+<footer>
+<hr><a class="soc" href="https://github.com/BC-Li" title="GitHub"><i data-feather="github"></i></a>|<a class="soc" href="https://twitter.com/turborocket123/" title="Twitter"><i data-feather="twitter"></i></a>|⚡️
+	2021  TurboRocket |  <a href="https://github.com/athul/archie">Archie Theme</a> | Built with <a href="https://gohugo.io">Hugo</a>
+</footer>
+
+
+<script>
+      feather.replace()
+</script></div>
+    </body>
+</html>

@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html><head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Space Invaders on FPGA - Forest Zone</title><meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<meta property="og:image" content=""/>
+	<meta property="og:title" content="Space Invaders on FPGA" />
+<meta property="og:description" content="​填坑填坑！(tl;dr" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://bc-li.github.io/posts/2020-12-8-spaceinvaders/" />
+<meta property="article:published_time" content="2020-12-08T00:00:00+00:00" />
+<meta property="article:modified_time" content="2020-12-08T00:00:00+00:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Space Invaders on FPGA"/>
+<meta name="twitter:description" content="​填坑填坑！(tl;dr"/>
+<script src="https://bc-li.github.io/js/feather.min.js"></script>
+	
+	<link href="https://bc-li.github.io/css/fonts.css" rel="stylesheet">
+	
+	<link rel="stylesheet" type="text/css" media="screen" href="https://bc-li.github.io/css/main.css" />
+	
+</head>
+<body>
+        <div class="content"><header>
+	<div class="main">
+		<a href="https://bc-li.github.io/">Forest Zone</a>
+	</div>
+	<nav>
+		
+		<a href="/">Home</a>
+		
+		<a href="/posts">All posts</a>
+		
+		<a href="/about">About</a>
+		
+		<a href="/tags">Tags</a>
+		
+	</nav>
+</header>
+
+<main>
+	<article>
+		<div class="title">
+			<h1 class="title">Space Invaders on FPGA</h1>
+			<div class="meta">Posted on Dec 8, 2020</div>
+		</div>
+		
+
+		<section class="body">
+			<h2 id="alienv-外星人游戏逻辑">Alien.v 外星人游戏逻辑</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#66d9ef">module</span> alien(
+<span style="color:#66d9ef">input</span> [<span style="color:#ae81ff">23</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>]aliennumber;    <span style="color:#75715e">// 外星人的数目
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">input</span> clk,rst;              <span style="color:#75715e">// 时钟和复位信号
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">input</span> bulletflying,startscreen,gameover,frontalive; <span style="color:#75715e">//  依次为
+</span><span style="color:#75715e"></span><span style="color:#960050;background-color:#1e0010">子弹是否正在飞行，是否在开始界面，是否已经</span>gg<span style="color:#960050;background-color:#1e0010">，前面两个外星人是不是还活着（第一排和第二排用，防止前面有外星人时就开火）</span>
+    <span style="color:#66d9ef">input</span> [<span style="color:#ae81ff">9</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] startX;     <span style="color:#75715e">// 子弹开始时的横坐标
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">input</span> [<span style="color:#ae81ff">8</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] startY;     <span style="color:#75715e">// 子弹开始时的纵坐标
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">input</span> [<span style="color:#ae81ff">9</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] bulletX;        <span style="color:#75715e">// 子弹现在的横坐标
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">input</span> [<span style="color:#ae81ff">8</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] bulletY;        <span style="color:#75715e">// 子弹现在的纵坐标
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">input</span> [<span style="color:#ae81ff">9</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] width;      <span style="color:#75715e">// 外星人的图片宽度（用于伤害判定）
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">input</span> [<span style="color:#ae81ff">27</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] firefreq;  <span style="color:#75715e">// 开火频率
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">output</span> <span style="color:#66d9ef">reg</span> [<span style="color:#ae81ff">9</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>]alienX; <span style="color:#75715e">// 输出外星人的横纵坐标 
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">output</span> <span style="color:#66d9ef">reg</span> [<span style="color:#ae81ff">8</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>]alienY;
+    <span style="color:#66d9ef">output</span> <span style="color:#66d9ef">reg</span> alienalive,hit,alienfire; <span style="color:#75715e">// 输出外星人的生命状态，是否被击中，以及外星人开火信号
+</span><span style="color:#75715e"></span>);
+    
+    <span style="color:#66d9ef">reg</span> [<span style="color:#ae81ff">23</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] counter;         <span style="color:#75715e">// 分频时钟
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">reg</span> [<span style="color:#ae81ff">27</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] firecounter;  <span style="color:#75715e">// 开火分频时钟
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">reg</span> speed,direction;        <span style="color:#75715e">// speed 是移动的速度， direction 是控制左右
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">wire</span> [<span style="color:#ae81ff">10</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>]aliencounter;    <span style="color:#75715e">// 外星人分频时钟
+</span><span style="color:#75715e"></span>    
+<span style="color:#66d9ef">always</span>@(<span style="color:#66d9ef">posedge</span> clk <span style="color:#66d9ef">or</span> <span style="color:#66d9ef">posedge</span> rst)     <span style="color:#75715e">//  时序逻辑
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">begin</span>
+        <span style="color:#66d9ef">if</span>(rst) <span style="color:#75715e">//  复位状态均置零
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">begin</span>
+            firecounter <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;
+            alienfire <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;
+        <span style="color:#66d9ef">end</span> 
+<span style="color:#66d9ef">else</span> <span style="color:#66d9ef">begin</span>
+            <span style="color:#66d9ef">if</span>(alienalive <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">~</span>frontalive <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">~</span>startscreen <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">~</span>gameover) <span style="color:#66d9ef">begin</span>        <span style="color:#75715e">// 如果活着，前方没有活外星人而且没在开始/结束页面的时候就定时开火
+</span><span style="color:#75715e"></span>                <span style="color:#66d9ef">if</span>(firecounter <span style="color:#f92672">==</span> firefreq) <span style="color:#66d9ef">begin</span>   <span style="color:#75715e">// 每隔一段时间开火
+</span><span style="color:#75715e"></span>                    firecounter <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;               
+                    alienfire <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">1</span>; 
+                <span style="color:#66d9ef">end</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">begin</span>
+                    firecounter <span style="color:#f92672">&lt;=</span> firecounter <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span><span style="color:#ae81ff">&#39;b1</span>;
+                    alienfire <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;
+                <span style="color:#66d9ef">end</span>
+            <span style="color:#66d9ef">end</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">begin</span>      <span style="color:#75715e">//  其余时间不开火
+</span><span style="color:#75715e"></span>                firecounter <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;
+                alienfire <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;
+            <span style="color:#66d9ef">end</span>
+        <span style="color:#66d9ef">end</span>
+    <span style="color:#66d9ef">end</span>
+    
+    <span style="color:#66d9ef">always</span>@(<span style="color:#66d9ef">posedge</span> clk <span style="color:#66d9ef">or</span> <span style="color:#66d9ef">posedge</span> rst) <span style="color:#75715e">// 伤害判定
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">begin</span>
+        <span style="color:#66d9ef">if</span>(rst)
+        <span style="color:#66d9ef">begin</span>   <span style="color:#75715e">// 复位时复活外星人
+</span><span style="color:#75715e"></span>            alienalive <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">1</span><span style="color:#ae81ff">&#39;b1</span>;
+            hit <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;
+        <span style="color:#66d9ef">end</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">begin</span>  <span style="color:#75715e">// 没复位的时候开始伤害判定
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span>(bulletflying <span style="color:#f92672">&amp;&amp;</span> alienalive <span style="color:#f92672">&amp;&amp;</span>(((bulletX <span style="color:#f92672">&gt;=</span> alienX <span style="color:#f92672">-</span><span style="color:#ae81ff">2</span>)<span style="color:#f92672">&amp;&amp;</span>(bulletX <span style="color:#f92672">&lt;=</span> alienX <span style="color:#f92672">+</span> width <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span>))<span style="color:#f92672">&amp;&amp;</span>(bulletY <span style="color:#f92672">==</span> alienY)))
+<span style="color:#66d9ef">begin</span>           <span style="color:#75715e">// 当子弹到alien图片的这个区域的时候启动伤害判定
+</span><span style="color:#75715e"></span>                alienalive <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;
+                hit <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">1</span><span style="color:#ae81ff">&#39;b1</span>;        <span style="color:#75715e">// alien 被打了
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">end</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">begin</span>
+                hit <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;           <span style="color:#75715e">// 其余时间没被打
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">end</span>
+        <span style="color:#66d9ef">end</span>
+    <span style="color:#66d9ef">end</span>
+    <span style="color:#66d9ef">assign</span> aliencounter <span style="color:#f92672">=</span> aliennumber;  <span style="color:#75715e">//  存储外星人数目
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">always</span>@(<span style="color:#66d9ef">posedge</span> clk <span style="color:#66d9ef">or</span> <span style="color:#66d9ef">posedge</span> rst)
+    <span style="color:#66d9ef">begin</span>
+        <span style="color:#66d9ef">if</span>(rst) <span style="color:#75715e">//  复位时重置外星人位置
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">begin</span>
+            alienX <span style="color:#f92672">&lt;=</span> startX;       
+        <span style="color:#66d9ef">end</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span>(counter <span style="color:#f92672">&gt;=</span> (<span style="color:#ae81ff">24</span><span style="color:#ae81ff">&#39;d1000</span>_000)) <span style="color:#75715e">// 用一个counter降频
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">begin</span>
+                 speed <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">1</span><span style="color:#ae81ff">&#39;b1</span>;
+                 counter <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;
+             <span style="color:#66d9ef">end</span> <span style="color:#66d9ef">else</span> 
+             <span style="color:#66d9ef">begin</span>
+                <span style="color:#66d9ef">if</span>(direction)   <span style="color:#75715e">// 向左还是向右看direction的值
+</span><span style="color:#75715e"></span>                <span style="color:#66d9ef">begin</span>
+                    counter <span style="color:#f92672">&lt;=</span> counter <span style="color:#f92672">+</span> <span style="color:#ae81ff">6</span> <span style="color:#f92672">-</span> aliennumber  ; <span style="color:#75715e">// 外星人的移动速度随着场上alien数减少而增加
+</span><span style="color:#75715e"></span>  alienX <span style="color:#f92672">&lt;=</span> startscreen<span style="color:#f92672">?</span> alienX: (alienX <span style="color:#f92672">+</span> speed); <span style="color:#75715e">//   不在游戏场景内外星人不动，若动就向右
+</span><span style="color:#75715e"></span>speed <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;
+                <span style="color:#66d9ef">end</span> <span style="color:#66d9ef">else</span> 
+                <span style="color:#66d9ef">begin</span>
+                    counter <span style="color:#f92672">&lt;=</span> counter <span style="color:#f92672">+</span> <span style="color:#ae81ff">6</span> <span style="color:#f92672">-</span> aliennumber  ;
+                    alienX <span style="color:#f92672">&lt;=</span> startscreen<span style="color:#f92672">?</span> alienX: (alienX <span style="color:#f92672">-</span> speed);<span style="color:#75715e">// direction为0时外星人向左
+</span><span style="color:#75715e"></span>                    speed <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;
+                <span style="color:#66d9ef">end</span>
+            <span style="color:#66d9ef">end</span>
+        <span style="color:#66d9ef">end</span>
+    
+    
+    <span style="color:#66d9ef">always</span>@(<span style="color:#66d9ef">posedge</span> clk <span style="color:#66d9ef">or</span> <span style="color:#66d9ef">posedge</span> rst)<span style="color:#66d9ef">begin</span>    <span style="color:#75715e">// 控制外星人纵向移动的逻辑，与横向移动类似
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span>(rst)
+        <span style="color:#66d9ef">begin</span>
+            direction <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;
+            alienY <span style="color:#f92672">&lt;=</span> startY;
+        <span style="color:#66d9ef">end</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">begin</span>
+            <span style="color:#66d9ef">if</span>(alienX <span style="color:#f92672">==</span> startX <span style="color:#f92672">-</span> <span style="color:#ae81ff">170</span> <span style="color:#f92672">&amp;&amp;</span> direction <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>) <span style="color:#66d9ef">begin</span>
+                direction <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">1</span><span style="color:#ae81ff">&#39;b1</span>;  <span style="color:#75715e">// X到边界就变向
+</span><span style="color:#75715e"></span>                alienY <span style="color:#f92672">&lt;=</span> (gameover) <span style="color:#f92672">?</span> alienY <span style="color:#f92672">:</span> (alienY <span style="color:#f92672">+</span> <span style="color:#ae81ff">20</span>); <span style="color:#75715e">// 同时纵坐标下移
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">end</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span>(alienX <span style="color:#f92672">==</span> startX <span style="color:#f92672">+</span> <span style="color:#ae81ff">50</span> <span style="color:#f92672">&amp;&amp;</span> direction <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>)<span style="color:#66d9ef">begin</span>
+                direction <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;
+                alienY <span style="color:#f92672">&lt;=</span> (gameover) <span style="color:#f92672">?</span> alienY <span style="color:#f92672">:</span> alienY <span style="color:#f92672">+</span> <span style="color:#ae81ff">20</span>;
+            <span style="color:#66d9ef">end</span>
+        <span style="color:#66d9ef">end</span>
+    <span style="color:#66d9ef">end</span>
+   
+<span style="color:#66d9ef">endmodule</span>
+</code></pre></div><h2 id="debounce_tv-信号去毛刺">Debounce_t.v 信号去毛刺</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#66d9ef">module</span> debounce(<span style="color:#66d9ef">input</span> reset, clock, noisy, <span style="color:#66d9ef">output</span> <span style="color:#66d9ef">reg</span> clean); 
+
+   <span style="color:#66d9ef">reg</span> [<span style="color:#ae81ff">19</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] count;
+   <span style="color:#66d9ef">reg</span> temp;
+   <span style="color:#66d9ef">wire</span> [<span style="color:#ae81ff">19</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] DELAY;
+   <span style="color:#66d9ef">assign</span> DELAY <span style="color:#f92672">=</span> <span style="color:#ae81ff">20</span><span style="color:#ae81ff">&#39;d1000000</span>;
+   <span style="color:#66d9ef">always</span> @ (<span style="color:#66d9ef">posedge</span> clock <span style="color:#66d9ef">or</span> <span style="color:#66d9ef">posedge</span> reset)
+        <span style="color:#66d9ef">if</span>(reset <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span><span style="color:#ae81ff">&#39;b1</span>)
+            <span style="color:#66d9ef">begin</span>   
+                count <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">20</span><span style="color:#ae81ff">&#39;b0</span>;
+                clean <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">1</span><span style="color:#ae81ff">&#39;b0</span>;
+                temp <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">1</span><span style="color:#ae81ff">&#39;b0</span>;
+            <span style="color:#66d9ef">end</span>
+        <span style="color:#66d9ef">else</span> 
+            <span style="color:#66d9ef">begin</span>
+                <span style="color:#66d9ef">if</span>(noisy)       <span style="color:#75715e">//  输入带毛刺的信号               
+</span><span style="color:#75715e"></span>                    <span style="color:#66d9ef">begin</span>       
+                        <span style="color:#66d9ef">if</span>(count <span style="color:#f92672">==</span> DELAY)  <span style="color:#75715e">// 计数器到延迟时间
+</span><span style="color:#75715e"></span>                            <span style="color:#66d9ef">begin</span>
+                                clean <span style="color:#f92672">&lt;=</span> temp;  <span style="color:#75715e">// 输出少毛刺的信号
+</span><span style="color:#75715e"></span>                            <span style="color:#66d9ef">end</span>
+                        <span style="color:#66d9ef">else</span>
+                            <span style="color:#66d9ef">begin</span>
+                                temp <span style="color:#f92672">&lt;=</span> noisy;  <span style="color:#75715e">// 剩余时间不赋值给少毛刺信号，只更新temp变量以及计数器递增
+</span><span style="color:#75715e"></span>                                clean <span style="color:#f92672">&lt;=</span> clean;
+                                count <span style="color:#f92672">&lt;=</span> count <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span><span style="color:#ae81ff">&#39;b1</span>;
+                            <span style="color:#66d9ef">end</span>
+                    <span style="color:#66d9ef">end</span>
+                <span style="color:#66d9ef">else</span>
+                    <span style="color:#66d9ef">begin</span>
+                        count <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">20</span><span style="color:#ae81ff">&#39;b0</span>;
+                        clean <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">1</span><span style="color:#ae81ff">&#39;b0</span>;
+                    <span style="color:#66d9ef">end</span>
+            <span style="color:#66d9ef">end</span>
+      
+<span style="color:#66d9ef">endmodule</span>
+
+</code></pre></div><h2 id="vgav-输出h-syncv-sync以及用于block-memory的内存地址">VGA.v 输出H-SYNC,V-SYNC以及用于Block Memory的内存地址</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#66d9ef">module</span> VGA(
+    <span style="color:#66d9ef">input</span> clk;
+    <span style="color:#66d9ef">input</span> rst;
+    <span style="color:#66d9ef">output</span> <span style="color:#66d9ef">reg</span> [<span style="color:#ae81ff">9</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] haddr; <span style="color:#75715e">// 内存地址，确定图片的区域，用于激励block memory 输出图片
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">output</span> <span style="color:#66d9ef">reg</span> [<span style="color:#ae81ff">8</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] vaddr; 
+    <span style="color:#66d9ef">output</span> <span style="color:#66d9ef">reg</span> active;      <span style="color:#75715e">// 在绘制区域内输出active信号
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">output</span> hsync;           <span style="color:#75715e">// H-SYNC 信号
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">output</span> vsync;           <span style="color:#75715e">// V-SYNC 信号
+</span><span style="color:#75715e"></span>);
+
+    <span style="color:#66d9ef">parameter</span> VA_END <span style="color:#f92672">=</span> <span style="color:#ae81ff">479</span>;          
+    <span style="color:#66d9ef">parameter</span> VS_STA <span style="color:#f92672">=</span> VA_END <span style="color:#f92672">+</span> <span style="color:#ae81ff">10</span>;  
+    <span style="color:#66d9ef">parameter</span> VS_END <span style="color:#f92672">=</span> VS_STA <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span>;   
+    <span style="color:#66d9ef">parameter</span> SCREEN <span style="color:#f92672">=</span> <span style="color:#ae81ff">524</span>; 
+
+    <span style="color:#75715e">//  分频信号 
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">reg</span> divcounter_H; 
+    <span style="color:#66d9ef">reg</span> divcounter_V;
+    <span style="color:#66d9ef">reg</span> [<span style="color:#ae81ff">10</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] counter_H; 
+    <span style="color:#66d9ef">reg</span> [<span style="color:#ae81ff">19</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>]counter_V;
+
+    <span style="color:#66d9ef">always</span>@(<span style="color:#66d9ef">posedge</span> clk <span style="color:#66d9ef">or</span> <span style="color:#66d9ef">posedge</span> rst)
+    <span style="color:#66d9ef">begin</span>
+        <span style="color:#66d9ef">if</span>(rst)
+        <span style="color:#66d9ef">begin</span>
+            counter_H <span style="color:#f92672">=</span> <span style="color:#ae81ff">11</span><span style="color:#ae81ff">&#39;b0</span>;
+        <span style="color:#66d9ef">end</span>
+        <span style="color:#66d9ef">else</span> 
+        <span style="color:#66d9ef">begin</span>
+            <span style="color:#66d9ef">if</span>(counter_H <span style="color:#f92672">==</span> <span style="color:#ae81ff">1599</span>) <span style="color:#75715e">// 0-1599 循环
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">begin</span>
+                counter_H <span style="color:#f92672">=</span> <span style="color:#ae81ff">11</span><span style="color:#ae81ff">&#39;b00</span>;
+            <span style="color:#66d9ef">end</span>
+            <span style="color:#66d9ef">else</span>
+            <span style="color:#66d9ef">begin</span>
+                counter_H <span style="color:#f92672">=</span> counter_H <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span><span style="color:#ae81ff">&#39;b1</span>;   
+            <span style="color:#66d9ef">end</span>
+        <span style="color:#66d9ef">end</span>
+    <span style="color:#66d9ef">end</span>
+
+
+    <span style="color:#66d9ef">assign</span> hsync <span style="color:#f92672">=</span> <span style="color:#f92672">~</span>((h_count <span style="color:#f92672">&gt;=</span> HS_STA) <span style="color:#f92672">&amp;</span> (h_count <span style="color:#f92672">&lt;</span> HS_END));
+    <span style="color:#66d9ef">assign</span> vsync <span style="color:#f92672">=</span> <span style="color:#f92672">~</span>((v_count <span style="color:#f92672">&gt;=</span> VS_STA) <span style="color:#f92672">&amp;</span> (v_count <span style="color:#f92672">&lt;</span> VS_END));
+
+    <span style="color:#66d9ef">always</span>@(<span style="color:#66d9ef">posedge</span> clk <span style="color:#66d9ef">or</span> <span style="color:#66d9ef">posedge</span> rst)
+    <span style="color:#66d9ef">begin</span>
+        <span style="color:#66d9ef">if</span>(rst)
+        <span style="color:#66d9ef">begin</span>
+            divcounter <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;
+            haddr <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">7</span><span style="color:#ae81ff">&#39;b0</span>;
+            active <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;
+        <span style="color:#66d9ef">end</span>
+        <span style="color:#66d9ef">else</span>
+        <span style="color:#66d9ef">begin</span>
+            <span style="color:#66d9ef">if</span>((counter <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">11</span><span style="color:#ae81ff">&#39;d289</span>) <span style="color:#f92672">&amp;&amp;</span> (counter <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">11</span><span style="color:#ae81ff">&#39;d1568</span>)) <span style="color:#75715e">// 此时输出Haddr信号
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">begin</span>
+                  active <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">1</span><span style="color:#ae81ff">&#39;b1</span>;
+                divcounter <span style="color:#f92672">&lt;=</span> divcounter <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span><span style="color:#ae81ff">&#39;b1</span>;
+                <span style="color:#66d9ef">if</span>(divcounter_H <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>)<span style="color:#66d9ef">begin</span>
+                     haddr <span style="color:#f92672">&lt;=</span> haddr <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span><span style="color:#ae81ff">&#39;b1</span>;  <span style="color:#75715e">// 0 - 640
+</span><span style="color:#75715e"></span>                <span style="color:#66d9ef">end</span>
+            <span style="color:#66d9ef">end</span> 
+            <span style="color:#66d9ef">else</span> 
+            <span style="color:#66d9ef">begin</span>
+                haddr <span style="color:#f92672">=</span> <span style="color:#ae81ff">7</span><span style="color:#ae81ff">&#39;b0</span>;
+                divcounter_H <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;
+                active <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;
+
+            <span style="color:#66d9ef">end</span>
+        <span style="color:#66d9ef">end</span>
+    <span style="color:#66d9ef">end</span>
+
+    <span style="color:#66d9ef">always</span>@(<span style="color:#66d9ef">posedge</span> clk <span style="color:#66d9ef">or</span> <span style="color:#66d9ef">posedge</span> rst)
+    <span style="color:#66d9ef">begin</span>
+        <span style="color:#66d9ef">if</span>(rst)
+        <span style="color:#66d9ef">begin</span>
+            counter_V <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">20</span><span style="color:#ae81ff">&#39;b0</span>;
+        <span style="color:#66d9ef">end</span>
+        <span style="color:#66d9ef">else</span> 
+        <span style="color:#66d9ef">begin</span>
+            <span style="color:#66d9ef">if</span>(counter_V <span style="color:#f92672">==</span> <span style="color:#ae81ff">12410463</span>)
+            <span style="color:#66d9ef">begin</span>
+                counter_V <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">20</span><span style="color:#ae81ff">&#39;b0</span>;
+            <span style="color:#66d9ef">end</span>
+            <span style="color:#66d9ef">else</span>
+            <span style="color:#66d9ef">begin</span>
+                counter_V <span style="color:#f92672">&lt;=</span> counter_V <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span><span style="color:#ae81ff">&#39;b1</span>;
+            <span style="color:#66d9ef">end</span>
+        <span style="color:#66d9ef">end</span>
+    <span style="color:#66d9ef">end</span>
+
+    <span style="color:#66d9ef">always</span>@(<span style="color:#66d9ef">posedge</span> clk <span style="color:#66d9ef">or</span> <span style="color:#66d9ef">posedge</span> rst)
+    <span style="color:#66d9ef">begin</span>
+        <span style="color:#66d9ef">if</span>(rst)
+        <span style="color:#66d9ef">begin</span>
+            vaddr <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">7</span><span style="color:#ae81ff">&#39;b0</span>;
+            divcounter_V <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;
+            active <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;
+        <span style="color:#66d9ef">end</span>
+        <span style="color:#66d9ef">else</span>
+        <span style="color:#66d9ef">begin</span>
+
+            <span style="color:#66d9ef">if</span>((counter_V <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">20</span><span style="color:#ae81ff">&#39;d49600</span>) <span style="color:#f92672">&amp;&amp;</span> (counter_V <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">20</span><span style="color:#ae81ff">&#39;d817601</span>))
+            <span style="color:#66d9ef">begin</span>
+            active <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">1</span><span style="color:#ae81ff">&#39;b1</span>;
+            <span style="color:#66d9ef">if</span>(divcounter <span style="color:#f92672">==</span> <span style="color:#ae81ff">11</span><span style="color:#ae81ff">&#39;d1599</span>)
+                <span style="color:#66d9ef">begin</span>
+                    divcounter <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;
+                    <span style="color:#66d9ef">if</span>(vaddr <span style="color:#f92672">==</span> <span style="color:#ae81ff">9</span><span style="color:#ae81ff">&#39;d479</span>)
+                    <span style="color:#66d9ef">begin</span>
+                        vaddr <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;
+                    <span style="color:#66d9ef">end</span>
+                    <span style="color:#66d9ef">else</span>
+                    <span style="color:#66d9ef">begin</span>
+                        vaddr <span style="color:#f92672">&lt;=</span> vaddr <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span><span style="color:#ae81ff">&#39;b1</span>;
+                    <span style="color:#66d9ef">end</span>
+               <span style="color:#66d9ef">end</span> <span style="color:#66d9ef">else</span> 
+               <span style="color:#66d9ef">begin</span>
+                    divcounter_V <span style="color:#f92672">&lt;=</span> divcounter_V <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span><span style="color:#ae81ff">&#39;b1</span>;
+                    vaddr <span style="color:#f92672">&lt;=</span> vaddr;
+                <span style="color:#66d9ef">end</span>
+            <span style="color:#66d9ef">end</span> 
+            <span style="color:#66d9ef">else</span>
+            <span style="color:#66d9ef">begin</span>
+                vaddr <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">7</span><span style="color:#ae81ff">&#39;b0</span>;
+                active <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;
+            <span style="color:#66d9ef">end</span>     
+        <span style="color:#66d9ef">end</span>
+    <span style="color:#66d9ef">end</span>
+
+<span style="color:#66d9ef">endmodule</span>
+
+</code></pre></div><h2 id="pulsev-状态机2状态">Pulse.v 状态机（2状态）</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#66d9ef">module</span> Pulse(<span style="color:#66d9ef">input</span> clk, <span style="color:#66d9ef">input</span> rst, <span style="color:#66d9ef">input</span> level, <span style="color:#66d9ef">output</span> <span style="color:#66d9ef">reg</span> pulse);
+    <span style="color:#75715e">// 处理按键状态
+</span><span style="color:#75715e"></span>   <span style="color:#66d9ef">reg</span> [<span style="color:#ae81ff">23</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] counter;
+   <span style="color:#66d9ef">reg</span> [<span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] state;
+   <span style="color:#66d9ef">reg</span> [<span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] nextstate;
+   <span style="color:#66d9ef">parameter</span> S0 <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span><span style="color:#ae81ff">&#39;b00</span>;
+   <span style="color:#66d9ef">parameter</span> S1 <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span><span style="color:#ae81ff">&#39;b01</span>;
+   
+  <span style="color:#66d9ef">always</span> @(<span style="color:#66d9ef">posedge</span> clk)
+      <span style="color:#66d9ef">begin</span>
+            <span style="color:#66d9ef">case</span>(state)
+                S0:
+                        <span style="color:#66d9ef">begin</span>
+                            pulse <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">1</span><span style="color:#ae81ff">&#39;b0</span>;
+                            counter <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;
+                            <span style="color:#66d9ef">if</span>(level)<span style="color:#66d9ef">begin</span>          <span style="color:#75715e">// 如果有按下按键
+</span><span style="color:#75715e"></span>                                nextstate <span style="color:#f92672">&lt;=</span> S1; <span style="color:#75715e">// 转S1
+</span><span style="color:#75715e"></span>                            <span style="color:#66d9ef">end</span>
+                            <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">begin</span>
+                                nextstate <span style="color:#f92672">&lt;=</span> S0;    <span style="color:#75715e">// 不按按键转 S0
+</span><span style="color:#75715e"></span>                            <span style="color:#66d9ef">end</span>
+                        <span style="color:#66d9ef">end</span>
+                S1:
+                        <span style="color:#66d9ef">begin</span>
+                            <span style="color:#66d9ef">if</span>(counter <span style="color:#f92672">==</span> <span style="color:#ae81ff">24</span><span style="color:#ae81ff">&#39;d200</span>_000)<span style="color:#66d9ef">begin</span>
+                                 pulse <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">1</span><span style="color:#ae81ff">&#39;b1</span>;     <span style="color:#75715e">// 按键按到一定时间（200000个posedge之后才输出按下按键这个信号）
+</span><span style="color:#75715e"></span>                                 counter <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;
+                            <span style="color:#66d9ef">end</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">begin</span>
+                                 pulse <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;        <span style="color:#75715e">// 否则不输出
+</span><span style="color:#75715e"></span>                                 counter <span style="color:#f92672">&lt;=</span> counter <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span><span style="color:#ae81ff">&#39;b1</span>;
+                            <span style="color:#66d9ef">end</span>
+                            <span style="color:#66d9ef">if</span>(level)<span style="color:#66d9ef">begin</span>
+                                nextstate <span style="color:#f92672">&lt;=</span> S1;
+                            <span style="color:#66d9ef">end</span>
+                            <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">begin</span>
+                                nextstate <span style="color:#f92672">&lt;=</span> S0;
+                            <span style="color:#66d9ef">end</span>
+                        <span style="color:#66d9ef">end</span>
+                <span style="color:#66d9ef">default</span><span style="color:#f92672">:</span> nextstate <span style="color:#f92672">&lt;=</span> S0;
+            <span style="color:#66d9ef">endcase</span>
+      <span style="color:#66d9ef">end</span>
+      
+      <span style="color:#75715e">// Set the new state 
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">always</span> @(<span style="color:#66d9ef">posedge</span> clk, <span style="color:#66d9ef">posedge</span> rst)
+            <span style="color:#66d9ef">begin</span>
+                <span style="color:#66d9ef">if</span>(rst <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span><span style="color:#ae81ff">&#39;b1</span>)
+                    state <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">2</span><span style="color:#ae81ff">&#39;b0</span>;
+                <span style="color:#66d9ef">else</span>
+                    state <span style="color:#f92672">&lt;=</span> nextstate;
+    <span style="color:#66d9ef">end</span>
+<span style="color:#66d9ef">endmodule</span>
+
+</code></pre></div><h2 id="子弹逻辑">子弹逻辑</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#66d9ef">module</span> bullet(clk,rst,startX,startY,
+        bulletX,bulletY,
+        bulletX1,bulletY1,  
+        bulletX2,bulletY2,
+        bulletX3,bulletY3,
+        bulletX4,bulletY4,
+        bulletX5,bulletY5,
+        bulletX6,bulletY6,
+        bullet1flying,
+        bullet2flying,
+        bullet3flying,
+        bullet4flying,
+        bullet5flying,
+        bullet6flying,
+        direction,fire,flying,hit,firespeed
+        );
+    <span style="color:#75715e">// 将子弹位置硬编码作为输入
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">input</span> clk,rst,fire,hit,direction,bullet1flying,bullet2flying,bullet3flying,bullet4flying,bullet5flying,bullet6flying;
+    <span style="color:#66d9ef">input</span> [<span style="color:#ae81ff">9</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>]startX,bulletX1,bulletX2,bulletX3,bulletX4,bulletX5,bulletX6;
+    <span style="color:#66d9ef">input</span> [<span style="color:#ae81ff">8</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>]startY,bulletY1,bulletY2,bulletY3,bulletY4,bulletY5,bulletY6;
+    <span style="color:#66d9ef">input</span> [<span style="color:#ae81ff">2</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] firespeed;  <span style="color:#75715e">// 子弹速度
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">output</span> <span style="color:#66d9ef">reg</span> flying;      <span style="color:#75715e">// 子弹是否飞行
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">output</span> <span style="color:#66d9ef">reg</span> [<span style="color:#ae81ff">9</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>]bulletX; <span style="color:#75715e">// 输出子弹的横纵坐标
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">output</span> <span style="color:#66d9ef">reg</span> [<span style="color:#ae81ff">8</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>]bulletY;    
+    <span style="color:#66d9ef">reg</span> [<span style="color:#ae81ff">23</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] counter;     <span style="color:#75715e">// 分频计数器
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">reg</span> speed,bullethit;        <span style="color:#75715e">// 飞行速度以及是否被击中的状态
+</span><span style="color:#75715e"></span>
+    
+    <span style="color:#66d9ef">always</span>@(<span style="color:#66d9ef">posedge</span> clk <span style="color:#66d9ef">or</span> <span style="color:#66d9ef">posedge</span> rst)
+    <span style="color:#66d9ef">begin</span>
+        <span style="color:#66d9ef">if</span>(rst)
+        <span style="color:#66d9ef">begin</span>
+            bullethit <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;     <span style="color:#75715e">// 复位时子弹恢复未被击中状态
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">end</span> <span style="color:#66d9ef">else</span> 
+        <span style="color:#66d9ef">begin</span>                       <span style="color:#75715e">// 将六个外星人发射的子弹传入模块，并判定如果我方飞船击中了对方的子弹，那么可以击落这发子弹
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span>( ((flying <span style="color:#f92672">&amp;&amp;</span> bullet1flying) <span style="color:#f92672">&amp;&amp;</span> ((bulletX <span style="color:#f92672">&gt;=</span> bulletX1 <span style="color:#f92672">-</span> <span style="color:#ae81ff">2</span>)<span style="color:#f92672">&amp;&amp;</span>(bulletX <span style="color:#f92672">&lt;=</span> bulletX1 <span style="color:#f92672">+</span> <span style="color:#ae81ff">6</span>))<span style="color:#f92672">&amp;&amp;</span>(bulletY <span style="color:#f92672">==</span> bulletY1 <span style="color:#f92672">+</span> <span style="color:#ae81ff">8</span>))<span style="color:#f92672">||</span>
+                ((flying <span style="color:#f92672">&amp;&amp;</span> bullet2flying) <span style="color:#f92672">&amp;&amp;</span> ((bulletX <span style="color:#f92672">&gt;=</span> bulletX2 <span style="color:#f92672">-</span> <span style="color:#ae81ff">2</span>)<span style="color:#f92672">&amp;&amp;</span>(bulletX <span style="color:#f92672">&lt;=</span> bulletX2 <span style="color:#f92672">+</span> <span style="color:#ae81ff">6</span>))<span style="color:#f92672">&amp;&amp;</span>(bulletY <span style="color:#f92672">==</span> bulletY2 <span style="color:#f92672">+</span> <span style="color:#ae81ff">8</span>))<span style="color:#f92672">||</span>
+                ((flying <span style="color:#f92672">&amp;&amp;</span> bullet3flying) <span style="color:#f92672">&amp;&amp;</span> ((bulletX <span style="color:#f92672">&gt;=</span> bulletX3 <span style="color:#f92672">-</span> <span style="color:#ae81ff">2</span>)<span style="color:#f92672">&amp;&amp;</span>(bulletX <span style="color:#f92672">&lt;=</span> bulletX3 <span style="color:#f92672">+</span> <span style="color:#ae81ff">6</span>))<span style="color:#f92672">&amp;&amp;</span>(bulletY <span style="color:#f92672">==</span> bulletY3 <span style="color:#f92672">+</span> <span style="color:#ae81ff">8</span>))<span style="color:#f92672">||</span>
+                ((flying <span style="color:#f92672">&amp;&amp;</span> bullet4flying) <span style="color:#f92672">&amp;&amp;</span> ((bulletX <span style="color:#f92672">&gt;=</span> bulletX4 <span style="color:#f92672">-</span> <span style="color:#ae81ff">2</span>)<span style="color:#f92672">&amp;&amp;</span>(bulletX <span style="color:#f92672">&lt;=</span> bulletX4 <span style="color:#f92672">+</span> <span style="color:#ae81ff">6</span>))<span style="color:#f92672">&amp;&amp;</span>(bulletY <span style="color:#f92672">==</span> bulletY4 <span style="color:#f92672">+</span> <span style="color:#ae81ff">8</span>))<span style="color:#f92672">||</span>
+                ((flying <span style="color:#f92672">&amp;&amp;</span> bullet5flying) <span style="color:#f92672">&amp;&amp;</span> ((bulletX <span style="color:#f92672">&gt;=</span> bulletX5 <span style="color:#f92672">-</span> <span style="color:#ae81ff">2</span>)<span style="color:#f92672">&amp;&amp;</span>(bulletX <span style="color:#f92672">&lt;=</span> bulletX5 <span style="color:#f92672">+</span> <span style="color:#ae81ff">6</span>))<span style="color:#f92672">&amp;&amp;</span>(bulletY <span style="color:#f92672">==</span> bulletY5 <span style="color:#f92672">+</span> <span style="color:#ae81ff">8</span>))<span style="color:#f92672">||</span>
+                ((flying <span style="color:#f92672">&amp;&amp;</span> bullet6flying) <span style="color:#f92672">&amp;&amp;</span> ((bulletX <span style="color:#f92672">&gt;=</span> bulletX6 <span style="color:#f92672">-</span> <span style="color:#ae81ff">2</span>)<span style="color:#f92672">&amp;&amp;</span>(bulletX <span style="color:#f92672">&lt;=</span> bulletX6 <span style="color:#f92672">+</span> <span style="color:#ae81ff">6</span>))<span style="color:#f92672">&amp;&amp;</span>(bulletY <span style="color:#f92672">==</span> bulletY6 <span style="color:#f92672">+</span> <span style="color:#ae81ff">8</span>)))
+            <span style="color:#66d9ef">begin</span>   <span style="color:#75715e">// 如果被击中
+</span><span style="color:#75715e"></span>                bullethit <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">1</span><span style="color:#ae81ff">&#39;b1</span>;  <span style="color:#75715e">//  子弹被击落   
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">end</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">begin</span>
+                bullethit <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;
+            <span style="color:#66d9ef">end</span>      
+        <span style="color:#66d9ef">end</span>
+    <span style="color:#66d9ef">end</span>
+    
+    <span style="color:#66d9ef">always</span>@(<span style="color:#66d9ef">posedge</span> clk <span style="color:#66d9ef">or</span> <span style="color:#66d9ef">posedge</span> rst)
+    <span style="color:#66d9ef">begin</span>
+        <span style="color:#66d9ef">if</span>(rst)
+        <span style="color:#66d9ef">begin</span>   
+            flying <span style="color:#f92672">&lt;=</span><span style="color:#ae81ff">0</span>;
+        <span style="color:#66d9ef">end</span> <span style="color:#66d9ef">else</span>
+        <span style="color:#66d9ef">begin</span>
+            <span style="color:#66d9ef">if</span>(fire)    <span style="color:#75715e">// 开火了
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">begin</span>
+                <span style="color:#66d9ef">if</span>(flying <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>)<span style="color:#66d9ef">begin</span>
+                    flying  <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">1</span>;   <span style="color:#75715e">// 子弹重新飞行
+</span><span style="color:#75715e"></span>                    bulletX <span style="color:#f92672">&lt;=</span> startX <span style="color:#f92672">+</span> <span style="color:#ae81ff">10</span><span style="color:#ae81ff">&#39;d13</span>;     <span style="color:#75715e">// 子弹初始位置（在飞船中央）
+</span><span style="color:#75715e"></span>                    bulletY <span style="color:#f92672">&lt;=</span> startY;
+                <span style="color:#66d9ef">end</span>
+            <span style="color:#66d9ef">end</span> 
+            <span style="color:#66d9ef">if</span>(flying)
+            <span style="color:#66d9ef">begin</span>   
+                bulletY <span style="color:#f92672">&lt;=</span> direction <span style="color:#f92672">?</span> (bulletY <span style="color:#f92672">-</span> speed)<span style="color:#f92672">:</span>(bulletY <span style="color:#f92672">+</span> speed); <span style="color:#75715e">// 子弹复用，如果是外星人发射的就向下飞，如果是我方飞船发射的就向上飞
+</span><span style="color:#75715e"></span>                <span style="color:#66d9ef">if</span>((bulletY <span style="color:#f92672">==</span> <span style="color:#ae81ff">10</span>) <span style="color:#f92672">||</span> (bulletY <span style="color:#f92672">==</span> <span style="color:#ae81ff">470</span>) <span style="color:#f92672">||</span> hit <span style="color:#f92672">||</span> bullethit) <span style="color:#75715e">// 到边沿就停止飞行
+</span><span style="color:#75715e"></span>                <span style="color:#66d9ef">begin</span>
+                    flying <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;
+                <span style="color:#66d9ef">end</span>
+            <span style="color:#66d9ef">end</span>
+        <span style="color:#66d9ef">end</span>
+    <span style="color:#66d9ef">end</span>
+    
+    <span style="color:#66d9ef">always</span>@(<span style="color:#66d9ef">posedge</span> clk)
+        <span style="color:#66d9ef">if</span>(flying)
+        <span style="color:#66d9ef">begin</span>
+            <span style="color:#66d9ef">if</span>(counter <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">24</span><span style="color:#ae81ff">&#39;d150</span>_000)<span style="color:#66d9ef">begin</span> <span style="color:#75715e">//  每到150000个posedge就开始向下移动，上方的speed变为1
+</span><span style="color:#75715e"></span>                 speed <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">1</span><span style="color:#ae81ff">&#39;b1</span>;
+                 counter <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;
+            <span style="color:#66d9ef">end</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">begin</span>
+                 counter <span style="color:#f92672">&lt;=</span> counter <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span><span style="color:#ae81ff">&#39;b1</span> <span style="color:#f92672">+</span> firespeed; <span style="color:#75715e">// 由开关控制的调速子弹，可以减少counter到达150000 个posedge的时间，让子弹飞行更快
+</span><span style="color:#75715e"></span>                 speed <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;
+            <span style="color:#66d9ef">end</span>
+        <span style="color:#66d9ef">end</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">begin</span>
+            counter <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;
+            speed <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;
+        <span style="color:#66d9ef">end</span>
+    
+<span style="color:#66d9ef">endmodule</span>
+
+</code></pre></div><h2 id="飞船逻辑">飞船逻辑</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#66d9ef">module</span> spaceship
+    (spaceshipX,spaceshipY,btnL,btnR,clk,rst,
+    alienbulletX1,alienbulletY1,
+    alienbulletX2,alienbulletY2,
+    alienbulletX3,alienbulletY3,
+    alienbulletX4,alienbulletY4,
+    alienbulletX5,alienbulletY5,
+    alienbulletX6,alienbulletY6,
+    alienbullet1,alienbullet2,
+    alienbullet3,alienbullet4,
+    alienbullet5,alienbullet6,
+    alienhit,liveminus);
+    <span style="color:#66d9ef">input</span> btnL,btnR;        <span style="color:#75715e">// 按键信号
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">input</span> clk,rst;
+    <span style="color:#66d9ef">output</span> <span style="color:#66d9ef">reg</span> [<span style="color:#ae81ff">9</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>]spaceshipX; <span style="color:#75715e">// 输出飞船的横纵坐标
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">output</span> <span style="color:#66d9ef">reg</span> [<span style="color:#ae81ff">8</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>]spaceshipY;
+    <span style="color:#66d9ef">output</span> <span style="color:#66d9ef">reg</span> alienhit,liveminus;  <span style="color:#75715e">// 输出是否被外星人击中
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">input</span> alienbullet1,alienbullet2,alienbullet3,alienbullet4,alienbullet5,alienbullet6;        <span style="color:#75715e">// 硬编码六发外星人子弹是否存活
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">input</span> [<span style="color:#ae81ff">9</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>]alienbulletX1,alienbulletX2,alienbulletX3,alienbulletX4,alienbulletX5,alienbulletX6; <span style="color:#75715e">// 六发外星人子弹的横纵坐标
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">input</span> [<span style="color:#ae81ff">8</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>]alienbulletY1,alienbulletY2,alienbulletY3,alienbulletY4,alienbulletY5,alienbulletY6;  
+     
+    <span style="color:#66d9ef">always</span>@(<span style="color:#66d9ef">posedge</span> clk <span style="color:#66d9ef">or</span> <span style="color:#66d9ef">posedge</span> rst)
+    <span style="color:#66d9ef">begin</span>
+        <span style="color:#66d9ef">if</span>(rst)
+        <span style="color:#66d9ef">begin</span>
+            spaceshipX <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">10</span><span style="color:#ae81ff">&#39;d310</span>;  <span style="color:#75715e">//   飞船的初始横纵坐标
+</span><span style="color:#75715e"></span>            spaceshipY <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">9</span><span style="color:#ae81ff">&#39;d400</span>;   
+            alienhit <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;          <span style="color:#75715e">//   尚未被外星人打中
+</span><span style="color:#75715e"></span>            liveminus <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;         <span style="color:#75715e">//   还没掉血
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">end</span>
+        <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">begin</span>
+            <span style="color:#66d9ef">if</span>(btnL) <span style="color:#66d9ef">begin</span>                       
+                spaceshipX <span style="color:#f92672">&lt;=</span> (spaceshipX <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">11</span>)<span style="color:#f92672">?</span> (spaceshipX <span style="color:#f92672">-</span> <span style="color:#ae81ff">10</span><span style="color:#ae81ff">&#39;d1</span>)<span style="color:#f92672">:</span>spaceshipX;   <span style="color:#75715e">//  如果到了边界再次按按钮不会向左 
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">end</span> 
+            <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span>(btnR) <span style="color:#66d9ef">begin</span>
+                spaceshipX <span style="color:#f92672">&lt;=</span> (spaceshipX <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">598</span>)<span style="color:#f92672">?</span> (spaceshipX <span style="color:#f92672">+</span> <span style="color:#ae81ff">9</span><span style="color:#ae81ff">&#39;d1</span>)<span style="color:#f92672">:</span>spaceshipX;   <span style="color:#75715e">//  到了边界再次按按钮不会向右
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">end</span>
+            <span style="color:#66d9ef">if</span> ((alienbullet1 <span style="color:#f92672">&amp;&amp;</span>(((alienbulletX1 <span style="color:#f92672">&gt;=</span> spaceshipX <span style="color:#f92672">-</span><span style="color:#ae81ff">2</span>)<span style="color:#f92672">&amp;&amp;</span>(alienbulletX1 <span style="color:#f92672">&lt;=</span> spaceshipX <span style="color:#f92672">+</span> <span style="color:#ae81ff">33</span>))<span style="color:#f92672">&amp;&amp;</span>(alienbulletY1 <span style="color:#f92672">==</span> spaceshipY)))  <span style="color:#f92672">||</span> 
+                (alienbullet2 <span style="color:#f92672">&amp;&amp;</span>(((alienbulletX2 <span style="color:#f92672">&gt;=</span> spaceshipX <span style="color:#f92672">-</span><span style="color:#ae81ff">2</span>)<span style="color:#f92672">&amp;&amp;</span>(alienbulletX2 <span style="color:#f92672">&lt;=</span> spaceshipX <span style="color:#f92672">+</span> <span style="color:#ae81ff">33</span>))<span style="color:#f92672">&amp;&amp;</span>(alienbulletY2 <span style="color:#f92672">==</span> spaceshipY)))  <span style="color:#f92672">||</span>
+                (alienbullet3 <span style="color:#f92672">&amp;&amp;</span>(((alienbulletX3 <span style="color:#f92672">&gt;=</span> spaceshipX <span style="color:#f92672">-</span><span style="color:#ae81ff">2</span>)<span style="color:#f92672">&amp;&amp;</span>(alienbulletX3 <span style="color:#f92672">&lt;=</span> spaceshipX <span style="color:#f92672">+</span> <span style="color:#ae81ff">33</span>))<span style="color:#f92672">&amp;&amp;</span>(alienbulletY3 <span style="color:#f92672">==</span> spaceshipY)))  <span style="color:#f92672">||</span>
+                (alienbullet4 <span style="color:#f92672">&amp;&amp;</span>(((alienbulletX4 <span style="color:#f92672">&gt;=</span> spaceshipX <span style="color:#f92672">-</span><span style="color:#ae81ff">2</span>)<span style="color:#f92672">&amp;&amp;</span>(alienbulletX4 <span style="color:#f92672">&lt;=</span> spaceshipX <span style="color:#f92672">+</span> <span style="color:#ae81ff">33</span>))<span style="color:#f92672">&amp;&amp;</span>(alienbulletY4 <span style="color:#f92672">==</span> spaceshipY)))  <span style="color:#f92672">||</span>
+                (alienbullet5 <span style="color:#f92672">&amp;&amp;</span>(((alienbulletX5 <span style="color:#f92672">&gt;=</span> spaceshipX <span style="color:#f92672">-</span><span style="color:#ae81ff">2</span>)<span style="color:#f92672">&amp;&amp;</span>(alienbulletX5 <span style="color:#f92672">&lt;=</span> spaceshipX <span style="color:#f92672">+</span> <span style="color:#ae81ff">33</span>))<span style="color:#f92672">&amp;&amp;</span>(alienbulletY5 <span style="color:#f92672">==</span> spaceshipY)))  <span style="color:#f92672">||</span>
+                (alienbullet6 <span style="color:#f92672">&amp;&amp;</span>(((alienbulletX6 <span style="color:#f92672">&gt;=</span> spaceshipX <span style="color:#f92672">-</span><span style="color:#ae81ff">2</span>)<span style="color:#f92672">&amp;&amp;</span>(alienbulletX6 <span style="color:#f92672">&lt;=</span> spaceshipX <span style="color:#f92672">+</span> <span style="color:#ae81ff">33</span>))<span style="color:#f92672">&amp;&amp;</span>(alienbulletY6 <span style="color:#f92672">==</span> spaceshipY)))) 
+            <span style="color:#66d9ef">begin</span>   <span style="color:#75715e">// 如果子弹存活而且子弹击中了飞船
+</span><span style="color:#75715e"></span>                alienhit <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">1</span><span style="color:#ae81ff">&#39;b1</span>;   <span style="color:#75715e">//  被外星人击中一次
+</span><span style="color:#75715e"></span>                liveminus <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">1</span><span style="color:#ae81ff">&#39;b1</span>;  <span style="color:#75715e">//  掉血
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">end</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">begin</span>
+                alienhit <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;  <span style="color:#75715e">//  没击中就不输出
+</span><span style="color:#75715e"></span>                liveminus <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>; 
+            <span style="color:#66d9ef">end</span>
+        <span style="color:#66d9ef">end</span>
+    <span style="color:#66d9ef">end</span>
+<span style="color:#66d9ef">endmodule</span>
+
+</code></pre></div><h2 id="顶层--vga-color">顶层 + VGA Color</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-verilog" data-lang="verilog"><span style="color:#66d9ef">module</span> spaceinvader(
+    <span style="color:#66d9ef">input</span> rst;
+    <span style="color:#66d9ef">input</span> clk;
+    <span style="color:#66d9ef">input</span> buttonL,buttonR,fire,startbutton;
+    <span style="color:#66d9ef">input</span> sw1,sw2;
+    <span style="color:#66d9ef">output</span> <span style="color:#66d9ef">reg</span> [<span style="color:#ae81ff">3</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] VGA_R,VGA_G,VGA_B;
+    <span style="color:#66d9ef">output</span> VGA_hSync,VGA_vSync;
+    <span style="color:#66d9ef">output</span> [<span style="color:#ae81ff">6</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] seg;
+    <span style="color:#66d9ef">output</span> [<span style="color:#ae81ff">7</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] AN;
+);
+<span style="color:#75715e">// 输入变量
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">wire</span> [<span style="color:#ae81ff">23</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>]aliennumber;
+<span style="color:#66d9ef">wire</span> locked;
+<span style="color:#66d9ef">wire</span> cleanL,cleanR,cleanfire;
+<span style="color:#66d9ef">wire</span> pulseL,pulseR,pulsefire,truepulseL,truepulseR;
+
+<span style="color:#66d9ef">wire</span> [<span style="color:#ae81ff">9</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>]sshipX;
+<span style="color:#66d9ef">wire</span> [<span style="color:#ae81ff">8</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>]sshipY;
+<span style="color:#66d9ef">wire</span> [<span style="color:#ae81ff">9</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>]rX,arX1,arX2,arX3,arX4,arX5,arX6;
+<span style="color:#66d9ef">wire</span> [<span style="color:#ae81ff">8</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>]rY,arY1,arY2,arY3,arY4,arY5,arY6;
+
+<span style="color:#66d9ef">reg</span> [<span style="color:#ae81ff">13</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>]currscore;
+<span style="color:#66d9ef">reg</span> [<span style="color:#ae81ff">8</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>]space_addr,life_addr;
+<span style="color:#66d9ef">wire</span> [<span style="color:#ae81ff">8</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>]ship_addr;
+<span style="color:#66d9ef">wire</span> [<span style="color:#ae81ff">7</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>]space_dout;
+<span style="color:#66d9ef">reg</span> [<span style="color:#ae81ff">9</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>]a_addr1,a_addr2,a_addr3,a_addr4,a_addr5;
+<span style="color:#66d9ef">reg</span> [<span style="color:#ae81ff">9</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>]a_addr6,a_addr7,a_addr8,a_addr9,a_addr10;
+<span style="color:#66d9ef">reg</span> [<span style="color:#ae81ff">9</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>]a_addr11,a_addr12,a_addr13,a_addr14,a_addr15;
+<span style="color:#66d9ef">wire</span> [<span style="color:#ae81ff">7</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>]a_dout,a2_dout,a3_dout;
+
+<span style="color:#66d9ef">wire</span> rfly,a1border,a2border,a3border,hit,gameover,truefire,hitbullet;
+<span style="color:#66d9ef">wire</span> ahit,liveminus;
+<span style="color:#66d9ef">wire</span> totalgameover;
+<span style="color:#66d9ef">reg</span> livesgameover;
+<span style="color:#66d9ef">reg</span> [<span style="color:#ae81ff">2</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] R,G,B;
+<span style="color:#66d9ef">reg</span> border,shipborder,scoreborder,bulletborder,gameoverborder,startborder,scorecase,startscreen,winscreen,winborder,lifeborder;
+<span style="color:#66d9ef">reg</span> abulletborder1,abulletborder2,abulletborder3,abulletborder4,abulletborder5,abulletborder6;
+<span style="color:#66d9ef">wire</span> Xdisplay,Ydisplay;
+<span style="color:#66d9ef">reg</span> [<span style="color:#ae81ff">14</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>]gameoveraddr;
+<span style="color:#66d9ef">reg</span> [<span style="color:#ae81ff">17</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>]startaddr;
+<span style="color:#66d9ef">reg</span> [<span style="color:#ae81ff">16</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>]winaddr;
+<span style="color:#66d9ef">wire</span> [<span style="color:#ae81ff">7</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>]background,gameoverimg,startimg,winimg;
+<span style="color:#66d9ef">wire</span> CLK_25,CLK_50;
+<span style="color:#66d9ef">reg</span> [<span style="color:#ae81ff">6</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] points;
+<span style="color:#66d9ef">reg</span> [<span style="color:#ae81ff">2</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] lives;
+
+<span style="color:#75715e">//  飞船
+</span><span style="color:#75715e"></span>spaceship SHIP(sshipX,sshipY,truepulseL,truepulseR,CLK_25,rst,
+    arX1,arY1,
+    arX2,arY2,
+    arX3,arY3,
+    arX4,arY4,
+    arX5,arY5,
+    arX6,arY6,
+    arfly1,arfly2,
+    arfly3,arfly4,
+    arfly5,arfly6,
+    ahit,liveminus
+    );
+<span style="color:#66d9ef">assign</span> firespeed <span style="color:#f92672">=</span> sw1 <span style="color:#f92672">+</span> sw2; <span style="color:#75715e">//    子弹调速通过开关实现
+</span><span style="color:#75715e">// 子弹
+</span><span style="color:#75715e"></span>bullet BULLETSHIP(CLK_25,rst,sshipX,sshipY,
+    rX,rY,
+    arX1,arY1,
+    arX2,arY2,
+    arX3,arY3,
+    arX4,arY4,
+    arX5,arY5,
+    arX6,arY6,
+    arfly1,arfly2,
+    arfly3,arfly4,
+    arfly5,arfly6,
+    <span style="color:#ae81ff">1</span>,truefire,rfly,hit,firespeed);
+
+<span style="color:#75715e">/************************外星人以及外星人子弹逻辑开始**************************/</span>
+
+<span style="color:#66d9ef">wire</span> arfly1,arfly2,arfly3,arfly4,arfly5,arfly6;
+<span style="color:#66d9ef">wire</span> afire1,afire2,afire3,afire4,afire5,afire6;
+<span style="color:#66d9ef">wire</span> aalive1,aalive2,aalive3,aalive4,aalive5;
+<span style="color:#66d9ef">wire</span> aalive6,aalive7,aalive8,aalive9,aalive10;
+<span style="color:#66d9ef">wire</span> aalive11,aalive12,aalive13,aalive14,aalive15;
+<span style="color:#66d9ef">wire</span> hit1,hit2,hit3,hit4,hit5;
+<span style="color:#66d9ef">wire</span> hit6,hit7,hit8,hit9,hit10;
+<span style="color:#66d9ef">wire</span> hit11,hit12,hit13,hit14,hit15;
+<span style="color:#66d9ef">wire</span> [<span style="color:#ae81ff">9</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>]aX1,aX2,aX3,aX4,aX5;
+<span style="color:#66d9ef">wire</span> [<span style="color:#ae81ff">8</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>]aY1,aY2,aY3,aY4,aY5;
+<span style="color:#66d9ef">wire</span> [<span style="color:#ae81ff">9</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>]a2X1,a2X2,a2X3,a2X4,a2X5;
+<span style="color:#66d9ef">wire</span> [<span style="color:#ae81ff">8</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>]a2Y1,a2Y2,a2Y3,a2Y4,a2Y5;
+<span style="color:#66d9ef">wire</span> [<span style="color:#ae81ff">9</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>]a3X1,a3X2,a3X3,a3X4,a3X5;
+<span style="color:#66d9ef">wire</span> [<span style="color:#ae81ff">8</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>]a3Y1,a3Y2,a3Y3,a3Y4,a3Y5;
+
+alien ALIEN1(CLK_25,rst,<span style="color:#ae81ff">500</span>,<span style="color:#ae81ff">150</span>,aX1,aY1,<span style="color:#ae81ff">30</span>,aalive1,rfly,rX,rY,hit1,afire1,<span style="color:#ae81ff">100000000</span>,<span style="color:#ae81ff">0</span>,startscreen,gameover,aliennumber);
+alien ALIEN2(CLK_25,rst,<span style="color:#ae81ff">430</span>,<span style="color:#ae81ff">150</span>,aX2,aY2,<span style="color:#ae81ff">30</span>,aalive2,rfly,rX,rY,hit2,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">150000000</span>,<span style="color:#ae81ff">0</span>,startscreen,gameover,aliennumber);
+alien ALIEN3(CLK_25,rst,<span style="color:#ae81ff">360</span>,<span style="color:#ae81ff">150</span>,aX3,aY3,<span style="color:#ae81ff">30</span>,aalive3,rfly,rX,rY,hit3,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">150000000</span>,<span style="color:#ae81ff">0</span>,startscreen,gameover,aliennumber);
+alien ALIEN4(CLK_25,rst,<span style="color:#ae81ff">290</span>,<span style="color:#ae81ff">150</span>,aX4,aY4,<span style="color:#ae81ff">30</span>,aalive4,rfly,rX,rY,hit4,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">150000000</span>,<span style="color:#ae81ff">0</span>,startscreen,gameover,aliennumber);
+alien ALIEN5(CLK_25,rst,<span style="color:#ae81ff">220</span>,<span style="color:#ae81ff">150</span>,aX5,aY5,<span style="color:#ae81ff">30</span>,aalive5,rfly,rX,rY,hit5,afire2,<span style="color:#ae81ff">100000000</span>,<span style="color:#ae81ff">0</span>,startscreen,gameover,aliennumber);
+
+alien ALIEN6(CLK_25,rst,<span style="color:#ae81ff">500</span>,<span style="color:#ae81ff">98</span>,a2X1,a2Y1,<span style="color:#ae81ff">30</span>,aalive6,rfly,rX,rY,hit6,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">150000000</span>,<span style="color:#ae81ff">0</span>,startscreen,gameover,aliennumber);
+alien ALIEN7(CLK_25,rst,<span style="color:#ae81ff">430</span>,<span style="color:#ae81ff">98</span>,a2X2,a2Y2,<span style="color:#ae81ff">30</span>,aalive7,rfly,rX,rY,hit7,afire3,<span style="color:#ae81ff">100000000</span>,aalive2,startscreen,gameover,aliennumber);
+alien ALIEN8(CLK_25,rst,<span style="color:#ae81ff">360</span>,<span style="color:#ae81ff">98</span>,a2X3,a2Y3,<span style="color:#ae81ff">30</span>,aalive8,rfly,rX,rY,hit8,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">150000000</span>,<span style="color:#ae81ff">0</span>,startscreen,gameover,aliennumber);
+alien ALIEN9(CLK_25,rst,<span style="color:#ae81ff">290</span>,<span style="color:#ae81ff">98</span>,a2X4,a2Y4,<span style="color:#ae81ff">30</span>,aalive9,rfly,rX,rY,hit9,afire4,<span style="color:#ae81ff">100000000</span>,aalive4,startscreen,gameover,aliennumber);
+alien ALIEN10(CLK_25,rst,<span style="color:#ae81ff">220</span>,<span style="color:#ae81ff">98</span>,a2X5,a2Y5,<span style="color:#ae81ff">30</span>,aalive10,rfly,rX,rY,hit10,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">150000000</span>,<span style="color:#ae81ff">0</span>,startscreen,gameover,aliennumber);
+
+alien ALIEN11(CLK_25,rst,<span style="color:#ae81ff">500</span>,<span style="color:#ae81ff">50</span>,a3X1,a3Y1,<span style="color:#ae81ff">30</span>,aalive11,rfly,rX,rY,hit11,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">150000000</span>,<span style="color:#ae81ff">0</span>,startscreen,gameover,aliennumber);
+alien ALIEN12(CLK_25,rst,<span style="color:#ae81ff">430</span>,<span style="color:#ae81ff">50</span>,a3X2,a3Y2,<span style="color:#ae81ff">30</span>,aalive12,rfly,rX,rY,hit12,afire5,<span style="color:#ae81ff">100000000</span>,(aalive7 <span style="color:#f92672">||</span> aalive2),startscreen,gameover,aliennumber);
+alien ALIEN13(CLK_25,rst,<span style="color:#ae81ff">360</span>,<span style="color:#ae81ff">50</span>,a3X3,a3Y3,<span style="color:#ae81ff">30</span>,aalive13,rfly,rX,rY,hit13,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">150000000</span>,<span style="color:#ae81ff">0</span>,startscreen,gameover,aliennumber);
+alien ALIEN14(CLK_25,rst,<span style="color:#ae81ff">290</span>,<span style="color:#ae81ff">50</span>,a3X4,a3Y4,<span style="color:#ae81ff">30</span>,aalive14,rfly,rX,rY,hit14,afire6,<span style="color:#ae81ff">100000000</span>,(aalive9 <span style="color:#f92672">||</span> aalive4),startscreen,gameover,aliennumber);
+alien ALIEN15(CLK_25,rst,<span style="color:#ae81ff">220</span>,<span style="color:#ae81ff">50</span>,a3X5,a3Y5,<span style="color:#ae81ff">30</span>,aalive15,rfly,rX,rY,hit15,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">150000000</span>,<span style="color:#ae81ff">0</span>,startscreen,gameover,aliennumber);
+
+bullet BULLET1(CLK_25,rst,aX1,aY1,arX1,arY1,rX,rY,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,rfly,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,afire1,arfly1,ahit,<span style="color:#ae81ff">0</span>);
+bullet BULLET2(CLK_25,rst,aX5,aY5,arX2,arY2,rX,rY,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,rfly,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,afire2,arfly2,ahit,<span style="color:#ae81ff">0</span>);
+bullet BULLET3(CLK_25,rst,a2X2,a2Y2,arX3,arY3,rX,rY,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,rfly,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,afire3,arfly3,ahit,<span style="color:#ae81ff">0</span>);
+bullet BULLET4(CLK_25,rst,a2X4,a2Y4,arX4,arY4,rX,rY,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,rfly,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,afire4,arfly4,ahit,<span style="color:#ae81ff">0</span>);
+bullet BULLET5(CLK_25,rst,a3X2,a3Y2,arX5,arY5,rX,rY,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,rfly,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,afire5,arfly5,ahit,<span style="color:#ae81ff">0</span>);
+bullet BULLET6(CLK_25,rst,a3X4,a3Y4,arX6,arY6,rX,rY,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,rfly,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,afire6,arfly6,ahit,<span style="color:#ae81ff">0</span>);
+
+<span style="color:#75715e">/**********************************************************************************/</span>
+
+<span style="color:#75715e">/****************************** 血槽，胜负判定模块 *********************************/</span>
+
+<span style="color:#66d9ef">wire</span> [<span style="color:#ae81ff">4</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] aalivecounter1<span style="color:#f92672">=</span>aalive1;
+<span style="color:#66d9ef">wire</span> [<span style="color:#ae81ff">4</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] aalivecounter2 <span style="color:#f92672">=</span> aalive2;
+<span style="color:#66d9ef">wire</span> [<span style="color:#ae81ff">4</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] aalivecounter3<span style="color:#f92672">=</span>aalive3;
+<span style="color:#66d9ef">wire</span> [<span style="color:#ae81ff">4</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] aalivecounter4<span style="color:#f92672">=</span>aalive4;
+<span style="color:#66d9ef">wire</span> [<span style="color:#ae81ff">4</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] aalivecounter5<span style="color:#f92672">=</span>aalive5;
+<span style="color:#66d9ef">wire</span> [<span style="color:#ae81ff">4</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] aalivecounter6<span style="color:#f92672">=</span>aalive6;
+<span style="color:#66d9ef">wire</span> [<span style="color:#ae81ff">4</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] aalivecounter7<span style="color:#f92672">=</span>aalive7;
+<span style="color:#66d9ef">wire</span> [<span style="color:#ae81ff">4</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] aalivecounter8<span style="color:#f92672">=</span>aalive8;
+<span style="color:#66d9ef">wire</span> [<span style="color:#ae81ff">4</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] aalivecounter9<span style="color:#f92672">=</span>aalive9;
+<span style="color:#66d9ef">wire</span> [<span style="color:#ae81ff">4</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] aalivecounter10<span style="color:#f92672">=</span>aalive10;
+<span style="color:#66d9ef">wire</span> [<span style="color:#ae81ff">4</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] aalivecounter11<span style="color:#f92672">=</span>aalive11;
+<span style="color:#66d9ef">wire</span> [<span style="color:#ae81ff">4</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] aalivecounter12<span style="color:#f92672">=</span>aalive12;
+<span style="color:#66d9ef">wire</span> [<span style="color:#ae81ff">4</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] aalivecounter13<span style="color:#f92672">=</span>aalive13;
+<span style="color:#66d9ef">wire</span> [<span style="color:#ae81ff">4</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] aalivecounter14<span style="color:#f92672">=</span>aalive14;
+<span style="color:#66d9ef">wire</span> [<span style="color:#ae81ff">4</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] aalivecounter15<span style="color:#f92672">=</span>aalive15;
+
+<span style="color:#75715e">// 传入的外星人数量（调整外星人移动速度的）以5个为一阶
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">assign</span> aliennumber <span style="color:#f92672">=</span> (aalivecounter1<span style="color:#f92672">+</span>aalivecounter2<span style="color:#f92672">+</span>aalivecounter3<span style="color:#f92672">+</span>aalivecounter4<span style="color:#f92672">+</span>aalivecounter5<span style="color:#f92672">+</span>aalivecounter6<span style="color:#f92672">+</span>aalivecounter7<span style="color:#f92672">+</span>aalivecounter8<span style="color:#f92672">+</span>aalivecounter9<span style="color:#f92672">+</span>aalivecounter10<span style="color:#f92672">+</span>aalivecounter11<span style="color:#f92672">+</span>aalivecounter12<span style="color:#f92672">+</span>aalivecounter13<span style="color:#f92672">+</span>aalivecounter14<span style="color:#f92672">+</span>aalivecounter15<span style="color:#f92672">&gt;=</span><span style="color:#ae81ff">14</span>)<span style="color:#f92672">?</span><span style="color:#ae81ff">4</span><span style="color:#f92672">:</span>
+                     (aalivecounter1<span style="color:#f92672">+</span>aalivecounter2<span style="color:#f92672">+</span>aalivecounter3<span style="color:#f92672">+</span>aalivecounter4<span style="color:#f92672">+</span>aalivecounter5<span style="color:#f92672">+</span>aalivecounter6<span style="color:#f92672">+</span>aalivecounter7<span style="color:#f92672">+</span>aalivecounter8<span style="color:#f92672">+</span>aalivecounter9<span style="color:#f92672">+</span>aalivecounter10<span style="color:#f92672">+</span>aalivecounter11<span style="color:#f92672">+</span>aalivecounter12<span style="color:#f92672">+</span>aalivecounter13<span style="color:#f92672">+</span>aalivecounter14<span style="color:#f92672">+</span>aalivecounter15<span style="color:#f92672">&gt;=</span><span style="color:#ae81ff">10</span>)<span style="color:#f92672">?</span><span style="color:#ae81ff">3</span><span style="color:#f92672">:</span>
+                     (aalivecounter1<span style="color:#f92672">+</span>aalivecounter2<span style="color:#f92672">+</span>aalivecounter3<span style="color:#f92672">+</span>aalivecounter4<span style="color:#f92672">+</span>aalivecounter5<span style="color:#f92672">+</span>aalivecounter6<span style="color:#f92672">+</span>aalivecounter7<span style="color:#f92672">+</span>aalivecounter8<span style="color:#f92672">+</span>aalivecounter9<span style="color:#f92672">+</span>aalivecounter10<span style="color:#f92672">+</span>aalivecounter11<span style="color:#f92672">+</span>aalivecounter12<span style="color:#f92672">+</span>aalivecounter13<span style="color:#f92672">+</span>aalivecounter14<span style="color:#f92672">+</span>aalivecounter15<span style="color:#f92672">&gt;=</span><span style="color:#ae81ff">5</span>)<span style="color:#f92672">?</span><span style="color:#ae81ff">2</span><span style="color:#f92672">:</span>
+                     (aalivecounter1<span style="color:#f92672">+</span>aalivecounter2<span style="color:#f92672">+</span>aalivecounter3<span style="color:#f92672">+</span>aalivecounter4<span style="color:#f92672">+</span>aalivecounter5<span style="color:#f92672">+</span>aalivecounter6<span style="color:#f92672">+</span>aalivecounter7<span style="color:#f92672">+</span>aalivecounter8<span style="color:#f92672">+</span>aalivecounter9<span style="color:#f92672">+</span>aalivecounter10<span style="color:#f92672">+</span>aalivecounter11<span style="color:#f92672">+</span>aalivecounter12<span style="color:#f92672">+</span>aalivecounter13<span style="color:#f92672">+</span>aalivecounter14<span style="color:#f92672">+</span>aalivecounter15<span style="color:#f92672">&gt;=</span><span style="color:#ae81ff">1</span>)<span style="color:#f92672">?</span><span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>;
+
+<span style="color:#75715e">// 游戏开始逻辑
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">always</span>@(<span style="color:#66d9ef">posedge</span> CLK_50 <span style="color:#66d9ef">or</span> <span style="color:#66d9ef">posedge</span> rst)
+<span style="color:#66d9ef">begin</span>
+    <span style="color:#66d9ef">if</span>(rst)
+    <span style="color:#66d9ef">begin</span>
+        startscreen <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">1</span>;
+    <span style="color:#66d9ef">end</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">begin</span>
+        <span style="color:#66d9ef">if</span>(startscreen) <span style="color:#66d9ef">begin</span>
+            <span style="color:#66d9ef">if</span>(startbutton) <span style="color:#66d9ef">begin</span>
+                startscreen <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;
+            <span style="color:#66d9ef">end</span>
+        <span style="color:#66d9ef">end</span>
+    <span style="color:#66d9ef">end</span>
+<span style="color:#66d9ef">end</span>
+
+<span style="color:#75715e">// 游戏结束判定
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">assign</span> gameover <span style="color:#f92672">=</span>   (aalive1 <span style="color:#f92672">&amp;&amp;</span> aY1 <span style="color:#f92672">&gt;=</span> sshipY <span style="color:#f92672">-</span> <span style="color:#ae81ff">22</span>) <span style="color:#f92672">||</span>
+                    (aalive2 <span style="color:#f92672">&amp;&amp;</span> aY2 <span style="color:#f92672">&gt;=</span> sshipY <span style="color:#f92672">-</span> <span style="color:#ae81ff">22</span>) <span style="color:#f92672">||</span>
+                    (aalive3 <span style="color:#f92672">&amp;&amp;</span> aY3 <span style="color:#f92672">&gt;=</span> sshipY <span style="color:#f92672">-</span> <span style="color:#ae81ff">22</span>) <span style="color:#f92672">||</span>
+                    (aalive4 <span style="color:#f92672">&amp;&amp;</span> aY4 <span style="color:#f92672">&gt;=</span> sshipY <span style="color:#f92672">-</span> <span style="color:#ae81ff">22</span>) <span style="color:#f92672">||</span>
+                    (aalive5 <span style="color:#f92672">&amp;&amp;</span> aY5 <span style="color:#f92672">&gt;=</span> sshipY <span style="color:#f92672">-</span> <span style="color:#ae81ff">22</span>) <span style="color:#f92672">||</span>
+                    (aalive6 <span style="color:#f92672">&amp;&amp;</span> a2Y1 <span style="color:#f92672">&gt;=</span> sshipY <span style="color:#f92672">-</span> <span style="color:#ae81ff">30</span>) <span style="color:#f92672">||</span>
+                    (aalive7 <span style="color:#f92672">&amp;&amp;</span> a2Y2 <span style="color:#f92672">&gt;=</span> sshipY <span style="color:#f92672">-</span> <span style="color:#ae81ff">30</span>) <span style="color:#f92672">||</span>
+                    (aalive8 <span style="color:#f92672">&amp;&amp;</span> a2Y3 <span style="color:#f92672">&gt;=</span> sshipY <span style="color:#f92672">-</span> <span style="color:#ae81ff">30</span>) <span style="color:#f92672">||</span>
+                    (aalive9 <span style="color:#f92672">&amp;&amp;</span> a2Y4 <span style="color:#f92672">&gt;=</span> sshipY <span style="color:#f92672">-</span> <span style="color:#ae81ff">30</span>) <span style="color:#f92672">||</span>
+                    (aalive10 <span style="color:#f92672">&amp;&amp;</span> a2Y5 <span style="color:#f92672">&gt;=</span> sshipY <span style="color:#f92672">-</span> <span style="color:#ae81ff">30</span>) <span style="color:#f92672">||</span>
+                    (aalive11 <span style="color:#f92672">&amp;&amp;</span> a3Y1 <span style="color:#f92672">&gt;=</span> sshipY <span style="color:#f92672">-</span> <span style="color:#ae81ff">22</span>) <span style="color:#f92672">||</span>
+                    (aalive12 <span style="color:#f92672">&amp;&amp;</span> a3Y2 <span style="color:#f92672">&gt;=</span> sshipY <span style="color:#f92672">-</span> <span style="color:#ae81ff">22</span>) <span style="color:#f92672">||</span>
+                    (aalive13 <span style="color:#f92672">&amp;&amp;</span> a3Y3 <span style="color:#f92672">&gt;=</span> sshipY <span style="color:#f92672">-</span> <span style="color:#ae81ff">22</span>) <span style="color:#f92672">||</span>
+                    (aalive14 <span style="color:#f92672">&amp;&amp;</span> a3Y4 <span style="color:#f92672">&gt;=</span> sshipY <span style="color:#f92672">-</span> <span style="color:#ae81ff">22</span>) <span style="color:#f92672">||</span>
+                    (aalive15 <span style="color:#f92672">&amp;&amp;</span> a3Y5 <span style="color:#f92672">&gt;=</span> sshipY <span style="color:#f92672">-</span> <span style="color:#ae81ff">22</span>);
+
+<span style="color:#75715e">//  是否被外星人打中 
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">assign</span> hit <span style="color:#f92672">=</span>    hit1 <span style="color:#f92672">||</span> hit2 <span style="color:#f92672">||</span> hit3 <span style="color:#f92672">||</span> hit4 <span style="color:#f92672">||</span> hit5 <span style="color:#f92672">||</span> hit6 <span style="color:#f92672">||</span> hit7 <span style="color:#f92672">||</span> hit8 <span style="color:#f92672">||</span> hit9 <span style="color:#f92672">||</span> hit10 <span style="color:#f92672">||</span> hit11 <span style="color:#f92672">||</span> hit12 <span style="color:#f92672">||</span> hit13 <span style="color:#f92672">||</span> hit14 <span style="color:#f92672">||</span> hit15;
+
+<span style="color:#75715e">// 没血了或者已经到边界了均判定为死亡
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">assign</span> totalgameover <span style="color:#f92672">=</span> (gameover) <span style="color:#f92672">||</span> (livesgameover);
+
+<span style="color:#75715e">// 血量逻辑
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">always</span>@(<span style="color:#66d9ef">posedge</span> CLK_25 <span style="color:#66d9ef">or</span> <span style="color:#66d9ef">posedge</span> rst)
+<span style="color:#66d9ef">begin</span>
+    <span style="color:#66d9ef">if</span>(rst)
+    <span style="color:#66d9ef">begin</span>
+        points <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;
+        winscreen <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;
+        livesgameover <span style="color:#f92672">&lt;=</span><span style="color:#ae81ff">0</span> ;
+        lives <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;
+    <span style="color:#66d9ef">end</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">begin</span>
+        points <span style="color:#f92672">&lt;=</span>   <span style="color:#ae81ff">90</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">15</span><span style="color:#f92672">*</span>lives;
+        lives <span style="color:#f92672">&lt;=</span> (liveminus) <span style="color:#f92672">?</span> lives <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">:</span> lives;   <span style="color:#75715e">//  被打一次计数器+1
+</span><span style="color:#75715e"></span>        livesgameover <span style="color:#f92672">&lt;=</span> (lives <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">5</span>) <span style="color:#f92672">?</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>;       <span style="color:#75715e">//  被打四次就没血了
+</span><span style="color:#75715e"></span>        winscreen <span style="color:#f92672">&lt;=</span> (hit1 <span style="color:#f92672">&amp;&amp;</span> hit2 <span style="color:#f92672">&amp;&amp;</span> hit3 <span style="color:#f92672">&amp;&amp;</span> hit4 <span style="color:#f92672">&amp;&amp;</span> hit5 <span style="color:#f92672">&amp;&amp;</span> hit6 <span style="color:#f92672">&amp;&amp;</span> hit7 <span style="color:#f92672">&amp;&amp;</span> hit8 <span style="color:#f92672">&amp;&amp;</span> hit9 <span style="color:#f92672">&amp;&amp;</span> hit10 <span style="color:#f92672">&amp;&amp;</span> hit11 <span style="color:#f92672">&amp;&amp;</span> hit12 <span style="color:#f92672">&amp;&amp;</span> hit13 <span style="color:#f92672">&amp;&amp;</span> hit14 <span style="color:#f92672">&amp;&amp;</span> hit15) <span style="color:#f92672">?</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>;<span style="color:#75715e">// 将外星人全部消灭即为赢得游戏
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">end</span>
+<span style="color:#66d9ef">end</span>
+
+<span style="color:#75715e">/******************************************************************************/</span>
+
+<span style="color:#75715e">/***************************按键去振动以及去毛刺************************************/</span>
+
+<span style="color:#75715e">// 输出无振动的按键信号
+</span><span style="color:#75715e"></span>
+Pulse PUL1(clk, rst, cleanL, pulseL);
+Pulse PUL2(clk, rst, cleanR, pulseR);
+Pulse PUL3(clk, rst, cleanfire, pulsefire);
+
+<span style="color:#75715e">// 信号去毛刺
+</span><span style="color:#75715e"></span>
+debounce DBL(rst,clk,buttonL,cleanL);
+debounce DBR(rst,clk,buttonR,cleanR);
+debounce DBF(rst,clk,fire,cleanfire);
+
+<span style="color:#75715e">// 按键信号只在非开始界面才有                 
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">assign</span> truefire <span style="color:#f92672">=</span> (startscreen)<span style="color:#f92672">?</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">:</span> pulsefire;
+<span style="color:#66d9ef">assign</span> truepulseL <span style="color:#f92672">=</span> (startscreen)<span style="color:#f92672">?</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">:</span> pulseL;
+<span style="color:#66d9ef">assign</span> truepulseR <span style="color:#f92672">=</span> (startscreen)<span style="color:#f92672">?</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">:</span> pulseR;
+
+<span style="color:#75715e">/*****************************************************************************/</span>
+
+<span style="color:#75715e">/*************************VGA color以及显示模块********************************/</span>
+
+<span style="color:#75715e">// HSYNC 和 VSYNC 信号
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">wire</span> [<span style="color:#ae81ff">9</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>]haddr;
+<span style="color:#66d9ef">wire</span> [<span style="color:#ae81ff">8</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>]vaddr;
+VGA VGA(clk,rst,haddr,vaddr,active,hsync,vsync);
+
+<span style="color:#75715e">// 图片用 Block Memory 存储，h，v信号刷到对应位置的时候开始输出图片
+</span><span style="color:#75715e"></span>
+blk_mem_gen_0 MEMSPACE(CLK_25,<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">0</span>,ship_addr,<span style="color:#ae81ff">0</span>,space_dout);
+blk_mem_gen_1 MEMALIEN1(CLK_25,<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">0</span>,a_addr,<span style="color:#ae81ff">0</span>,a_dout);
+blk_mem_gen_2 MEMALIEN2(CLK_25,<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">0</span>,a_addr,<span style="color:#ae81ff">0</span>,a2_dout);
+blk_mem_gen_3 MEMALIEN3(CLK_25,<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">0</span>,a_addr,<span style="color:#ae81ff">0</span>,a3_dout);
+blk_mem_gen_5 GAMEOVER(CLK_25,<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">0</span>,gameoveraddr,<span style="color:#ae81ff">0</span>,gameoverimg);
+blk_mem_gen_6 START(CLK_25,<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">0</span>,startaddr,<span style="color:#ae81ff">0</span>,startimg);
+blk_mem_gen_7 WIN(CLK_25,<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">0</span>,winaddr,<span style="color:#ae81ff">0</span>,winimg);
+
+                
+<span style="color:#75715e">// 输出三排外星人的图片时会用到的图片边界
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">assign</span> a1border <span style="color:#f92672">=</span>   aborder1 <span style="color:#f92672">||</span> aborder2 <span style="color:#f92672">||</span>aborder3 <span style="color:#f92672">||</span> aborder4 <span style="color:#f92672">||</span> aborder5;
+<span style="color:#66d9ef">assign</span> a2border <span style="color:#f92672">=</span>   aborder6 <span style="color:#f92672">||</span> aborder7 <span style="color:#f92672">||</span>aborder8 <span style="color:#f92672">||</span> aborder9 <span style="color:#f92672">||</span> aborder10;
+<span style="color:#66d9ef">assign</span> a3border <span style="color:#f92672">=</span>   aborder11 <span style="color:#f92672">||</span> aborder12 <span style="color:#f92672">||</span>aborder13 <span style="color:#f92672">||</span> aborder14 <span style="color:#f92672">||</span> aborder15;
+
+<span style="color:#66d9ef">wire</span> [<span style="color:#ae81ff">9</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>]a_addr;
+
+<span style="color:#66d9ef">assign</span> a_addr <span style="color:#f92672">=</span> (aborder1)<span style="color:#f92672">?</span> a_addr1:
+                (aborder2)<span style="color:#f92672">?</span> a_addr2:
+                (aborder3)<span style="color:#f92672">?</span> a_addr3:
+                (aborder4)<span style="color:#f92672">?</span> a_addr4:
+                (aborder5)<span style="color:#f92672">?</span> a_addr5:
+                (aborder6)<span style="color:#f92672">?</span> a_addr6:
+                (aborder7)<span style="color:#f92672">?</span> a_addr7:
+                (aborder8)<span style="color:#f92672">?</span> a_addr8:
+                (aborder9)<span style="color:#f92672">?</span> a_addr9:
+                (aborder10)<span style="color:#f92672">?</span> a_addr10:
+                (aborder11)<span style="color:#f92672">?</span> a_addr11:
+                (aborder12)<span style="color:#f92672">?</span> a_addr12:
+                (aborder13)<span style="color:#f92672">?</span> a_addr13:
+                (aborder14)<span style="color:#f92672">?</span> a_addr14:
+                (aborder15)<span style="color:#f92672">?</span> a_addr15:
+                <span style="color:#ae81ff">0</span>;      <span style="color:#75715e">// 复用 a_addr, eg.当刷新到 aborder1 的范围时除了 aborder1 其他 aborder 均为 0，此时 a_addr = a_addr9.输出范围在 haddr
+</span><span style="color:#75715e"></span>                        <span style="color:#75715e">// haddr &gt;= aX1 haddr &lt;= aX1 + 29 与 vaddr &gt;= aY1 vaddr &lt;= aY1 + 21，画一个 alien 出来。
+</span><span style="color:#75715e"></span>                    
+<span style="color:#66d9ef">assign</span> ship_addr <span style="color:#f92672">=</span>  (shipborder)<span style="color:#f92672">?</span> space_addr <span style="color:#f92672">:</span> 
+                    (lifeborder)<span style="color:#f92672">?</span> life_addr <span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>;
+
+<span style="color:#75715e">// 用 clock wizard 分频（50MHz和25MHz各一个）
+</span><span style="color:#75715e"></span>clk_wiz_0 clk_divider(CLK_50,CLK_25,rst,locked,clk);
+
+<span style="color:#75715e">// RGB 输出
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">always</span>@(<span style="color:#66d9ef">posedge</span> CLK_50)
+    <span style="color:#66d9ef">begin</span>
+        VGA_R   <span style="color:#f92672">&lt;=</span> {<span style="color:#ae81ff">0</span>,R};
+        VGA_G   <span style="color:#f92672">&lt;=</span> {<span style="color:#ae81ff">0</span>,G};
+        VGA_B   <span style="color:#f92672">&lt;=</span> {B};
+    <span style="color:#66d9ef">end</span> 
+
+
+<span style="color:#75715e">// 做了一个巨大判定来决定什么时候RGB输出什么
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">always</span>@(<span style="color:#66d9ef">posedge</span> CLK_25)
+<span style="color:#66d9ef">begin</span>
+    <span style="color:#66d9ef">if</span>(Xdisplay <span style="color:#f92672">&amp;&amp;</span> Ydisplay)
+    <span style="color:#66d9ef">begin</span>
+        R <span style="color:#f92672">&lt;=</span>    (startscreen)<span style="color:#f92672">?</span> startimg[<span style="color:#ae81ff">7</span><span style="color:#f92672">:</span><span style="color:#ae81ff">5</span>]<span style="color:#f92672">:</span>
+                (totalgameover)<span style="color:#f92672">?</span> gameoverimg[<span style="color:#ae81ff">7</span><span style="color:#f92672">:</span><span style="color:#ae81ff">5</span>]<span style="color:#f92672">:</span>
+                (winscreen)<span style="color:#f92672">?</span> winimg[<span style="color:#ae81ff">7</span><span style="color:#f92672">:</span><span style="color:#ae81ff">5</span>]<span style="color:#f92672">:</span>
+                (scorecase)     <span style="color:#f92672">?</span> <span style="color:#ae81ff">7</span> <span style="color:#f92672">:</span>
+                (scoreborder)   <span style="color:#f92672">?</span> <span style="color:#ae81ff">7</span> <span style="color:#f92672">:</span>
+                (a3border)  <span style="color:#f92672">?</span> a3_dout[<span style="color:#ae81ff">7</span><span style="color:#f92672">:</span><span style="color:#ae81ff">5</span>]<span style="color:#f92672">:</span>
+                (a2border) <span style="color:#f92672">?</span> a2_dout[<span style="color:#ae81ff">7</span><span style="color:#f92672">:</span><span style="color:#ae81ff">5</span>]<span style="color:#f92672">:</span>
+                (a1border) <span style="color:#f92672">?</span> a_dout[<span style="color:#ae81ff">7</span><span style="color:#f92672">:</span><span style="color:#ae81ff">5</span>]<span style="color:#f92672">:</span>
+                (bulletborder) <span style="color:#f92672">?</span> <span style="color:#ae81ff">7</span><span style="color:#f92672">:</span>
+                (abulletborder1) <span style="color:#f92672">?</span> <span style="color:#ae81ff">7</span><span style="color:#f92672">:</span>   
+                (abulletborder2) <span style="color:#f92672">?</span> <span style="color:#ae81ff">7</span><span style="color:#f92672">:</span>
+                (abulletborder3) <span style="color:#f92672">?</span> <span style="color:#ae81ff">7</span><span style="color:#f92672">:</span>
+                (abulletborder4) <span style="color:#f92672">?</span> <span style="color:#ae81ff">7</span><span style="color:#f92672">:</span>
+                (abulletborder5) <span style="color:#f92672">?</span> <span style="color:#ae81ff">7</span><span style="color:#f92672">:</span>
+                (abulletborder6) <span style="color:#f92672">?</span> <span style="color:#ae81ff">7</span><span style="color:#f92672">:</span>
+                (shipborder)   <span style="color:#f92672">?</span> space_dout[<span style="color:#ae81ff">7</span><span style="color:#f92672">:</span><span style="color:#ae81ff">5</span>] <span style="color:#f92672">:</span> space_dout[<span style="color:#ae81ff">7</span><span style="color:#f92672">:</span><span style="color:#ae81ff">5</span>] ;
+        G <span style="color:#f92672">&lt;=</span>    (startscreen)<span style="color:#f92672">?</span> startimg[<span style="color:#ae81ff">4</span><span style="color:#f92672">:</span><span style="color:#ae81ff">2</span>]<span style="color:#f92672">:</span>
+                (totalgameover)<span style="color:#f92672">?</span> gameoverimg[<span style="color:#ae81ff">4</span><span style="color:#f92672">:</span><span style="color:#ae81ff">2</span>]<span style="color:#f92672">:</span>
+                (winscreen)<span style="color:#f92672">?</span> winimg[<span style="color:#ae81ff">4</span><span style="color:#f92672">:</span><span style="color:#ae81ff">2</span>]<span style="color:#f92672">:</span>
+                (scorecase)     <span style="color:#f92672">?</span> <span style="color:#ae81ff">7</span> <span style="color:#f92672">:</span>
+                (scoreborder)   <span style="color:#f92672">?</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">:</span>
+                (a3border)  <span style="color:#f92672">?</span> a3_dout[<span style="color:#ae81ff">4</span><span style="color:#f92672">:</span><span style="color:#ae81ff">2</span>]<span style="color:#f92672">:</span>
+                (a2border) <span style="color:#f92672">?</span> a2_dout[<span style="color:#ae81ff">4</span><span style="color:#f92672">:</span><span style="color:#ae81ff">2</span>]<span style="color:#f92672">:</span>
+                (a1border) <span style="color:#f92672">?</span> a_dout[<span style="color:#ae81ff">4</span><span style="color:#f92672">:</span><span style="color:#ae81ff">2</span>]<span style="color:#f92672">:</span>
+                (bulletborder) <span style="color:#f92672">?</span> <span style="color:#ae81ff">7</span><span style="color:#f92672">:</span> 
+                (abulletborder1) <span style="color:#f92672">?</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">:</span>
+                (abulletborder2) <span style="color:#f92672">?</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">:</span>
+                (abulletborder3) <span style="color:#f92672">?</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">:</span>
+                (abulletborder4) <span style="color:#f92672">?</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">:</span>
+                (abulletborder5) <span style="color:#f92672">?</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">:</span>
+                (abulletborder6) <span style="color:#f92672">?</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">:</span>
+                (shipborder)   <span style="color:#f92672">?</span> space_dout[<span style="color:#ae81ff">4</span><span style="color:#f92672">:</span><span style="color:#ae81ff">2</span>] <span style="color:#f92672">:</span> space_dout[<span style="color:#ae81ff">4</span><span style="color:#f92672">:</span><span style="color:#ae81ff">2</span>] ;
+        B <span style="color:#f92672">&lt;=</span>    (startscreen)<span style="color:#f92672">?</span> startimg[<span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>]<span style="color:#f92672">:</span>
+                (totalgameover)<span style="color:#f92672">?</span> gameoverimg[<span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>]<span style="color:#f92672">:</span>
+                (winscreen)<span style="color:#f92672">?</span> winimg[<span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>]<span style="color:#f92672">:</span>
+                (scorecase)     <span style="color:#f92672">?</span> <span style="color:#ae81ff">7</span> <span style="color:#f92672">:</span>
+                (scoreborder)   <span style="color:#f92672">?</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">:</span>
+                (a3border)  <span style="color:#f92672">?</span> a3_dout[<span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>]<span style="color:#f92672">:</span>
+                (a2border) <span style="color:#f92672">?</span> a2_dout[<span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>]<span style="color:#f92672">:</span>
+                (a1border) <span style="color:#f92672">?</span> a_dout[<span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>]<span style="color:#f92672">:</span>
+                (abulletborder1) <span style="color:#f92672">?</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">:</span>
+                (abulletborder2) <span style="color:#f92672">?</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">:</span>
+                (abulletborder3) <span style="color:#f92672">?</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">:</span>
+                (abulletborder4) <span style="color:#f92672">?</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">:</span>
+                (abulletborder5) <span style="color:#f92672">?</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">:</span>
+                (abulletborder6) <span style="color:#f92672">?</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">:</span>
+                (shipborder)   <span style="color:#f92672">?</span> space_dout[<span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] <span style="color:#f92672">:</span> space_dout[<span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>] ;
+    <span style="color:#66d9ef">end</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">begin</span>
+        R <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;
+        B <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;
+        G <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;
+    <span style="color:#66d9ef">end</span>
+<span style="color:#66d9ef">end</span>
+
+<span style="color:#75715e">//  画笔位置
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">always</span>@(<span style="color:#66d9ef">posedge</span> CLK_25 <span style="color:#66d9ef">or</span> <span style="color:#66d9ef">posedge</span> rst)
+<span style="color:#66d9ef">begin</span>
+    <span style="color:#66d9ef">if</span>(rst)
+    <span style="color:#66d9ef">begin</span>
+        gameoveraddr <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;
+        winaddr <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;
+        space_addr <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;
+        life_addr <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;
+        a_addr1 <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;
+        a_addr2 <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;
+        a_addr3 <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;
+        a_addr4 <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;
+        a_addr5 <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;
+        a_addr6 <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;
+        a_addr7 <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;
+        a_addr8 <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;
+        a_addr9 <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;
+        a_addr10 <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;
+        a_addr11 <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;
+        a_addr12 <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;
+        a_addr13 <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;
+        a_addr14 <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;
+        a_addr15 <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;    
+    <span style="color:#66d9ef">end</span> 
+    <span style="color:#66d9ef">else</span>
+    <span style="color:#66d9ef">begin</span> <span style="color:#75715e">//    此处思路是判断画笔到屏幕的什么位置，如果到了下方定义的border内，addr就开始递增计数，使上面的block memory 输出不同的rgb信号，随着画笔位置的迁移，画出整个图片，该模块中的所有逻辑均是相同的.
+</span><span style="color:#75715e"></span>        startaddr <span style="color:#f92672">&lt;=</span> (vaddr <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">459</span> )<span style="color:#f92672">?</span> (startborder <span style="color:#f92672">?</span> (startaddr <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span><span style="color:#ae81ff">&#39;b1</span>)<span style="color:#f92672">:</span> startaddr) <span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>;    
+        gameoveraddr <span style="color:#f92672">&lt;=</span> (vaddr <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">264</span> )<span style="color:#f92672">?</span> (gameoverborder <span style="color:#f92672">?</span> (gameoveraddr <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span><span style="color:#ae81ff">&#39;b1</span>)<span style="color:#f92672">:</span> gameoveraddr) <span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>;
+        winaddr <span style="color:#f92672">&lt;=</span> (vaddr <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">320</span> )<span style="color:#f92672">?</span> (winborder <span style="color:#f92672">?</span> (winaddr <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span><span style="color:#ae81ff">&#39;b1</span>)<span style="color:#f92672">:</span> winaddr) <span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>;
+        space_addr <span style="color:#f92672">&lt;=</span> (vaddr <span style="color:#f92672">==</span> sshipY <span style="color:#f92672">+</span> <span style="color:#ae81ff">16</span>)<span style="color:#f92672">?</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">:</span> ((shipborder)<span style="color:#f92672">?</span> (space_addr <span style="color:#f92672">+</span>  <span style="color:#ae81ff">1</span><span style="color:#ae81ff">&#39;b1</span>) <span style="color:#f92672">:</span> (space_addr));
+        life_addr <span style="color:#f92672">&lt;=</span> (vaddr <span style="color:#f92672">==</span> <span style="color:#ae81ff">38</span>)<span style="color:#f92672">?</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">:</span> ((lifeborder)<span style="color:#f92672">?</span> (life_addr <span style="color:#f92672">+</span>  <span style="color:#ae81ff">1</span><span style="color:#ae81ff">&#39;b1</span>) <span style="color:#f92672">:</span> (life_addr));
+        a_addr1 <span style="color:#f92672">&lt;=</span> (vaddr <span style="color:#f92672">==</span> aY1 <span style="color:#f92672">+</span> <span style="color:#ae81ff">22</span>)<span style="color:#f92672">?</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">:</span> ((aborder1)<span style="color:#f92672">?</span> (a_addr1 <span style="color:#f92672">+</span>  <span style="color:#ae81ff">1</span><span style="color:#ae81ff">&#39;b1</span>) <span style="color:#f92672">:</span> (a_addr1));
+        a_addr2 <span style="color:#f92672">&lt;=</span> (vaddr <span style="color:#f92672">==</span> aY2 <span style="color:#f92672">+</span> <span style="color:#ae81ff">22</span>)<span style="color:#f92672">?</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">:</span> ((aborder2)<span style="color:#f92672">?</span> (a_addr2 <span style="color:#f92672">+</span>  <span style="color:#ae81ff">1</span><span style="color:#ae81ff">&#39;b1</span>) <span style="color:#f92672">:</span> (a_addr2));
+        a_addr3 <span style="color:#f92672">&lt;=</span> (vaddr <span style="color:#f92672">==</span> aY3 <span style="color:#f92672">+</span> <span style="color:#ae81ff">22</span>)<span style="color:#f92672">?</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">:</span> ((aborder3)<span style="color:#f92672">?</span> (a_addr3 <span style="color:#f92672">+</span>  <span style="color:#ae81ff">1</span><span style="color:#ae81ff">&#39;b1</span>) <span style="color:#f92672">:</span> (a_addr3));
+        a_addr4 <span style="color:#f92672">&lt;=</span> (vaddr <span style="color:#f92672">==</span> aY4 <span style="color:#f92672">+</span> <span style="color:#ae81ff">22</span>)<span style="color:#f92672">?</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">:</span> ((aborder4)<span style="color:#f92672">?</span> (a_addr4 <span style="color:#f92672">+</span>  <span style="color:#ae81ff">1</span><span style="color:#ae81ff">&#39;b1</span>) <span style="color:#f92672">:</span> (a_addr4));
+        a_addr5 <span style="color:#f92672">&lt;=</span> (vaddr <span style="color:#f92672">==</span> aY5 <span style="color:#f92672">+</span> <span style="color:#ae81ff">22</span>)<span style="color:#f92672">?</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">:</span> ((aborder5)<span style="color:#f92672">?</span> (a_addr5 <span style="color:#f92672">+</span>  <span style="color:#ae81ff">1</span><span style="color:#ae81ff">&#39;b1</span>) <span style="color:#f92672">:</span> (a_addr5));
+        a_addr6 <span style="color:#f92672">&lt;=</span> (vaddr <span style="color:#f92672">==</span> a2Y1 <span style="color:#f92672">+</span> <span style="color:#ae81ff">30</span>)<span style="color:#f92672">?</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">:</span> ((aborder6)<span style="color:#f92672">?</span> (a_addr6 <span style="color:#f92672">+</span>  <span style="color:#ae81ff">1</span><span style="color:#ae81ff">&#39;b1</span>) <span style="color:#f92672">:</span> (a_addr6));
+        a_addr7 <span style="color:#f92672">&lt;=</span> (vaddr <span style="color:#f92672">==</span> a2Y2 <span style="color:#f92672">+</span> <span style="color:#ae81ff">30</span>)<span style="color:#f92672">?</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">:</span> ((aborder7)<span style="color:#f92672">?</span> (a_addr7 <span style="color:#f92672">+</span>  <span style="color:#ae81ff">1</span><span style="color:#ae81ff">&#39;b1</span>) <span style="color:#f92672">:</span> (a_addr7));
+        a_addr8 <span style="color:#f92672">&lt;=</span> (vaddr <span style="color:#f92672">==</span> a2Y3 <span style="color:#f92672">+</span> <span style="color:#ae81ff">30</span>)<span style="color:#f92672">?</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">:</span> ((aborder8)<span style="color:#f92672">?</span> (a_addr8 <span style="color:#f92672">+</span>  <span style="color:#ae81ff">1</span><span style="color:#ae81ff">&#39;b1</span>) <span style="color:#f92672">:</span> (a_addr8));
+        a_addr9 <span style="color:#f92672">&lt;=</span> (vaddr <span style="color:#f92672">==</span> a2Y4 <span style="color:#f92672">+</span> <span style="color:#ae81ff">30</span>)<span style="color:#f92672">?</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">:</span> ((aborder9)<span style="color:#f92672">?</span> (a_addr9 <span style="color:#f92672">+</span>  <span style="color:#ae81ff">1</span><span style="color:#ae81ff">&#39;b1</span>) <span style="color:#f92672">:</span> (a_addr9));
+        a_addr10 <span style="color:#f92672">&lt;=</span> (vaddr <span style="color:#f92672">==</span> a2Y5 <span style="color:#f92672">+</span> <span style="color:#ae81ff">30</span>)<span style="color:#f92672">?</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">:</span> ((aborder10)<span style="color:#f92672">?</span> (a_addr10 <span style="color:#f92672">+</span>  <span style="color:#ae81ff">1</span><span style="color:#ae81ff">&#39;b1</span>) <span style="color:#f92672">:</span> (a_addr10));
+        a_addr11 <span style="color:#f92672">&lt;=</span> (vaddr <span style="color:#f92672">==</span> a3Y1 <span style="color:#f92672">+</span> <span style="color:#ae81ff">22</span>)<span style="color:#f92672">?</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">:</span> ((aborder11)<span style="color:#f92672">?</span> (a_addr11 <span style="color:#f92672">+</span>  <span style="color:#ae81ff">1</span><span style="color:#ae81ff">&#39;b1</span>) <span style="color:#f92672">:</span> (a_addr11));
+        a_addr12 <span style="color:#f92672">&lt;=</span> (vaddr <span style="color:#f92672">==</span> a3Y2 <span style="color:#f92672">+</span> <span style="color:#ae81ff">22</span>)<span style="color:#f92672">?</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">:</span> ((aborder12)<span style="color:#f92672">?</span> (a_addr12 <span style="color:#f92672">+</span>  <span style="color:#ae81ff">1</span><span style="color:#ae81ff">&#39;b1</span>) <span style="color:#f92672">:</span> (a_addr12));
+        a_addr13 <span style="color:#f92672">&lt;=</span> (vaddr <span style="color:#f92672">==</span> a3Y3 <span style="color:#f92672">+</span> <span style="color:#ae81ff">22</span>)<span style="color:#f92672">?</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">:</span> ((aborder13)<span style="color:#f92672">?</span> (a_addr13 <span style="color:#f92672">+</span>  <span style="color:#ae81ff">1</span><span style="color:#ae81ff">&#39;b1</span>) <span style="color:#f92672">:</span> (a_addr13));
+        a_addr14 <span style="color:#f92672">&lt;=</span> (vaddr <span style="color:#f92672">==</span> a3Y4 <span style="color:#f92672">+</span> <span style="color:#ae81ff">22</span>)<span style="color:#f92672">?</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">:</span> ((aborder14)<span style="color:#f92672">?</span> (a_addr14 <span style="color:#f92672">+</span>  <span style="color:#ae81ff">1</span><span style="color:#ae81ff">&#39;b1</span>) <span style="color:#f92672">:</span> (a_addr14));
+        a_addr15 <span style="color:#f92672">&lt;=</span> (vaddr <span style="color:#f92672">==</span> a3Y5 <span style="color:#f92672">+</span> <span style="color:#ae81ff">22</span>)<span style="color:#f92672">?</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">:</span> ((aborder15)<span style="color:#f92672">?</span> (a_addr15 <span style="color:#f92672">+</span>  <span style="color:#ae81ff">1</span><span style="color:#ae81ff">&#39;b1</span>) <span style="color:#f92672">:</span> (a_addr15));
+    <span style="color:#66d9ef">end</span>
+<span style="color:#66d9ef">end</span>
+
+<span style="color:#66d9ef">reg</span> aborder1,aborder2,aborder3,aborder4,aborder5;
+<span style="color:#66d9ef">reg</span> aborder6,aborder7,aborder8,aborder9,aborder10;
+<span style="color:#66d9ef">reg</span> aborder11,aborder12,aborder13,aborder14,aborder15;
+
+<span style="color:#75715e">// 这是规定的图片边界
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">always</span> @(<span style="color:#66d9ef">posedge</span> CLK_50)
+    <span style="color:#66d9ef">begin</span>
+        scorecase <span style="color:#f92672">&lt;=</span> (  ((haddr <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">9</span> <span style="color:#f92672">&amp;&amp;</span> haddr <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">101</span>)    <span style="color:#f92672">&amp;&amp;</span> (vaddr <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">23</span> <span style="color:#f92672">&amp;&amp;</span> vaddr <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">24</span>)) <span style="color:#f92672">||</span>
+                        ((haddr <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">9</span> <span style="color:#f92672">&amp;&amp;</span> haddr <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">101</span>)    <span style="color:#f92672">&amp;&amp;</span> (vaddr <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">31</span> <span style="color:#f92672">&amp;&amp;</span> vaddr <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">32</span>)) <span style="color:#f92672">||</span>
+                        ((haddr <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">9</span> <span style="color:#f92672">&amp;&amp;</span> haddr <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">10</span>)     <span style="color:#f92672">&amp;&amp;</span> (vaddr <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">23</span> <span style="color:#f92672">&amp;&amp;</span> vaddr <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">32</span>)) <span style="color:#f92672">||</span>
+                        ((haddr <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">100</span> <span style="color:#f92672">&amp;&amp;</span> haddr <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">101</span>)   <span style="color:#f92672">&amp;&amp;</span> (vaddr <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">23</span> <span style="color:#f92672">&amp;&amp;</span> vaddr <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">32</span>)));
+        scoreborder <span style="color:#f92672">&lt;=</span> (((haddr <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">10</span>) <span style="color:#f92672">&amp;&amp;</span> (haddr <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">9</span> <span style="color:#f92672">+</span> points)) <span style="color:#f92672">&amp;&amp;</span> ((vaddr <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">25</span>) <span style="color:#f92672">&amp;&amp;</span> (vaddr <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">30</span>) ));
+        startborder <span style="color:#f92672">&lt;=</span> (startscreen) <span style="color:#f92672">&amp;&amp;</span> (((haddr <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">12</span>) <span style="color:#f92672">&amp;&amp;</span> (haddr <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">627</span>)) <span style="color:#f92672">&amp;&amp;</span> ((vaddr <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">21</span>) <span style="color:#f92672">&amp;&amp;</span> (vaddr <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">458</span>)));    
+ <span style="color:#75715e">// 例如开始界面是一个616x438的图片时,我们令vaddr的上下界之和为479,之差为437(图片的宽度),haddr的上下界之和为639,上下界之差为615(图片的宽度),这样就得出了图片的边界值.
+</span><span style="color:#75715e"></span>        gameoverborder <span style="color:#f92672">&lt;=</span> (totalgameover) <span style="color:#f92672">&amp;&amp;</span> (((haddr <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">126</span> ) <span style="color:#f92672">&amp;&amp;</span> (haddr <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">513</span>)) <span style="color:#f92672">&amp;&amp;</span> ((vaddr <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">180</span>) <span style="color:#f92672">&amp;&amp;</span> (vaddr <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">263</span>)));
+        winborder <span style="color:#f92672">&lt;=</span> (winscreen) <span style="color:#f92672">&amp;&amp;</span> (((haddr <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">192</span> ) <span style="color:#f92672">&amp;&amp;</span> (haddr <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">447</span>)) <span style="color:#f92672">&amp;&amp;</span> ((vaddr <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">141</span>) <span style="color:#f92672">&amp;&amp;</span> (vaddr <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">338</span>)));
+        shipborder <span style="color:#f92672">&lt;=</span> (((haddr <span style="color:#f92672">&gt;=</span> sshipX ) <span style="color:#f92672">&amp;&amp;</span> (haddr <span style="color:#f92672">&lt;=</span> sshipX <span style="color:#f92672">+</span> <span style="color:#ae81ff">30</span>)) <span style="color:#f92672">&amp;&amp;</span> ((vaddr <span style="color:#f92672">&gt;=</span> sshipY) <span style="color:#f92672">&amp;&amp;</span> (vaddr <span style="color:#f92672">&lt;=</span> sshipY <span style="color:#f92672">+</span> <span style="color:#ae81ff">15</span>)));
+        bulletborder <span style="color:#f92672">&lt;=</span> (rfly)<span style="color:#f92672">?</span>(((haddr <span style="color:#f92672">&gt;=</span> rX ) <span style="color:#f92672">&amp;&amp;</span> (haddr <span style="color:#f92672">&lt;=</span> rX <span style="color:#f92672">+</span> <span style="color:#ae81ff">4</span>)) <span style="color:#f92672">&amp;&amp;</span> ((vaddr <span style="color:#f92672">&gt;=</span> rY) <span style="color:#f92672">&amp;&amp;</span> (vaddr <span style="color:#f92672">&lt;=</span> rY <span style="color:#f92672">+</span> <span style="color:#ae81ff">8</span>)))<span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>;
+        abulletborder1 <span style="color:#f92672">&lt;=</span> (arfly1)<span style="color:#f92672">?</span>(((haddr <span style="color:#f92672">&gt;=</span> arX1 ) <span style="color:#f92672">&amp;&amp;</span> (haddr <span style="color:#f92672">&lt;=</span> arX1 <span style="color:#f92672">+</span> <span style="color:#ae81ff">4</span>)) <span style="color:#f92672">&amp;&amp;</span> ((vaddr <span style="color:#f92672">&gt;=</span> arY1) <span style="color:#f92672">&amp;&amp;</span> (vaddr <span style="color:#f92672">&lt;=</span> arY1 <span style="color:#f92672">+</span> <span style="color:#ae81ff">8</span>)))<span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>;
+<span style="color:#75715e">// 子弹,飞船和静态图片唯一的不同是它的横纵坐标边界为一个变量,在当前的坐标确定边界并输出图片即可.
+</span><span style="color:#75715e"></span>        abulletborder2 <span style="color:#f92672">&lt;=</span> (arfly2)<span style="color:#f92672">?</span>(((haddr <span style="color:#f92672">&gt;=</span> arX2 ) <span style="color:#f92672">&amp;&amp;</span> (haddr <span style="color:#f92672">&lt;=</span> arX2 <span style="color:#f92672">+</span> <span style="color:#ae81ff">4</span>)) <span style="color:#f92672">&amp;&amp;</span> ((vaddr <span style="color:#f92672">&gt;=</span> arY2) <span style="color:#f92672">&amp;&amp;</span> (vaddr <span style="color:#f92672">&lt;=</span> arY2 <span style="color:#f92672">+</span> <span style="color:#ae81ff">8</span>)))<span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>;
+        abulletborder3 <span style="color:#f92672">&lt;=</span> (arfly3)<span style="color:#f92672">?</span>(((haddr <span style="color:#f92672">&gt;=</span> arX3 ) <span style="color:#f92672">&amp;&amp;</span> (haddr <span style="color:#f92672">&lt;=</span> arX3 <span style="color:#f92672">+</span> <span style="color:#ae81ff">4</span>)) <span style="color:#f92672">&amp;&amp;</span> ((vaddr <span style="color:#f92672">&gt;=</span> arY3) <span style="color:#f92672">&amp;&amp;</span> (vaddr <span style="color:#f92672">&lt;=</span> arY3 <span style="color:#f92672">+</span> <span style="color:#ae81ff">8</span>)))<span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>;
+        abulletborder4 <span style="color:#f92672">&lt;=</span> (arfly4)<span style="color:#f92672">?</span>(((haddr <span style="color:#f92672">&gt;=</span> arX4 ) <span style="color:#f92672">&amp;&amp;</span> (haddr <span style="color:#f92672">&lt;=</span> arX4 <span style="color:#f92672">+</span> <span style="color:#ae81ff">4</span>)) <span style="color:#f92672">&amp;&amp;</span> ((vaddr <span style="color:#f92672">&gt;=</span> arY4) <span style="color:#f92672">&amp;&amp;</span> (vaddr <span style="color:#f92672">&lt;=</span> arY4 <span style="color:#f92672">+</span> <span style="color:#ae81ff">8</span>)))<span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>;
+        abulletborder5 <span style="color:#f92672">&lt;=</span> (arfly5)<span style="color:#f92672">?</span>(((haddr <span style="color:#f92672">&gt;=</span> arX5 ) <span style="color:#f92672">&amp;&amp;</span> (haddr <span style="color:#f92672">&lt;=</span> arX5 <span style="color:#f92672">+</span> <span style="color:#ae81ff">4</span>)) <span style="color:#f92672">&amp;&amp;</span> ((vaddr <span style="color:#f92672">&gt;=</span> arY5) <span style="color:#f92672">&amp;&amp;</span> (vaddr <span style="color:#f92672">&lt;=</span> arY5 <span style="color:#f92672">+</span> <span style="color:#ae81ff">8</span>)))<span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>;
+        abulletborder6 <span style="color:#f92672">&lt;=</span> (arfly6)<span style="color:#f92672">?</span>(((haddr <span style="color:#f92672">&gt;=</span> arX6 ) <span style="color:#f92672">&amp;&amp;</span> (haddr <span style="color:#f92672">&lt;=</span> arX6 <span style="color:#f92672">+</span> <span style="color:#ae81ff">4</span>)) <span style="color:#f92672">&amp;&amp;</span> ((vaddr <span style="color:#f92672">&gt;=</span> arY6) <span style="color:#f92672">&amp;&amp;</span> (vaddr <span style="color:#f92672">&lt;=</span> arY6 <span style="color:#f92672">+</span> <span style="color:#ae81ff">8</span>)))<span style="color:#f92672">:</span><span style="color:#ae81ff">0</span>;
+        aborder1 <span style="color:#f92672">&lt;=</span> (aalive1)<span style="color:#f92672">&amp;&amp;</span>(((haddr <span style="color:#f92672">&gt;=</span> aX1 ) <span style="color:#f92672">&amp;&amp;</span> (haddr <span style="color:#f92672">&lt;=</span> aX1 <span style="color:#f92672">+</span> <span style="color:#ae81ff">29</span>)) <span style="color:#f92672">&amp;&amp;</span> ((vaddr <span style="color:#f92672">&gt;=</span> aY1) <span style="color:#f92672">&amp;&amp;</span> (vaddr <span style="color:#f92672">&lt;=</span> aY1 <span style="color:#f92672">+</span> <span style="color:#ae81ff">21</span>)));
+        aborder2 <span style="color:#f92672">&lt;=</span> (aalive2)<span style="color:#f92672">&amp;&amp;</span>(((haddr <span style="color:#f92672">&gt;=</span> aX2 ) <span style="color:#f92672">&amp;&amp;</span> (haddr <span style="color:#f92672">&lt;=</span> aX2 <span style="color:#f92672">+</span> <span style="color:#ae81ff">29</span>)) <span style="color:#f92672">&amp;&amp;</span> ((vaddr <span style="color:#f92672">&gt;=</span> aY2) <span style="color:#f92672">&amp;&amp;</span> (vaddr <span style="color:#f92672">&lt;=</span> aY2 <span style="color:#f92672">+</span> <span style="color:#ae81ff">21</span>)));
+        aborder3 <span style="color:#f92672">&lt;=</span> (aalive3)<span style="color:#f92672">&amp;&amp;</span>(((haddr <span style="color:#f92672">&gt;=</span> aX3 ) <span style="color:#f92672">&amp;&amp;</span> (haddr <span style="color:#f92672">&lt;=</span> aX3 <span style="color:#f92672">+</span> <span style="color:#ae81ff">29</span>)) <span style="color:#f92672">&amp;&amp;</span> ((vaddr <span style="color:#f92672">&gt;=</span> aY3) <span style="color:#f92672">&amp;&amp;</span> (vaddr <span style="color:#f92672">&lt;=</span> aY3 <span style="color:#f92672">+</span> <span style="color:#ae81ff">21</span>)));
+        aborder4 <span style="color:#f92672">&lt;=</span> (aalive4)<span style="color:#f92672">&amp;&amp;</span>(((haddr <span style="color:#f92672">&gt;=</span> aX4 ) <span style="color:#f92672">&amp;&amp;</span> (haddr <span style="color:#f92672">&lt;=</span> aX4 <span style="color:#f92672">+</span> <span style="color:#ae81ff">29</span>)) <span style="color:#f92672">&amp;&amp;</span> ((vaddr <span style="color:#f92672">&gt;=</span> aY4) <span style="color:#f92672">&amp;&amp;</span> (vaddr <span style="color:#f92672">&lt;=</span> aY4 <span style="color:#f92672">+</span> <span style="color:#ae81ff">21</span>)));
+        aborder5 <span style="color:#f92672">&lt;=</span> (aalive5)<span style="color:#f92672">&amp;&amp;</span>(((haddr <span style="color:#f92672">&gt;=</span> aX5 ) <span style="color:#f92672">&amp;&amp;</span> (haddr <span style="color:#f92672">&lt;=</span> aX5 <span style="color:#f92672">+</span> <span style="color:#ae81ff">29</span>)) <span style="color:#f92672">&amp;&amp;</span> ((vaddr <span style="color:#f92672">&gt;=</span> aY5) <span style="color:#f92672">&amp;&amp;</span> (vaddr <span style="color:#f92672">&lt;=</span> aY5 <span style="color:#f92672">+</span> <span style="color:#ae81ff">21</span>)));
+        aborder6 <span style="color:#f92672">&lt;=</span> (aalive6)<span style="color:#f92672">&amp;&amp;</span>(((haddr <span style="color:#f92672">&gt;=</span> a2X1 ) <span style="color:#f92672">&amp;&amp;</span> (haddr <span style="color:#f92672">&lt;=</span> a2X1 <span style="color:#f92672">+</span> <span style="color:#ae81ff">30</span>)) <span style="color:#f92672">&amp;&amp;</span> ((vaddr <span style="color:#f92672">&gt;=</span> a2Y1) <span style="color:#f92672">&amp;&amp;</span> (vaddr <span style="color:#f92672">&lt;=</span> a2Y1 <span style="color:#f92672">+</span> <span style="color:#ae81ff">29</span>)));
+        aborder7 <span style="color:#f92672">&lt;=</span> (aalive7)<span style="color:#f92672">&amp;&amp;</span>(((haddr <span style="color:#f92672">&gt;=</span> a2X2 ) <span style="color:#f92672">&amp;&amp;</span> (haddr <span style="color:#f92672">&lt;=</span> a2X2 <span style="color:#f92672">+</span> <span style="color:#ae81ff">30</span>)) <span style="color:#f92672">&amp;&amp;</span> ((vaddr <span style="color:#f92672">&gt;=</span> a2Y2) <span style="color:#f92672">&amp;&amp;</span> (vaddr <span style="color:#f92672">&lt;=</span> a2Y2 <span style="color:#f92672">+</span> <span style="color:#ae81ff">29</span>)));
+        aborder8 <span style="color:#f92672">&lt;=</span> (aalive8)<span style="color:#f92672">&amp;&amp;</span>(((haddr <span style="color:#f92672">&gt;=</span> a2X3 ) <span style="color:#f92672">&amp;&amp;</span> (haddr <span style="color:#f92672">&lt;=</span> a2X3 <span style="color:#f92672">+</span> <span style="color:#ae81ff">30</span>)) <span style="color:#f92672">&amp;&amp;</span> ((vaddr <span style="color:#f92672">&gt;=</span> a2Y3) <span style="color:#f92672">&amp;&amp;</span> (vaddr <span style="color:#f92672">&lt;=</span> a2Y3 <span style="color:#f92672">+</span> <span style="color:#ae81ff">29</span>)));
+        aborder9 <span style="color:#f92672">&lt;=</span> (aalive9)<span style="color:#f92672">&amp;&amp;</span>(((haddr <span style="color:#f92672">&gt;=</span> a2X4 ) <span style="color:#f92672">&amp;&amp;</span> (haddr <span style="color:#f92672">&lt;=</span> a2X4 <span style="color:#f92672">+</span> <span style="color:#ae81ff">30</span>)) <span style="color:#f92672">&amp;&amp;</span> ((vaddr <span style="color:#f92672">&gt;=</span> a2Y4) <span style="color:#f92672">&amp;&amp;</span> (vaddr <span style="color:#f92672">&lt;=</span> a2Y4 <span style="color:#f92672">+</span> <span style="color:#ae81ff">29</span>)));
+        aborder10 <span style="color:#f92672">&lt;=</span> (aalive10)<span style="color:#f92672">&amp;&amp;</span>(((haddr <span style="color:#f92672">&gt;=</span> a2X5 ) <span style="color:#f92672">&amp;&amp;</span> (haddr <span style="color:#f92672">&lt;=</span> a2X5 <span style="color:#f92672">+</span> <span style="color:#ae81ff">30</span>)) <span style="color:#f92672">&amp;&amp;</span> ((vaddr <span style="color:#f92672">&gt;=</span> a2Y5) <span style="color:#f92672">&amp;&amp;</span> (vaddr <span style="color:#f92672">&lt;=</span> a2Y5 <span style="color:#f92672">+</span> <span style="color:#ae81ff">29</span>)));
+        aborder11 <span style="color:#f92672">&lt;=</span> (aalive11)<span style="color:#f92672">&amp;&amp;</span>(((haddr <span style="color:#f92672">&gt;=</span> a3X1 ) <span style="color:#f92672">&amp;&amp;</span> (haddr <span style="color:#f92672">&lt;=</span> a3X1 <span style="color:#f92672">+</span> <span style="color:#ae81ff">32</span>)) <span style="color:#f92672">&amp;&amp;</span> ((vaddr <span style="color:#f92672">&gt;=</span> a3Y1) <span style="color:#f92672">&amp;&amp;</span> (vaddr <span style="color:#f92672">&lt;=</span> a3Y1 <span style="color:#f92672">+</span> <span style="color:#ae81ff">21</span>)));
+        aborder12 <span style="color:#f92672">&lt;=</span> (aalive12)<span style="color:#f92672">&amp;&amp;</span>(((haddr <span style="color:#f92672">&gt;=</span> a3X2 ) <span style="color:#f92672">&amp;&amp;</span> (haddr <span style="color:#f92672">&lt;=</span> a3X2 <span style="color:#f92672">+</span> <span style="color:#ae81ff">32</span>)) <span style="color:#f92672">&amp;&amp;</span> ((vaddr <span style="color:#f92672">&gt;=</span> a3Y2) <span style="color:#f92672">&amp;&amp;</span> (vaddr <span style="color:#f92672">&lt;=</span> a3Y2 <span style="color:#f92672">+</span> <span style="color:#ae81ff">21</span>)));
+        aborder13 <span style="color:#f92672">&lt;=</span> (aalive13)<span style="color:#f92672">&amp;&amp;</span>(((haddr <span style="color:#f92672">&gt;=</span> a3X3 ) <span style="color:#f92672">&amp;&amp;</span> (haddr <span style="color:#f92672">&lt;=</span> a3X3 <span style="color:#f92672">+</span> <span style="color:#ae81ff">32</span>)) <span style="color:#f92672">&amp;&amp;</span> ((vaddr <span style="color:#f92672">&gt;=</span> a3Y3) <span style="color:#f92672">&amp;&amp;</span> (vaddr <span style="color:#f92672">&lt;=</span> a3Y3 <span style="color:#f92672">+</span> <span style="color:#ae81ff">21</span>)));
+        aborder14 <span style="color:#f92672">&lt;=</span> (aalive14)<span style="color:#f92672">&amp;&amp;</span>(((haddr <span style="color:#f92672">&gt;=</span> a3X4 ) <span style="color:#f92672">&amp;&amp;</span> (haddr <span style="color:#f92672">&lt;=</span> a3X4 <span style="color:#f92672">+</span> <span style="color:#ae81ff">32</span>)) <span style="color:#f92672">&amp;&amp;</span> ((vaddr <span style="color:#f92672">&gt;=</span> a3Y4) <span style="color:#f92672">&amp;&amp;</span> (vaddr <span style="color:#f92672">&lt;=</span> a3Y4 <span style="color:#f92672">+</span> <span style="color:#ae81ff">21</span>)));
+        aborder15 <span style="color:#f92672">&lt;=</span> (aalive15)<span style="color:#f92672">&amp;&amp;</span>(((haddr <span style="color:#f92672">&gt;=</span> a3X5 ) <span style="color:#f92672">&amp;&amp;</span> (haddr <span style="color:#f92672">&lt;=</span> a3X5 <span style="color:#f92672">+</span> <span style="color:#ae81ff">32</span>)) <span style="color:#f92672">&amp;&amp;</span> ((vaddr <span style="color:#f92672">&gt;=</span> a3Y5) <span style="color:#f92672">&amp;&amp;</span> (vaddr <span style="color:#f92672">&lt;=</span> a3Y5 <span style="color:#f92672">+</span> <span style="color:#ae81ff">21</span>)));
+    <span style="color:#66d9ef">end</span>
+<span style="color:#75715e">/****************************************************************************************/</span>
+<span style="color:#66d9ef">endmodule</span>
+
+</code></pre></div>
+		</section>
+
+		<div class="post-tags">
+			
+			
+			<nav class="nav tags">
+				<ul class="tags">
+					
+					<li><a href="/tags/coding">coding</a></li>
+					
+				</ul>
+			</nav>
+			
+			
+		</div>
+	</article>
+</main>
+<footer>
+<hr><a class="soc" href="https://github.com/BC-Li" title="GitHub"><i data-feather="github"></i></a>|<a class="soc" href="https://twitter.com/turborocket123/" title="Twitter"><i data-feather="twitter"></i></a>|⚡️
+	2021  TurboRocket |  <a href="https://github.com/athul/archie">Archie Theme</a> | Built with <a href="https://gohugo.io">Hugo</a>
+</footer>
+
+
+<script>
+      feather.replace()
+</script></div>
+    </body>
+</html>

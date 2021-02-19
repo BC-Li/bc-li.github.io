@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>cn on Forest Zone</title>
+    <link>https://bc-li.github.io/tags/cn/</link>
+    <description>Recent content in cn on Forest Zone</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>TurboRocket</copyright>
+    <lastBuildDate>Mon, 29 Jun 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://bc-li.github.io/tags/cn/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Meaning in life</title>
+      <link>https://bc-li.github.io/posts/2020-7-1-meaning/</link>
+      <pubDate>Mon, 29 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://bc-li.github.io/posts/2020-7-1-meaning/</guid>
+      <description>Living in the post-modern days, many people get a sense of nothingness.
+They regard their lives as &amp;ldquo;meaningless&amp;rdquo;. However, there must be something to chase, because when you think your life &amp;ldquo;meaningless&amp;rdquo;, there must be a contradictory concept named &amp;ldquo;meaningful&amp;rdquo;. Thorough scepticism is totally wrong in logic for &amp;ldquo;is suspecting itself worth suspecting?&amp;rdquo; At least you can feel your breath now, and you may die if you jump from the high building.</description>
+    </item>
+    
+    <item>
+      <title>BFS used in problem 8 numbers</title>
+      <link>https://bc-li.github.io/posts/2020-5-12-bfs/</link>
+      <pubDate>Tue, 12 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://bc-li.github.io/posts/2020-5-12-bfs/</guid>
+      <description>Preknowledge BFS（广度优先搜索）  广度优先搜索较之深度优先搜索之不同在于，深度优先搜索旨在不管有多少条岔路，先一条路走到底，不成功就返回上一个路口然后就选择下一条岔路，而广度优先搜索旨在面临一个路口时，把所有的岔路口都记下来，然后选择其中一个进入，然后将它的分路情况记录下来，然后再返回来进入另外一个岔路，并重复这样的操作，用图形来表示则是这样的，例子:
+从黑色起点出发，记录所有的岔路口，并标记为走一步可以到达的。然后选择其中一个方向走进去，我们走黑点方块上面的那个，然后将这个路口可走的方向记录下来并标记为2，意味走两步可以到达的地方。
+接下来，我们回到黑色方块右手边的1方块上，并将它能走的方向也记录下来，同样标记为2，因为也是走两步便可到达的地方
+这样走一步以及走两步可以到达的地方都搜索完毕了，下面同理，我们可以迅速把三步的格子给标记出来
+再之后是四步，五步。
+我们便成功寻找到了路径，并且把所有可行的路径都求出来了。在广度优先搜索中，可以看出是逐步求解的，反复的进入与退出，将当前的所有可行解都记录下来，然后逐个去查看。在DFS中我们说关键点是递归以及回溯，在BFS中，关键点则是状态的选取和标记。
+int n = 10, m = 10; //地图宽高 void BFS() { queue que; //用队列来保存路口  int graph[n][m]; //地图  int px[] = {-1, 0, 1, 0}; //移动方向的数组  int py[] = {0, -1, 0, 1}; que.push(起点入队); //将起点入队  while (!que.empty()) { //只要队列不为空  auto temp = que.pop(); //得到队列中的元素  for (int i = 0; i != 4; ++i) { if(//可以走) {  //标记当前格子  //将当前状态入队列，等待下次提取  } } } } 注：以上两个代码只是提供思路，并非是语法正确的可运行代码。</description>
+    </item>
+    
+    <item>
+      <title>喜欢的游戏要出新作了，好开心 ^_^</title>
+      <link>https://bc-li.github.io/posts/2020-3-30-%E5%96%9C%E6%AC%A2%E7%9A%84%E6%B8%B8%E6%88%8F%E8%A6%81%E5%87%BA%E6%96%B0%E4%BD%9C%E5%95%A6%E5%A5%BD%E5%BC%80%E5%BF%83-%E5%89%AF%E6%9C%AC-%E5%89%AF%E6%9C%AC/</link>
+      <pubDate>Mon, 30 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://bc-li.github.io/posts/2020-3-30-%E5%96%9C%E6%AC%A2%E7%9A%84%E6%B8%B8%E6%88%8F%E8%A6%81%E5%87%BA%E6%96%B0%E4%BD%9C%E5%95%A6%E5%A5%BD%E5%BC%80%E5%BF%83-%E5%89%AF%E6%9C%AC-%E5%89%AF%E6%9C%AC/</guid>
+      <description>2B小姐姐 惊艳到 之后很快，
+NieR Replicant ver.1.22474487139&amp;hellip; （对，这就是官方原名 ）
+作为尼尔十周年的新作就要开始制（hua）作（bing）了，听说并不是重制版，而是加了内容的“增强版”
+总之期待++ 最后， $$ \sqrt1.5=1.22474487139&amp;hellip; $$ （这个居然是版本号的来源&amp;hellip;</description>
+    </item>
+    
+    <item>
+      <title>Git Commands</title>
+      <link>https://bc-li.github.io/posts/2020-3-23-git_commands/</link>
+      <pubDate>Mon, 23 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://bc-li.github.io/posts/2020-3-23-git_commands/</guid>
+      <description>1.创建仓库及push操作
+创建操作在github desktop/github网页上执行
+在本地上用git bash cd到指定的文件夹，
+git clone https://.... . ...git
+创建文件夹之后第一次提交需要进行的操作：
+  把自己要push的文件放进文件夹
+  依次执行命令 git add . git commit -m &amp;quot;first commit&amp;quot; git push u origin master 会提示输入ssh密码/github用户名，密码，输入即可
+  第二次及以后的操作只需修改本地仓库的文件之后
+git push
+即可。
+3.2.其他的git命令：
+ git init #把当前目录变成git可以管理的仓库
+ git add readme.txt #添加一个文件，也可以添加文件夹
+ git add -A #添加全部文件
+ git commit -m &amp;quot;some commit&amp;quot; #提交修改
+ git status #查看是否还有未提交
+ git log #查看最近日志
+ git reset --hard HEAD^ #版本回退一个版本</description>
+    </item>
+    
+  </channel>
+</rss>

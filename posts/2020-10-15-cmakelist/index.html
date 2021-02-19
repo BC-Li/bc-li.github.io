@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html><head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>CMakeList Usage and some must-handle Syntax - Forest Zone</title><meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<meta property="og:image" content=""/>
+	<meta property="og:title" content="CMakeList Usage and some must-handle Syntax" />
+<meta property="og:description" content="as the title says XD" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://bc-li.github.io/posts/2020-10-15-cmakelist/" />
+<meta property="article:published_time" content="2020-10-15T00:00:00+00:00" />
+<meta property="article:modified_time" content="2020-10-15T00:00:00+00:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="CMakeList Usage and some must-handle Syntax"/>
+<meta name="twitter:description" content="as the title says XD"/>
+<script src="https://bc-li.github.io/js/feather.min.js"></script>
+	
+	<link href="https://bc-li.github.io/css/fonts.css" rel="stylesheet">
+	
+	<link rel="stylesheet" type="text/css" media="screen" href="https://bc-li.github.io/css/main.css" />
+	
+</head>
+<body>
+        <div class="content"><header>
+	<div class="main">
+		<a href="https://bc-li.github.io/">Forest Zone</a>
+	</div>
+	<nav>
+		
+		<a href="/">Home</a>
+		
+		<a href="/posts">All posts</a>
+		
+		<a href="/about">About</a>
+		
+		<a href="/tags">Tags</a>
+		
+	</nav>
+</header>
+
+<main>
+	<article>
+		<div class="title">
+			<h1 class="title">CMakeList Usage and some must-handle Syntax</h1>
+			<div class="meta">Posted on Oct 15, 2020</div>
+		</div>
+		
+
+		<section class="body">
+			<p>One good tutorial about CMake is <a href="https://www.jetbrains.com/help/clion/quick-cmake-tutorial.html?gclid=CjwKCAjw5p_8BRBUEiwAPpJO6wA0sNaogIYJOqkuAeE_u6b45Oi8F6Vjgpk8AMOX9Qyby3xcK1pKDxoCrZYQAvD_BwE&amp;gclsrc=aw.ds">here</a>. You can also take the <a href="https://cmake.org/cmake/help/latest/">official document</a> as a reference.</p>
+<h2 id="what-is-cmake">What is CMake?</h2>
+<blockquote>
+<p><a href="https://cmake.org/">CMake</a> is a meta build system that uses scripts called <strong>CMakeLists</strong> to generate build files for a specific environment (for example, makefiles on Unix machines). When you create a new CMake project in CLion, a <strong>CMakeLists.txt</strong> file is automatically generated under the project root.</p>
+</blockquote>
+<p>So when you want to get CMake running you are required to handle some basic CMakeList syntax, which I&rsquo;ll show below.</p>
+<h2 id="an-example-cmakelisttxt-provided-by-jetbrains">An example CMakeList.txt provided by JetBrains</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">cmake_minimum_required(VERSION <span style="color:#ae81ff">3.13</span>)  <span style="color:#960050;background-color:#1e0010">#</span> CMake version check
+project(simple_example)               <span style="color:#960050;background-color:#1e0010">#</span> Create project <span style="color:#e6db74">&#34;simple_example&#34;</span>
+set(CMAKE_CXX_STANDARD <span style="color:#ae81ff">14</span>)            <span style="color:#960050;background-color:#1e0010">#</span> Enable c<span style="color:#f92672">++</span><span style="color:#ae81ff">14</span> standard
+
+<span style="color:#75715e"># Add main.cpp file of project root directory as source file
+</span><span style="color:#75715e"></span>set(SOURCE_FILES main.cpp)
+
+<span style="color:#75715e"># Add executable target with source files listed in SOURCE_FILES variable
+</span><span style="color:#75715e"></span>add_executable(simple_example <span style="color:#960050;background-color:#1e0010">$</span>{SOURCE_FILES})
+</code></pre></div><h2 id="getting-started">Getting Started</h2>
+<p>We should know how to write a CMakeList before we can use CMake.</p>
+<h3 id="some-cmakelist-syntax">Some CMakeList Syntax</h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cmake_minimum_required(VERSION 3.13)</td>
+<td>Set the minimum version of CMake.</td>
+</tr>
+<tr>
+<td>project(cmake_testcpp)</td>
+<td>Your project name, depending on the name you set at the very beginning.</td>
+</tr>
+<tr>
+<td>set(CMAKE_CXX_STANDARD 14)</td>
+<td>Set the C standard to 14</td>
+</tr>
+<tr>
+<td>add_executable(cmake_testapp main.cpp test.cpp note.cpp &hellip;..)</td>
+<td>Add your testcases executable target which will be built from main.cpp</td>
+</tr>
+<tr>
+<td>aux_source_directory(. DIR_SRCS)</td>
+<td>If you have too many source files, you can use this command to store all your files in one variable &lsquo;DIR_SRCS&rsquo;, and you can use it in <code>add_executable</code> command like this: <code>add_executable(cmake_testapp ${DIR_SRCS})</code>.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="compile">Compile</h3>
+<ul>
+<li>Run <code>cmake .</code>in your project directory, and get your Makefile.</li>
+<li>Run <code>make</code>, and CMake will compile automatically.</li>
+<li>In Linux Terminal you can run command <code>./yourfile</code> to run your project.</li>
+</ul>
+
+		</section>
+
+		<div class="post-tags">
+			
+			
+			<nav class="nav tags">
+				<ul class="tags">
+					
+					<li><a href="/tags/coding">coding</a></li>
+					
+				</ul>
+			</nav>
+			
+			
+		</div>
+	</article>
+</main>
+<footer>
+<hr><a class="soc" href="https://github.com/BC-Li" title="GitHub"><i data-feather="github"></i></a>|<a class="soc" href="https://twitter.com/turborocket123/" title="Twitter"><i data-feather="twitter"></i></a>|⚡️
+	2021  TurboRocket |  <a href="https://github.com/athul/archie">Archie Theme</a> | Built with <a href="https://gohugo.io">Hugo</a>
+</footer>
+
+
+<script>
+      feather.replace()
+</script></div>
+    </body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html><head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Build your repo with Tarvis CI. - Forest Zone</title><meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<meta property="og:image" content=""/>
+	<meta property="og:title" content="Build your repo with Tarvis CI." />
+<meta property="og:description" content="This is the review of album folklore by Taylor Swift, released on 2020/7/24." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://bc-li.github.io/posts/2020-7-26-tarvisci/" />
+<meta property="article:published_time" content="2020-07-26T00:00:00+00:00" />
+<meta property="article:modified_time" content="2020-07-26T00:00:00+00:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Build your repo with Tarvis CI."/>
+<meta name="twitter:description" content="This is the review of album folklore by Taylor Swift, released on 2020/7/24."/>
+<script src="https://bc-li.github.io/js/feather.min.js"></script>
+	
+	<link href="https://bc-li.github.io/css/fonts.css" rel="stylesheet">
+	
+	<link rel="stylesheet" type="text/css" media="screen" href="https://bc-li.github.io/css/main.css" />
+	
+</head>
+<body>
+        <div class="content"><header>
+	<div class="main">
+		<a href="https://bc-li.github.io/">Forest Zone</a>
+	</div>
+	<nav>
+		
+		<a href="/">Home</a>
+		
+		<a href="/posts">All posts</a>
+		
+		<a href="/about">About</a>
+		
+		<a href="/tags">Tags</a>
+		
+	</nav>
+</header>
+
+<main>
+	<article>
+		<div class="title">
+			<h1 class="title">Build your repo with Tarvis CI.</h1>
+			<div class="meta">Posted on Jul 26, 2020</div>
+		</div>
+		
+
+		<section class="body">
+			<p>Build your repo automatically with Tarvis CI.</p>
+<h2 id="what-is-tarvis-ci">What is Tarvis CI?</h2>
+<blockquote>
+<p><strong>Travis CI</strong> is a hosted[<a href="https://en.wikipedia.org/wiki/Travis_CI#cite_note-2">2]</a> <a href="https://en.wikipedia.org/wiki/Continuous_integration">continuous integration</a> service used to build and test software projects hosted at <a href="https://en.wikipedia.org/wiki/GitHub">GitHub</a>[<a href="https://en.wikipedia.org/wiki/Travis_CI#cite_note-3">3]</a> and <a href="https://en.wikipedia.org/wiki/Bitbucket">Bitbucket</a>.[<a href="https://en.wikipedia.org/wiki/Travis_CI#cite_note-4">4]</a></p>
+<p>Travis CI provides various paid plan for private projects, and a free plan for open source. TravisPro provides custom deployments of a proprietary version on the customer&rsquo;s own hardware.</p>
+<p>The source is technically <a href="https://en.wikipedia.org/wiki/Free_software">free software</a> and available piecemeal on GitHub under permissive licenses. The company notes, however, that the large number of tasks that a user needs to monitor and perform can make it difficult for some users to successfully integrate the Enterprise version with their own infrastructure.</p>
+</blockquote>
+<h2 id="getting-started">Getting Started</h2>
+<ol>
+<li>Register in Tarvis CI with your GitHub account and migrate your repos in GitHub with Tarvis CI.</li>
+<li>Push an <strong>runnable</strong> .tarvis.yml to your repo</li>
+<li>Find your repo in Dashboard and trigger a build.</li>
+<li>Wait until it finish building and it&rsquo;s done! you&rsquo;ll get something like this: <a href="https://travis-ci.com/BC-Li/bc-li.github.io"><img src="https://travis-ci.com/BC-Li/bc-li.github.io.svg?token=Yyg3baLESvJZxgyG1jBY&amp;branch=master" alt="Build Status"></a></li>
+<li>Further usage for Tarvis CI, I may update them in near future as soon as I get enough time for it.</li>
+</ol>
+<h2 id="my-tarvisyml-for-this-site">My .tarvis.yml for This Site</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">language</span>: <span style="color:#ae81ff">ruby</span>
+<span style="color:#f92672">cache</span>: <span style="color:#ae81ff">bundler</span>
+<span style="color:#f92672">sudo</span>: <span style="color:#66d9ef">false</span>
+
+<span style="color:#f92672">script</span>: <span style="color:#ae81ff">bundle exec jekyll build</span>
+</code></pre></div><p>The .tarvis.yml is like something you need the remote Ubuntu server to do. Write your commands which you basically wrote in Bash or Terminal or something else in <strong>script</strong> above, and the server will automatically run your commands.</p>
+<p><code>inspired by an iBug's post.Thanks! </code></p>
+
+		</section>
+
+		<div class="post-tags">
+			
+			
+			<nav class="nav tags">
+				<ul class="tags">
+					
+					<li><a href="/tags/coding">coding</a></li>
+					
+				</ul>
+			</nav>
+			
+			
+		</div>
+	</article>
+</main>
+<footer>
+<hr><a class="soc" href="https://github.com/BC-Li" title="GitHub"><i data-feather="github"></i></a>|<a class="soc" href="https://twitter.com/turborocket123/" title="Twitter"><i data-feather="twitter"></i></a>|⚡️
+	2021  TurboRocket |  <a href="https://github.com/athul/archie">Archie Theme</a> | Built with <a href="https://gohugo.io">Hugo</a>
+</footer>
+
+
+<script>
+      feather.replace()
+</script></div>
+    </body>
+</html>

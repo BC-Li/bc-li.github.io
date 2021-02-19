@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html><head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Customize your site built on jekyll theme &#34;Minimal Mistakes&#34; - Forest Zone</title><meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<meta property="og:image" content=""/>
+	<meta property="og:title" content="Customize your site built on jekyll theme &#34;Minimal Mistakes&#34;" />
+<meta property="og:description" content="Use your own CSS files to customize the site." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://bc-li.github.io/posts/2020-8-30-customize_your_site/" />
+<meta property="article:published_time" content="2020-08-30T00:00:00+00:00" />
+<meta property="article:modified_time" content="2020-08-30T00:00:00+00:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Customize your site built on jekyll theme &#34;Minimal Mistakes&#34;"/>
+<meta name="twitter:description" content="Use your own CSS files to customize the site."/>
+<script src="https://bc-li.github.io/js/feather.min.js"></script>
+	
+	<link href="https://bc-li.github.io/css/fonts.css" rel="stylesheet">
+	
+	<link rel="stylesheet" type="text/css" media="screen" href="https://bc-li.github.io/css/main.css" />
+	
+</head>
+<body>
+        <div class="content"><header>
+	<div class="main">
+		<a href="https://bc-li.github.io/">Forest Zone</a>
+	</div>
+	<nav>
+		
+		<a href="/">Home</a>
+		
+		<a href="/posts">All posts</a>
+		
+		<a href="/about">About</a>
+		
+		<a href="/tags">Tags</a>
+		
+	</nav>
+</header>
+
+<main>
+	<article>
+		<div class="title">
+			<h1 class="title">Customize your site built on jekyll theme &#34;Minimal Mistakes&#34;</h1>
+			<div class="meta">Posted on Aug 30, 2020</div>
+		</div>
+		
+
+		<section class="body">
+			<h2 id="importing-the-css-files">Importing the CSS files</h2>
+<p>Read the documents and you&rsquo;ll find it&rsquo;s rather easy to use your own CSS. Go straight to <code>/assets/css/main.scss</code> . You can import them here.</p>
+<p>For instance:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scss" data-lang="scss"><span style="color:#f92672">---</span>
+# <span style="color:#f92672">Only</span> <span style="color:#f92672">the</span> <span style="color:#f92672">main</span> <span style="color:#f92672">Sass</span> <span style="color:#f92672">file</span> <span style="color:#f92672">needs</span> <span style="color:#f92672">front</span> <span style="color:#f92672">matter</span> <span style="color:#f92672">(</span><span style="color:#f92672">the</span> <span style="color:#f92672">dashes</span> <span style="color:#f92672">are</span> <span style="color:#f92672">enough</span><span style="color:#f92672">)</span>
+<span style="color:#f92672">---</span>
+
+<span style="color:#f92672">@</span><span style="color:#f92672">charset</span> <span style="color:#e6db74">&#34;utf-8&#34;</span>;
+
+<span style="color:#66d9ef">@import</span> <span style="color:#e6db74">&#34;minimal-mistakes/skins/{{ site.minimal_mistakes_skin | default: &#39;default&#39; }}&#34;</span>; <span style="color:#75715e">// skin
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">@import</span> <span style="color:#e6db74">&#34;minimal-mistakes&#34;</span>; <span style="color:#75715e">// main partials
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">@import</span> <span style="color:#e6db74">&#34;minimal-mistakes/_custom&#34;</span>; <span style="color:#75715e">// Your personal config on your site goes here and below
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">@import</span> <span style="color:#e6db74">&#34;minimal-mistakes/_landing&#34;</span>;
+</code></pre></div><p>And that&rsquo;s it. It&rsquo;s separate from the origin SCSS files and that means you <strong>needn&rsquo;t</strong> make any changes to core files of mmistakes.</p>
+<h2 id="making-your-own-css-files">Making your own CSS files</h2>
+<h2 id="use-your-customized-files-on-a-specific-page">Use your customized files on a specific page</h2>
+<p><code>Pending...</code></p>
+
+		</section>
+
+		<div class="post-tags">
+			
+			
+			<nav class="nav tags">
+				<ul class="tags">
+					
+					<li><a href="/tags/coding">coding</a></li>
+					
+				</ul>
+			</nav>
+			
+			
+		</div>
+	</article>
+</main>
+<footer>
+<hr><a class="soc" href="https://github.com/BC-Li" title="GitHub"><i data-feather="github"></i></a>|<a class="soc" href="https://twitter.com/turborocket123/" title="Twitter"><i data-feather="twitter"></i></a>|⚡️
+	2021  TurboRocket |  <a href="https://github.com/athul/archie">Archie Theme</a> | Built with <a href="https://gohugo.io">Hugo</a>
+</footer>
+
+
+<script>
+      feather.replace()
+</script></div>
+    </body>
+</html>

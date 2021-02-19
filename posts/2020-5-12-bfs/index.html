@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html><head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>BFS used in problem 8 numbers - Forest Zone</title><meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<meta property="og:image" content=""/>
+	<meta property="og:title" content="BFS used in problem 8 numbers" />
+<meta property="og:description" content="8 numbers problem in CPII 2020 Spring: solution and some related basic knowledge used in it." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://bc-li.github.io/posts/2020-5-12-bfs/" />
+<meta property="article:published_time" content="2020-05-12T00:00:00+00:00" />
+<meta property="article:modified_time" content="2020-05-12T00:00:00+00:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="BFS used in problem 8 numbers"/>
+<meta name="twitter:description" content="8 numbers problem in CPII 2020 Spring: solution and some related basic knowledge used in it."/>
+<script src="https://bc-li.github.io/js/feather.min.js"></script>
+	
+	<link href="https://bc-li.github.io/css/fonts.css" rel="stylesheet">
+	
+	<link rel="stylesheet" type="text/css" media="screen" href="https://bc-li.github.io/css/main.css" />
+	
+</head>
+<body>
+        <div class="content"><header>
+	<div class="main">
+		<a href="https://bc-li.github.io/">Forest Zone</a>
+	</div>
+	<nav>
+		
+		<a href="/">Home</a>
+		
+		<a href="/posts">All posts</a>
+		
+		<a href="/about">About</a>
+		
+		<a href="/tags">Tags</a>
+		
+	</nav>
+</header>
+
+<main>
+	<article>
+		<div class="title">
+			<h1 class="title">BFS used in problem 8 numbers</h1>
+			<div class="meta">Posted on May 12, 2020</div>
+		</div>
+		
+
+		<section class="body">
+			<h2 id="preknowledge">Preknowledge</h2>
+<h3 id="bfs广度优先搜索httpszhuanlanzhihucomp24986203"><a href="https://zhuanlan.zhihu.com/p/24986203">BFS（广度优先搜索）</a></h3>
+<blockquote>
+<p>广度优先搜索较之深度优先搜索之不同在于，深度优先搜索旨在不管有多少条岔路，先一条路走到底，不成功就返回上一个路口然后就选择下一条岔路，而广度优先搜索旨在面临一个路口时，把所有的岔路口都记下来，然后选择其中一个进入，然后将它的分路情况记录下来，然后再返回来进入另外一个岔路，并重复这样的操作，用图形来表示则是这样的，例子:</p>
+<p><img src="/assets/images/8numbers/v2-7d1e0548d25096f24b5ff23944f58d18_720w.png" alt="v2-7d1e0548d25096f24b5ff23944f58d18_720w"></p>
+<p>从黑色起点出发，记录所有的岔路口，并标记为走一步可以到达的。然后选择其中一个方向走进去，我们走黑点方块上面的那个，然后将这个路口可走的方向记录下来并标记为2，意味走两步可以到达的地方。</p>
+<p><img src="/assets/images/8numbers/v2-63f88b398a7843506efd6f5249e60b94_720w.png" alt="v2-63f88b398a7843506efd6f5249e60b94_720w"></p>
+<p>接下来，我们回到黑色方块右手边的1方块上，并将它能走的方向也记录下来，同样标记为2，因为也是走两步便可到达的地方</p>
+<p><img src="/assets/images/8numbers/v2-a4f12599e335d6ac6e72d685accad82e_720w.png" alt="v2-a4f12599e335d6ac6e72d685accad82e_720w"></p>
+<p>这样走一步以及走两步可以到达的地方都搜索完毕了，下面同理，我们可以迅速把三步的格子给标记出来</p>
+<p><img src="/assets/images/8numbers/v2-89b61c229f7a852888e4e29b2cafd7a1_720w.png" alt="v2-89b61c229f7a852888e4e29b2cafd7a1_720w"></p>
+<p>再之后是四步，五步。</p>
+<p><img src="/assets/images/8numbers/v2-813b44a06012c6ae599a62aaa422c96b_720w.png" alt="v2-813b44a06012c6ae599a62aaa422c96b_720w"></p>
+<p>我们便成功寻找到了路径，并且把所有可行的路径都求出来了。在广度优先搜索中，可以看出是逐步求解的，反复的进入与退出，将当前的所有可行解都记录下来，然后逐个去查看。在DFS中我们说关键点是递归以及回溯，在BFS中，关键点则是状态的选取和标记。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>, m <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>;                   <span style="color:#75715e">//地图宽高
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">BFS</span>()
+{
+    queue que;              <span style="color:#75715e">//用队列来保存路口
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> graph[n][m];          <span style="color:#75715e">//地图
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> px[] <span style="color:#f92672">=</span> {<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>};   <span style="color:#75715e">//移动方向的数组
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> py[] <span style="color:#f92672">=</span> {<span style="color:#ae81ff">0</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>};
+    que.push(<span style="color:#960050;background-color:#1e0010">起点入队</span>);      <span style="color:#75715e">//将起点入队
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">while</span> (<span style="color:#f92672">!</span>que.empty()) {    <span style="color:#75715e">//只要队列不为空
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">auto</span> temp <span style="color:#f92672">=</span> que.pop();          <span style="color:#75715e">//得到队列中的元素
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">!=</span> <span style="color:#ae81ff">4</span>; <span style="color:#f92672">++</span>i) {
+            <span style="color:#66d9ef">if</span>(<span style="color:#75715e">//可以走) {
+</span><span style="color:#75715e"></span>                <span style="color:#75715e">//标记当前格子
+</span><span style="color:#75715e"></span>                <span style="color:#75715e">//将当前状态入队列，等待下次提取
+</span><span style="color:#75715e"></span>            }
+        }
+    } 
+}
+</code></pre></div><p><strong>注：以上两个代码只是提供思路，并非是语法正确的可运行代码。</strong></p>
+<h2 id="总结"><strong>总结</strong></h2>
+<p>对于这两个搜索方法，其实我们是可以轻松的看出来，他们有许多差异与许多相同点的。</p>
+<p><strong>1.数据结构上的运用</strong></p>
+<p>DFS用递归的形式，用到了栈结构，先进后出。</p>
+<p>BFS选取状态用队列的形式，先进先出。</p>
+<p><strong>2.复杂度</strong></p>
+<p>DFS的复杂度与BFS的复杂度大体一致，不同之处在于遍历的方式与对于问题的解决出发点不同，DFS适合目标明确，而BFS适合大范围的寻找。</p>
+<p><strong>3.思想</strong></p>
+<p>思想上来说这两种方法都是穷竭列举所有的情况。</p>
+<p>From: Zhihu: <a href="https://www.zhihu.com/people/cheng-jie-shi-36">Linkcheng</a></p>
+</blockquote>
+<h3 id="cantor-展开httpsblogcsdnnetltrblessarticledetails87696372"><a href="https://blog.csdn.net/ltrbless/article/details/87696372">Cantor 展开</a></h3>
+<h4 id="target-usage">Target usage</h4>
+<p>Cantor 展开用于求解一个全排列的序号。例如：12345 序号为 1 ，12354 序号为 2，按字典序增加序号递增。
+Cantor 逆展开用于求解序号对应的排列。</p>
+<h4 id="explanation">Explanation</h4>
+<p><strong>康托展开的基本公式如下：</strong> <img src="https://www.zhihu.com/equation?tex=+X%3Da_n%28n-1%29%21%2Ba_%7Bn-1%7D%28n-2%29%21%2B%C2%B7%C2%B7%C2%B7%2Ba_1%5Ctimes0%21%2B1" alt="[公式]"></p>
+<p>其中X代表该排列的排名， <img src="https://www.zhihu.com/equation?tex=a_i" alt="[公式]"> 代表该排列中的第i位数字在第i位其后的数字中按升序排在第几个（以0为最小）。</p>
+<p><strong>举个例子：在1~5的排列中，求解34152的排名。</strong></p>
+<p>第1位数字是3，在34152中按升序排在第2个。（最小的是第0个）故 <img src="https://www.zhihu.com/equation?tex=a_1%3D2%E3%80%82" alt="[公式]"></p>
+<p>第2位数字是4，在4152中按升序排在第2个。 <img src="https://www.zhihu.com/equation?tex=a_2%3D2" alt="[公式]"></p>
+<p>第3位数字是1，在152中按升序排在第0个。 <img src="https://www.zhihu.com/equation?tex=a_3%3D0" alt="[公式]"></p>
+<p>第4位数字是5，在52中按升序排在第1个。 <img src="https://www.zhihu.com/equation?tex=a_4%3D1" alt="[公式]"></p>
+<p>最后一位 <img src="https://www.zhihu.com/equation?tex=a_5" alt="[公式]"> 固定为0。</p>
+<p>则 <img src="https://www.zhihu.com/equation?tex=X%3D2%5Ctimes%285-1%29%21%2B2%5Ctimes%285-2%29%21%2B0%5Ctimes%285-3%29%21%2B1%5Ctimes%285-4%29%21%2B0%5Ctimes%285-5%29%21%2B1%3D62" alt="[公式]"></p>
+<h3 id="字典序">字典序</h3>
+<p><img src="/assets/images/8numbers/811207-20160316224604443-404581276.png" alt="811207-20160316224604443-404581276"></p>
+<h2 id="8-numbers-problem">8 numbers problem</h2>
+<h3 id="content">Content</h3>
+<p>3×3九宫棋盘，放置数码为1-8的8个棋牌，剩下一个空格，只能通过棋牌向空格的移动来改变棋盘的布局。要求：根据给定初始布局，问：至少移动几次才能从初始布局到达目标布局。</p>
+<p>目标布局如下图：</p>
+<p>8 7 6
+5 4 3
+2 1</p>
+<h3 id="input-description">Input Description</h3>
+<p>3行，每行3个0-8的不重复整数，其中0表示空格所在的位置，数字间用空格隔开，表示初始布局，数据保证该初始布局一定能移到目标布局。</p>
+<h3 id="output-description">Output Description</h3>
+<p>一个整数，表示最少移动到目标布局的次数。</p>
+<h3 id="sample">Sample</h3>
+<h4 id="input">INPUT</h4>
+<p>0 7 6
+8 4 3
+5 2 1</p>
+<h4 id="output">OUTPUT</h4>
+<p>4</p>
+<h3 id="main-method">Main method</h3>
+<p>对于每种情况，可以看作 9 个数字的不同排列，也就是说会有 9！=362880 种情况，而每种情况用一个字符串进行记录，也方便调用字符串函数减少工作量。为了避免搜索重复情况，将建立一个 HASH 表。每种排列的 Cantor 展开是唯一的，故可以此作为对应关系。</p>
+<h4 id="每种状态的记录以及挪动元素的实现">每种状态的记录以及挪动元素的实现</h4>
+<h5 id="记录">记录</h5>
+<p>例如：将 INPUT 情况记作序列</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">int</span> arr[<span style="color:#ae81ff">9</span>] <span style="color:#f92672">=</span> {<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">7</span>,<span style="color:#ae81ff">6</span>,<span style="color:#ae81ff">8</span>,<span style="color:#ae81ff">4</span>,<span style="color:#ae81ff">3</span>,<span style="color:#ae81ff">5</span>,<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">1</span>}
+</code></pre></div><h5 id="挪动元素">挪动元素</h5>
+<p>那么对于其中某一个元素（如 <strong>8</strong> ）向上一格，只需令 8 与它之前的第三个元素进行交换，同时需要满足：</p>
+<ul>
+<li>之前的第三个元素是 0；
+只需</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">arr[where_8_is_located <span style="color:#f92672">-</span> <span style="color:#ae81ff">3</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</code></pre></div><ul>
+<li>不在边缘。
+可以用标记该位置是否可以向左移动实现。</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">int</span> mobility[<span style="color:#ae81ff">9</span>][<span style="color:#ae81ff">4</span>]<span style="color:#f92672">=</span>{ {<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">1</span>},{<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">1</span>},{<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">0</span>},{<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">1</span>},{<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">1</span>},{<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">0</span>},{<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">1</span>},{<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">1</span>},{<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">0</span>} }  <span style="color:#75715e">//order in up, down, left and right, 0 means unable;
+</span></code></pre></div><p>同理，向左一格是与该元素之前的一个元素进行交换&hellip;</p>
+<h5 id="避免重复搜索">避免重复搜索</h5>
+<p>原 Blog 中利用 Hash 表 + Cantor 展开.
+复习一下上面的公式和算法：（似乎是我自己记不住&hellip; ）
+<img src="https://www.zhihu.com/equation?tex=+X%3Da_n%28n-1%29%21%2Ba_%7Bn-1%7D%28n-2%29%21%2B%C2%B7%C2%B7%C2%B7%2Ba_1%5Ctimes0%21%2B1" alt="[公式]"></p>
+<p>其中X代表该排列的排名， <img src="https://www.zhihu.com/equation?tex=a_i" alt="[公式]"> 代表该排列中的第i位数字在第i位其后的数字中按升序排在第几个（以0为最小）。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">cantor</span>(<span style="color:#66d9ef">char</span> x[],<span style="color:#66d9ef">int</span> n)  <span style="color:#75715e">// calculate the cantor function 
+</span><span style="color:#75715e"></span>{
+	<span style="color:#66d9ef">int</span> fac[]<span style="color:#f92672">=</span>{<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">6</span>,<span style="color:#ae81ff">24</span>,<span style="color:#ae81ff">120</span>,<span style="color:#ae81ff">720</span>,<span style="color:#ae81ff">5040</span>,<span style="color:#ae81ff">40320</span>};  <span style="color:#75715e">// values of factorial, from 0 to 8 (there is 9 numbers used in total) 
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">int</span> i,j,num<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>,count; <span style="color:#75715e">//num means X.
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">for</span>(i<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>;i<span style="color:#f92672">&lt;</span>n;i<span style="color:#f92672">++</span>)
+	{
+		count<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>;
+		<span style="color:#66d9ef">for</span>(j<span style="color:#f92672">=</span>i<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>;j<span style="color:#f92672">&lt;</span>n;j<span style="color:#f92672">++</span>)
+			<span style="color:#66d9ef">if</span>(x[j]<span style="color:#f92672">&lt;</span>x[i]) count<span style="color:#f92672">++</span>;
+		
+		num<span style="color:#f92672">+=</span>count<span style="color:#f92672">*</span>fac[n<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span><span style="color:#f92672">-</span>i];
+	}
+	<span style="color:#66d9ef">return</span> num <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
+}
+</code></pre></div><h3 id="write-up">Write-up</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;string.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#define MAX 400000  </span><span style="color:#75715e">// all of the possible routes 9! = 362880
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">int</span> hash [MAX];  
+<span style="color:#66d9ef">char</span> aim[<span style="color:#ae81ff">10</span>]<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;876543210&#34;</span>;
+<span style="color:#66d9ef">char</span> single_status [MAX][<span style="color:#ae81ff">10</span>]; <span style="color:#75715e">// every single status. 9! in total
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">cantor</span>(<span style="color:#66d9ef">char</span> x[],<span style="color:#66d9ef">int</span> n)  <span style="color:#75715e">// calculate the cantor function 
+</span><span style="color:#75715e"></span>{
+	<span style="color:#66d9ef">int</span> fac[]<span style="color:#f92672">=</span>{<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">6</span>,<span style="color:#ae81ff">24</span>,<span style="color:#ae81ff">120</span>,<span style="color:#ae81ff">720</span>,<span style="color:#ae81ff">5040</span>,<span style="color:#ae81ff">40320</span>};  <span style="color:#75715e">// values of factorial, from 0 to 8 (there is 9 numbers used in total) 
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">int</span> i,j,num<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>,count; <span style="color:#75715e">//num means X.
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">for</span>(i<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>;i<span style="color:#f92672">&lt;</span>n;i<span style="color:#f92672">++</span>)
+	{
+		count<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>;
+		<span style="color:#66d9ef">for</span>(j<span style="color:#f92672">=</span>i<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>;j<span style="color:#f92672">&lt;</span>n;j<span style="color:#f92672">++</span>)
+			<span style="color:#66d9ef">if</span>(x[j]<span style="color:#f92672">&lt;</span>x[i]) count<span style="color:#f92672">++</span>;
+		
+		num<span style="color:#f92672">+=</span>count<span style="color:#f92672">*</span>fac[n<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span><span style="color:#f92672">-</span>i];
+	}
+	<span style="color:#66d9ef">return</span> num <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
+}
+
+<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">bfs</span>(<span style="color:#66d9ef">int</span> p, <span style="color:#66d9ef">int</span> q, <span style="color:#66d9ef">int</span> n){
+    <span style="color:#66d9ef">int</span> i,j<span style="color:#f92672">=</span>q<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>,t,num;
+    <span style="color:#66d9ef">char</span> new_status[<span style="color:#ae81ff">10</span>]; <span style="color:#75715e">// new status
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">for</span>(i<span style="color:#f92672">=</span>p;i<span style="color:#f92672">&lt;=</span>q;i<span style="color:#f92672">++</span>){
+        <span style="color:#66d9ef">if</span>(strcmp(single_status[i],aim)<span style="color:#f92672">==</span><span style="color:#ae81ff">0</span>){
+            printf(<span style="color:#e6db74">&#34;%d&#34;</span>,n);
+            <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+        }
+
+        t<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>;
+        <span style="color:#66d9ef">while</span>(single_status[i][t]<span style="color:#f92672">!=</span><span style="color:#e6db74">&#39;0&#39;</span>){
+            t<span style="color:#f92672">++</span>;
+        }
+        <span style="color:#66d9ef">if</span>(t<span style="color:#f92672">&gt;</span><span style="color:#ae81ff">2</span>){ <span style="color:#75715e">// 0 isn&#39;t in the first line
+</span><span style="color:#75715e"></span>        strcpy(new_status,single_status[i]);
+        new_status[t]<span style="color:#f92672">=</span>single_status[i][t<span style="color:#f92672">-</span><span style="color:#ae81ff">3</span>];<span style="color:#75715e">// down
+</span><span style="color:#75715e"></span>        new_status[t<span style="color:#f92672">-</span><span style="color:#ae81ff">3</span>]<span style="color:#f92672">=</span>single_status[i][t];
+        num <span style="color:#f92672">=</span> cantor(new_status,<span style="color:#ae81ff">9</span>);
+        <span style="color:#66d9ef">if</span>(hash[num]<span style="color:#f92672">==</span><span style="color:#ae81ff">1</span>){
+            strcpy(single_status[j],new_status);
+            hash[num] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+            j<span style="color:#f92672">++</span>;
+        }
+        }
+        <span style="color:#66d9ef">if</span>(t<span style="color:#f92672">&lt;</span><span style="color:#ae81ff">6</span>){
+        strcpy(new_status,single_status[i]);
+        new_status[t]<span style="color:#f92672">=</span>single_status[i][t<span style="color:#f92672">+</span><span style="color:#ae81ff">3</span>];<span style="color:#75715e">// down
+</span><span style="color:#75715e"></span>        new_status[t<span style="color:#f92672">+</span><span style="color:#ae81ff">3</span>]<span style="color:#f92672">=</span>single_status[i][t];
+        num <span style="color:#f92672">=</span> cantor(new_status,<span style="color:#ae81ff">9</span>);
+        <span style="color:#66d9ef">if</span>(hash[num]<span style="color:#f92672">==</span><span style="color:#ae81ff">1</span>){
+            strcpy(single_status[j],new_status);
+            hash[num] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+            j<span style="color:#f92672">++</span>;
+        }
+        }
+        <span style="color:#66d9ef">if</span>(t<span style="color:#f92672">%</span><span style="color:#ae81ff">3</span> <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span>){
+        strcpy(new_status,single_status[i]);
+        new_status[t]<span style="color:#f92672">=</span>single_status[i][t<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>];<span style="color:#75715e">// down
+</span><span style="color:#75715e"></span>        new_status[t<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]<span style="color:#f92672">=</span>single_status[i][t];
+        num <span style="color:#f92672">=</span> cantor(new_status,<span style="color:#ae81ff">9</span>);
+        <span style="color:#66d9ef">if</span>(hash[num]<span style="color:#f92672">==</span><span style="color:#ae81ff">1</span>){
+            strcpy(single_status[j],new_status);
+            hash[num] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+            j<span style="color:#f92672">++</span>;
+        }
+        }
+        <span style="color:#66d9ef">if</span>(t<span style="color:#f92672">%</span><span style="color:#ae81ff">3</span> <span style="color:#f92672">!=</span> <span style="color:#ae81ff">2</span>){
+        strcpy(new_status,single_status[i]);
+        new_status[t]<span style="color:#f92672">=</span>single_status[i][t<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>];<span style="color:#75715e">// down
+</span><span style="color:#75715e"></span>        new_status[t<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>]<span style="color:#f92672">=</span>single_status[i][t];
+        num <span style="color:#f92672">=</span> cantor(new_status,<span style="color:#ae81ff">9</span>);
+        <span style="color:#66d9ef">if</span> (hash[num] <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>) {
+          strcpy(single_status[j], new_status);
+          hash[num] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+          j<span style="color:#f92672">++</span>;
+        }
+        }
+        
+    }
+    bfs(q <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>, j <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>, n <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>);
+    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+}
+<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>(){
+    <span style="color:#66d9ef">int</span> i,trans;
+    <span style="color:#66d9ef">for</span>(i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;i<span style="color:#f92672">&lt;</span><span style="color:#ae81ff">9</span>;i<span style="color:#f92672">++</span>){
+        scanf(<span style="color:#e6db74">&#34;%d&#34;</span>,<span style="color:#f92672">&amp;</span>trans);
+        single_status[<span style="color:#ae81ff">0</span>][i]<span style="color:#f92672">=</span>trans<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;0&#39;</span>;
+    }
+    single_status[<span style="color:#ae81ff">0</span>][<span style="color:#ae81ff">9</span>]<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;\0&#39;</span>;
+    <span style="color:#66d9ef">for</span>(i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;i<span style="color:#f92672">&lt;</span>MAX;i<span style="color:#f92672">++</span>){
+        hash[i]<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>;
+    }
+    hash[cantor(single_status[<span style="color:#ae81ff">0</span>],<span style="color:#ae81ff">9</span>)]<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>;
+    bfs(<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>);
+    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+}
+</code></pre></div>
+		</section>
+
+		<div class="post-tags">
+			
+			
+			<nav class="nav tags">
+				<ul class="tags">
+					
+					<li><a href="/tags/cn">cn</a></li>
+					
+				</ul>
+			</nav>
+			
+			
+		</div>
+	</article>
+</main>
+<footer>
+<hr><a class="soc" href="https://github.com/BC-Li" title="GitHub"><i data-feather="github"></i></a>|<a class="soc" href="https://twitter.com/turborocket123/" title="Twitter"><i data-feather="twitter"></i></a>|⚡️
+	2021  TurboRocket |  <a href="https://github.com/athul/archie">Archie Theme</a> | Built with <a href="https://gohugo.io">Hugo</a>
+</footer>
+
+
+<script>
+      feather.replace()
+</script></div>
+    </body>
+</html>
