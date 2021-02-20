@@ -95,7 +95,7 @@ figure h4 {
   margin-bottom: 1em;
 }
 figure h4::before {
-  content: 'ï¿?? ';
+  content: 'ï¿½?? ';
 }
 
 /* Code blocks */
