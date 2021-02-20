@@ -54,12 +54,6 @@
 					<br><div class="description">
 						
 						记录了一点 Openpose 的配置过程及踩过的坑
-Ubuntu 对于 NVIDIA 显卡驱动的支持程度差得超乎我的想象，所以下次掉驱动我可能不会像现在这样挣扎了好几周才选择重装 Ubuntu，而是直接插上我的启动盘（可以，不和他多 BB &mdash;某主播）
-这是具体的安装教程，照着走就可以，十分详细，不过里面的一些坑还是很闹心的。
-  CMake 版本不要按这个来，否则会出现报错：NOTFOUNDCUDA_cublas_device_LIBRARY。 解决方案 如果你安装了旧版的 CMake，那就直接删掉旧的重装一下就可以了，软连接之后 CMake - gui 就能进入 gui 界面，不要安装 CMake-QT-gui ，那个是旧版的。
- 软连接 CMake :https://m.linuxidc.com/Linux/2018-09/154165.htm
-   CUDA9 最多支持到 Ubuntu 16 ，没有 Ubuntu 1804 的 deb 包 / Run File 解决方案：实测 CUDA 10 也可以正常跑，不过，跑别的项目可能会崩，照我来讲，我可能会选择再次重装系统。 （我的配置是 i7 - 9750H + GTX 1650 )
-  如果你选择了 BUILD-PYTHON, 不事先 clone 一个 Pybind 肯定出错。因为 git clone 下来的仓库： 3rdparty 文件夹是空的。（我怎么知道为什么&hellip;
 						
 					</div>
 					<a href="/posts/2020-3-28-openpose/">Read more ⟶</a>

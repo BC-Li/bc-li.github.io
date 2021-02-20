@@ -5,26 +5,14 @@
 
 	<meta property="og:image" content=""/>
 	<meta property="og:title" content="Openpose 配置小记" />
-<meta property="og:description" content="记录了一点 Openpose 的配置过程及踩过的坑
-Ubuntu 对于 NVIDIA 显卡驱动的支持程度差得超乎我的想象，所以下次掉驱动我可能不会像现在这样挣扎了好几周才选择重装 Ubuntu，而是直接插上我的启动盘（可以，不和他多 BB &mdash;某主播）
-这是具体的安装教程，照着走就可以，十分详细，不过里面的一些坑还是很闹心的。
-  CMake 版本不要按这个来，否则会出现报错：NOTFOUNDCUDA_cublas_device_LIBRARY。 解决方案 如果你安装了旧版的 CMake，那就直接删掉旧的重装一下就可以了，软连接之后 CMake - gui 就能进入 gui 界面，不要安装 CMake-QT-gui ，那个是旧版的。
- 软连接 CMake :https://m.linuxidc.com/Linux/2018-09/154165.htm
-   CUDA9 最多支持到 Ubuntu 16 ，没有 Ubuntu 1804 的 deb 包 / Run File 解决方案：实测 CUDA 10 也可以正常跑，不过，跑别的项目可能会崩，照我来讲，我可能会选择再次重装系统。 （我的配置是 i7 - 9750H &#43; GTX 1650 )
-  如果你选择了 BUILD-PYTHON, 不事先 clone 一个 Pybind 肯定出错。因为 git clone 下来的仓库： 3rdparty 文件夹是空的。（我怎么知道为什么" />
+<meta property="og:description" content="记录了一点 Openpose 的配置过程及踩过的坑" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://bc-li.github.io/posts/2020-3-28-openpose/" />
 <meta property="article:published_time" content="2020-03-28T00:00:00+00:00" />
 <meta property="article:modified_time" content="2020-03-28T00:00:00+00:00" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Openpose 配置小记"/>
-<meta name="twitter:description" content="记录了一点 Openpose 的配置过程及踩过的坑
-Ubuntu 对于 NVIDIA 显卡驱动的支持程度差得超乎我的想象，所以下次掉驱动我可能不会像现在这样挣扎了好几周才选择重装 Ubuntu，而是直接插上我的启动盘（可以，不和他多 BB &mdash;某主播）
-这是具体的安装教程，照着走就可以，十分详细，不过里面的一些坑还是很闹心的。
-  CMake 版本不要按这个来，否则会出现报错：NOTFOUNDCUDA_cublas_device_LIBRARY。 解决方案 如果你安装了旧版的 CMake，那就直接删掉旧的重装一下就可以了，软连接之后 CMake - gui 就能进入 gui 界面，不要安装 CMake-QT-gui ，那个是旧版的。
- 软连接 CMake :https://m.linuxidc.com/Linux/2018-09/154165.htm
-   CUDA9 最多支持到 Ubuntu 16 ，没有 Ubuntu 1804 的 deb 包 / Run File 解决方案：实测 CUDA 10 也可以正常跑，不过，跑别的项目可能会崩，照我来讲，我可能会选择再次重装系统。 （我的配置是 i7 - 9750H &#43; GTX 1650 )
-  如果你选择了 BUILD-PYTHON, 不事先 clone 一个 Pybind 肯定出错。因为 git clone 下来的仓库： 3rdparty 文件夹是空的。（我怎么知道为什么"/>
+<meta name="twitter:description" content="记录了一点 Openpose 的配置过程及踩过的坑"/>
 <script src="https://bc-li.github.io/js/feather.min.js"></script>
 	
 	<link href="https://bc-li.github.io/css/fonts.css" rel="stylesheet">
@@ -59,8 +47,7 @@ Ubuntu 对于 NVIDIA 显卡驱动的支持程度差得超乎我的想象，所�
 		
 
 		<section class="body">
-			<p>记录了一点 Openpose 的配置过程及踩过的坑</p>
-<p>Ubuntu 对于 NVIDIA 显卡驱动的支持程度差得超乎我的想象，所以下次掉驱动我可能不会像现在这样挣扎了好几周才选择重装 Ubuntu，而是直接插上我的启动盘（可以，不和他多 BB &mdash;某主播）</p>
+			<p>Ubuntu 对于 NVIDIA 显卡驱动的支持程度差得超乎我的想象，所以下次掉驱动我可能不会像现在这样挣扎了好几周才选择重装 Ubuntu，而是直接插上我的启动盘（可以，不和他多 BB &mdash;某主播）</p>
 <p><a href="https://blog.csdn.net/qq_35468937/article/details/81514198#t27">这是具体的安装教程</a>，照着走就可以，十分详细，不过里面的一些坑还是很闹心的。</p>
 <ul>
 <li>
@@ -112,6 +99,14 @@ Ubuntu 对于 NVIDIA 显卡驱动的支持程度差得超乎我的想象，所�
 
 		<div class="post-tags">
 			
+			
+			<nav class="nav tags">
+				<ul class="tags">
+					
+					<li><a href="/tags/coding">coding</a></li>
+					
+				</ul>
+			</nav>
 			
 			
 		</div>
