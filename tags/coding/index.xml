@@ -24,15 +24,6 @@
     </item>
     
     <item>
-      <title>Space Invaders on FPGA</title>
-      <link>https://bc-li.github.io/posts/2020-12-8-spaceinvaders/</link>
-      <pubDate>Tue, 08 Dec 2020 00:00:00 +0000</pubDate>
-      
-      <guid>https://bc-li.github.io/posts/2020-12-8-spaceinvaders/</guid>
-      <description>Alien.v 外星人游戏逻辑 module alien( input [23:0]aliennumber; // 外星人的数目  input clk,rst; // 时钟和复位信号 input bulletflying,startscreen,gameover,frontalive; // 依次为 子弹是否正在飞行，是否在开始界面，是否已经gg，前面两个外星人是不是还活着（第一排和第二排用，防止前面有外星人时就开火） input [9:0] startX; // 子弹开始时的横坐标  input [8:0] startY; // 子弹开始时的纵坐标  input [9:0] bulletX; // 子弹现在的横坐标  input [8:0] bulletY; // 子弹现在的纵坐标  input [9:0] width; // 外星人的图片宽度（用于伤害判定）  input [27:0] firefreq; // 开火频率  output reg [9:0]alienX; // 输出外星人的横纵坐标  output reg [8:0]alienY; output reg alienalive,hit,alienfire; // 输出外星人的生命状态，是否被击中，以及外星人开火信号 ); reg [23:0] counter; // 分频时钟  reg [27:0] firecounter; // 开火分频时钟  reg speed,direction; // speed 是移动的速度， direction 是控制左右  wire [10:0]aliencounter; // 外星人分频时钟  always@(posedge clk or posedge rst) // 时序逻辑  begin if(rst) // 复位状态均置零  begin firecounter &amp;lt;= 0; alienfire &amp;lt;= 0; end else begin if(alienalive &amp;amp;&amp;amp; ~frontalive &amp;amp;&amp;amp; ~startscreen &amp;amp;&amp;amp; ~gameover) begin // 如果活着，前方没有活外星人而且没在开始/结束页面的时候就定时开火  if(firecounter == firefreq) begin // 每隔一段时间开火  firecounter &amp;lt;= 0; alienfire &amp;lt;= 1; end else begin firecounter &amp;lt;= firecounter + 1&amp;#39;b1; alienfire &amp;lt;= 0; end end else begin // 其余时间不开火  firecounter &amp;lt;= 0; alienfire &amp;lt;= 0; end end end always@(posedge clk or posedge rst) // 伤害判定  begin if(rst) begin // 复位时复活外星人  alienalive &amp;lt;= 1&amp;#39;b1; hit &amp;lt;= 0; end else begin // 没复位的时候开始伤害判定  if(bulletflying &amp;amp;&amp;amp; alienalive &amp;amp;&amp;amp;(((bulletX &amp;gt;= alienX -2)&amp;amp;&amp;amp;(bulletX &amp;lt;= alienX + width + 2))&amp;amp;&amp;amp;(bulletY == alienY))) begin // 当子弹到alien图片的这个区域的时候启动伤害判定  alienalive &amp;lt;= 0; hit &amp;lt;= 1&amp;#39;b1; // alien 被打了  end else begin hit &amp;lt;= 0; // 其余时间没被打  end end end assign aliencounter = aliennumber; // 存储外星人数目  always@(posedge clk or posedge rst) begin if(rst) // 复位时重置外星人位置  begin alienX &amp;lt;= startX; end else if(counter &amp;gt;= (24&amp;#39;d1000_000)) // 用一个counter降频  begin speed &amp;lt;= 1&amp;#39;b1; counter &amp;lt;= 0; end else begin if(direction) // 向左还是向右看direction的值  begin counter &amp;lt;= counter + 6 - aliennumber ; // 外星人的移动速度随着场上alien数减少而增加  alienX &amp;lt;= startscreen?</description>
-    </item>
-    
-    <item>
       <title>Verilog 笔记</title>
       <link>https://bc-li.github.io/posts/2020-10-20-verilog/</link>
       <pubDate>Tue, 20 Oct 2020 00:00:00 +0000</pubDate>
